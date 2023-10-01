@@ -8,7 +8,7 @@ The plugin facilitates troubleshooting and writing reproducible configurations.
 ## Features
 
 1. Enable/disable multiple plugins by keyword from one central location.
-2. Define and use presets for your own configuration, optionally using a plugin container.
+2. Define and use presets for your own configuration, optionally using a plugin container like **LazyVim**.
 3. Has presets for each plugin module in [**LazyVim**](https://github.com/LazyVim/LazyVim).
 4. Has options to skip loading the configuration modules **LazyVim** provides.
 5. Easier troubleshooting without modifying any configuration.
@@ -18,14 +18,14 @@ The plugin facilitates troubleshooting and writing reproducible configurations.
 
 References:
 
-- Requirements section, in [**lazy.nvim**](https://github.com/folke/lazy.nvim#%EF%B8%8F-requirements)
+- Requirements section: [**lazy.nvim**](https://github.com/folke/lazy.nvim#%EF%B8%8F-requirements)
 
 ## Installation
 
 References:
 
-- Installation section, in [**lazy.nvim**](https://github.com/folke/lazy.nvim#-installation)
-- `config.lazy.lua`, in [**LazyVim starter**](https://github.com/LazyVim/starter/blob/a13d5c90769ce6177d1e27b46efd967ed52c1d68/lua/config/lazy.lua#L11)
+- Installation section: [**lazy.nvim**](https://github.com/folke/lazy.nvim#-installation)
+- `config.lazy.lua`: [**LazyVim starter**](https://github.com/LazyVim/starter/blob/a13d5c90769ce6177d1e27b46efd967ed52c1d68/lua/config/lazy.lua#L11)
 
 The plugin must be the first item in the spec!
 
@@ -50,8 +50,9 @@ require("lazy").setup({
 ## Using lazy's conditional keyword
 
 References:
-Plugin Spec, in [**lazy.nvim**](https://github.com/folke/lazy.nvim#-plugin-spec)
-Configuration, in [**lazy.nvim**](https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration)
+
+- Plugin Spec: [**lazy.nvim**](https://github.com/folke/lazy.nvim#-plugin-spec)
+- Configuration: [**lazy.nvim**](https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration)
 
 **lazyflex** attaches a `cond` property to each spec in the list of specs managed by **lazy.nvim**.
 The value of the property is either `true` or `false`, depending on `config.enable_on_match`.

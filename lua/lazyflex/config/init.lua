@@ -1,7 +1,7 @@
 local M = {}
 
 local defaults = {
-  -- by default, load lazyvim's config:
+  -- by default, load config supplied by plugin container:
   config = {
     enabled = true,
     options = true, -- use config.options
@@ -13,7 +13,7 @@ local defaults = {
   --
   -- when specified, prepend the keywords with the keywords the preset provides
   -- each lazyvim module has a corresponding preset containing keywords
-  presets_collection = "lazyvim",
+  plugin_container = "lazyvim",
   presets_selected = {},
 
   -- presets defined in a module in your config.
@@ -31,22 +31,15 @@ local defaults = {
   enable_on_match = true,
 }
 
-local apply_presets = function(presets, presets_module, enable_on_match, apply_preset)
-  for _, selected in ipairs(presets) do
-    local ok, preset_keywords = pcall(presets_module.get, selected, enable_on_match)
+local apply_presets = function(selected_presets, presets_module, opts, apply_callback)
+  for _, name in ipairs(selected_presets) do
+    local ok, preset_keywords = pcall(presets_module.get_preset, name, opts)
     if ok then
-      apply_preset(preset_keywords)
+      apply_callback(preset_keywords)
     end
   end
 end
 
--- if opts.presets_to_use and not vim.tbl_isempty(opts.presets_to_use) then
---   local presets = require("lazyflex.presets").from_collection(opts.presets_collection)
---   for _, preset in ipairs(opts.presets_to_use) do
---     local preset_keywords = presets.get(preset, opts.enable_on_match)
---     keywords = vim.list_extend(preset_keywords, keywords)
---   end
--- end
 local extend_keywords = function(opts)
   local keywords = opts.keywords and vim.tbl_map(string.lower, opts.keywords) or {}
 
@@ -58,13 +51,13 @@ local extend_keywords = function(opts)
   end
 
   if use(opts.presets_selected) then
-    local presets_module = require("lazyflex.presets").from_collection(opts.presets_collection)
-    apply_presets(opts.presets_selected, presets_module, opts.enable_on_match, apply_preset)
+    local presets_module = require("lazyflex.presets").factory(opts.plugin_container)
+    apply_presets(opts.presets_selected, presets_module, opts, apply_preset)
   end
   if use(opts.presets_personal) then
     local ok, presets_personal_module = pcall(require, opts.presets_personal_module)
     if ok then
-      apply_presets(opts.presets_personal, presets_personal_module, opts.enable_on_match, apply_preset)
+      apply_presets(opts.presets_personal, presets_personal_module, opts, apply_preset)
     end
   end
 

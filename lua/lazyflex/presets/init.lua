@@ -1,20 +1,24 @@
 local M = {}
 
+-- a dummy implementation for a "preset" module
 local Dummy = {}
-Dummy.get = function(_, _)
-  -- for now, return dummy collecton if the requested collection is not present.
+Dummy.get_preset_keywords = function(_, _)
+  return {}
+end
+Dummy.intercept_options = function(_) end
+Dummy.return_container_spec = function(_)
   return {}
 end
 
-local collections = {
+local containers = {
   lazyvim = function()
     return require("lazyflex.presets.lazyvim")
   end,
 }
 
-M.from_collection = function(name_of_collection)
-  local collection = collections[name_of_collection]
-  return collection and collection() or Dummy
+M.factory = function(name)
+  local module = containers[name]
+  return module and module() or Dummy
 end
 
 return M

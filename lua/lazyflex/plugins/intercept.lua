@@ -1,18 +1,12 @@
 if vim.g.vscode or vim.g.started_by_firenvim then
   return {}
 end
-
 local opts = require("lazyflex.config").setup()
+local cond = require("lazyflex.utils").cond
 
-if not opts.config.options then
-  package.loaded["lazyvim.config.options"] = true
-  vim.g.mapleader, vim.g.maplocalleader = " ", "\\"
-end
-
--- same approach as in lazyvim.config.init()
+-- same approach as in lazyvim.config.init():
 local Plugin = require("lazy.core.plugin")
 local original_add = Plugin.Spec.add
-local cond = require("lazyflex.utils").cond
 
 ---@diagnostic disable-next-line: duplicate-set-field
 Plugin.Spec.add = function(self, plugin, ...)
@@ -23,9 +17,6 @@ Plugin.Spec.add = function(self, plugin, ...)
   return plugin_result
 end
 
-return {
-  {
-    "LazyVim/LazyVim",
-    opts = { defaults = { autocmds = opts.config.autocmds, keymaps = opts.config.keymaps } },
-  },
-}
+local preset = require("lazyflex.presets").factory(opts.plugin_container)
+preset.intercept_options(opts)
+return preset.return_container_spec(opts)

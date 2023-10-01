@@ -47,7 +47,7 @@ require("lazy").setup({
 })
 ```
 
-## Using lazy's conditional keyword
+## Using lazy's conditional enabling
 
 References:
 
@@ -56,6 +56,14 @@ References:
 
 **lazyflex** attaches a `cond` property to each plugin in the list of plugins managed by **lazy.nvim**.
 The value of the property is either `true` or `false`, depending on `enable_on_match`.
+
+The `cond` property needs to be attached before **lazy.nvim** starts marking plugins enabled or disabled.
+For now, this can only be done in the `spec phase`, see `:Lazy profile`.
+
+The approach is also used in the following code:
+
+- `vscode.lua`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/plugins/extras/vscode.lua#L24)
+- `config.init`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/config/init.lua#L187)
 
 ## Examples
 
@@ -101,5 +109,22 @@ The value of the property is either `true` or `false`, depending on `enable_on_m
 
 Not in scope for now, but possible:
 
-- add presets for AstroNvim-v4
+- Add presets for AstroNvim-v4
 - Combine specs from multiple plugin containers: LazyVim, AstroNvim-v4
+
+## History
+
+- Debug nvim crash with plugins: [**LazyVim** discussion](https://github.com/LazyVim/LazyVim/discussions/1322#discussioncomment-6728171)
+- Turning LazyVim into Kickstart: [**LazyVim** discussion](https://github.com/LazyVim/LazyVim/discussions/1483)
+- Adding to repro.lua: [**LazyVim** discussion](https://github.com/LazyVim/LazyVim/discussions/1493)
+- Feature: integrated binary debugging: [**lazy.nvim**](https://github.com/folke/lazy.nvim/issues/1047#issuecomment-1735131704)
+
+## Credits
+
+@dpetka2001, for his feedback during my early attempts
+@folke, for creating **lazy.nvim** and **LazyVim**(to name a few...)
+
+This plugin can be considered a tribute to:
+
+- **lazy.nvim**: its architecture and possibilities.
+- **LazyVim**: its concept of a plugin as a thin container for other plugins.

@@ -6,25 +6,24 @@ before lazy.nvim starts using the cond() function, disabling plugins.
 example spec:
 
 local use_flex = false -- switch to activate the plugin
-local spec_flex = not use_flex and {} or {
+local plugin_flex = not use_flex and {} or {
   "abeldekat/lazyflex.nvim",
-  import = "lazyflex.plugins.default_cond",
-  -- import = "lazyflex.plugins.plugin_cond",
+  import = "lazyflex.plugins.intercept",
   opts = {
     keywords = { "pairs" }, -- only enable mini.pairs
   },
 }
 
 require("lazy").setup({
-  spec_flex,
+  plugin_flex,
   -- other plugins
 })
 
-lazyflex.plugins.spec_default_cond
+lazyflex.plugins.deprecated:
 overwrites the default cond function.
-slightly less powerful, when plugins have their own cond function defined...
+less powerful, plugins can define their own cond function...
 
-lazyflex.plugins.spec_plugin_cond
+lazyflex.plugins.intercept:
 unconditionally overwrites the cond function of each plugin
 --]]
 local M = {}

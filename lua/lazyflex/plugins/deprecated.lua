@@ -1,3 +1,7 @@
+--[[
+deprecated, but keep for now
+use intercept.lua
+--]]
 if vim.g.vscode or vim.g.started_by_firenvim then
   return {}
 end

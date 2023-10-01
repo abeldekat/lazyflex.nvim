@@ -13,17 +13,9 @@ if not opts.config.options then
   vim.g.mapleader, vim.g.maplocalleader = " ", "\\"
 end
 
+local cond = require("lazyflex.utils").cond
 require("lazy.core.config").options.defaults.cond = function(plugin)
-  local cond = function()
-    local name = string.lower(plugin.name)
-    for _, keyword in ipairs(opts.keywords) do
-      if name:find(keyword, 1, true) then
-        return opts.enable_on_match
-      end
-    end
-    return not opts.enable_on_match
-  end
-  return cond()
+  return cond(plugin.name, opts)
 end
 
 return {

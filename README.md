@@ -3,6 +3,7 @@
 WIP
 
 **lazyflex.nvim** hooks into [**lazy.nvim**](https://github.com/folke/lazy.nvim), a modern plugin manager for Neovim.
+
 The plugin facilitates troubleshooting and writing reproducible configurations.
 
 ## Features

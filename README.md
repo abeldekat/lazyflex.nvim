@@ -7,12 +7,12 @@ The plugin facilitates troubleshooting and writing reproducible configurations.
 
 ## Features
 
-1. Enable/disable multiple plugins by keyword from one central location.
-2. Define and use presets for your own configuration, optionally using a plugin container like **LazyVim**.
-3. Has presets for each plugin module in [**LazyVim**](https://github.com/LazyVim/LazyVim).
-4. Has options to skip loading the configuration modules **LazyVim** provides.
-5. Easier troubleshooting without modifying any configuration.
-6. When creating an issue, facilitates writing a concise reproducible configuration.
+- Enable/disable multiple plugins by keyword from one central location.
+- Define and use presets for your own configuration, optionally using a plugin container like **LazyVim**.
+- Has presets for each plugin module in [**LazyVim**](https://github.com/LazyVim/LazyVim).
+- Has options to skip loading the configuration modules **LazyVim** provides.
+- Easier troubleshooting without modifying any configuration.
+- When creating an issue, facilitates writing a concise reproducible configuration.
 
 ## Requirements
 

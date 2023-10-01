@@ -43,7 +43,7 @@ end
 local extend_keywords = function(opts)
   local keywords = opts.keywords and vim.tbl_map(string.lower, opts.keywords) or {}
 
-  local function apply_preset(preset_keywords)
+  local function apply_callback(preset_keywords)
     keywords = vim.list_extend(preset_keywords, keywords)
   end
   local function use(selected_presets)
@@ -52,12 +52,12 @@ local extend_keywords = function(opts)
 
   if use(opts.presets_selected) then
     local presets_module = require("lazyflex.presets").factory(opts.plugin_container)
-    apply_presets(opts.presets_selected, presets_module, opts, apply_preset)
+    apply_presets(opts.presets_selected, presets_module, opts, apply_callback)
   end
   if use(opts.presets_personal) then
     local ok, presets_personal_module = pcall(require, opts.presets_personal_module)
     if ok then
-      apply_presets(opts.presets_personal, presets_personal_module, opts, apply_preset)
+      apply_presets(opts.presets_personal, presets_personal_module, opts, apply_callback)
     end
   end
 

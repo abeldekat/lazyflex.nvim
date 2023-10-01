@@ -1,30 +1,27 @@
 local M = {}
 
 local defaults = {
-  -- by default, load config supplied by plugin container:
+  -- by default, load the config supplied by the plugin container:
   config = {
-    enabled = true,
+    enabled = true, -- quick switch, disabling the three options below:
     options = true, -- use config.options
     autocmds = true, -- use config.autocmds
     keymaps = true, -- use config.keymaps
   },
 
-  -- TODO: could be extended to use other collections, astronvim v4 for example
-  --
-  -- when specified, prepend the keywords with the keywords the preset provides
-  -- each lazyvim module has a corresponding preset containing keywords
-  plugin_container = "lazyvim",
-  presets_selected = {},
+  -- for lazyvim, each module has a corresponding preset containing keywords
+  plugin_container = "lazyvim", -- extension point for other plugin containers.
+  presets_selected = {}, -- example: {"mini"}, only mini plugins
 
   -- presets defined in a module in your config.
-  -- The module must provide a function: M.function = get(name, enable_on_match)
+  -- The module must provide a function: M.function = get_preset(name, enable_on_match)
   presets_personal_module = "config.presets",
-  presets_personal = {},
+  presets_personal = {}, -- example: {"test"}, when "test" provides keywords
 
-  -- keywords are prepended with plugins to always enable:
+  -- keywords for plugins to always enable:
   keywords_always_enable = { "lazy", "tokyo" },
 
-  -- your own keywords will be merged with presets and always_enable
+  -- your own keywords will be merged with presets and always_enable:
   keywords = {}, -- example: "line" matches lualine, bufferline and indent-blankline
 
   -- either enable or disable matching plugins

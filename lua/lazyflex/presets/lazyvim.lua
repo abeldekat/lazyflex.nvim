@@ -71,7 +71,7 @@ local when_enabling = {
   },
   editor = {
     "nui.nvim", -- neo-tree
-    "plenary.nvim", -- neo-tree
+    "plenary.nvim", -- neo-tree, telescope
   },
   lsp = {
     "plenary.nvim", -- none-ls

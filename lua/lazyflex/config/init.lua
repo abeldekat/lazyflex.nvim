@@ -14,7 +14,12 @@ local defaults = {
   -- when specified, prepend the keywords with the keywords the preset provides
   -- each lazyvim module has a corresponding preset containing keywords
   presets_collection = "lazyvim",
-  presets_to_use = {},
+  presets_selected = {},
+
+  -- presets defined in a module in your config.
+  -- The module must provide a function: M.function = get(name, enable_on_match)
+  presets_personal_module = "config.presets",
+  presets_personal = {},
 
   -- keywords are prepended with plugins to always enable:
   keywords_always_enable = { "lazy", "tokyo" },
@@ -26,14 +31,40 @@ local defaults = {
   enable_on_match = true,
 }
 
+local apply_presets = function(presets, presets_module, enable_on_match, apply_preset)
+  for _, selected in ipairs(presets) do
+    local ok, preset_keywords = pcall(presets_module.get, selected, enable_on_match)
+    if ok then
+      apply_preset(preset_keywords)
+    end
+  end
+end
+
+-- if opts.presets_to_use and not vim.tbl_isempty(opts.presets_to_use) then
+--   local presets = require("lazyflex.presets").from_collection(opts.presets_collection)
+--   for _, preset in ipairs(opts.presets_to_use) do
+--     local preset_keywords = presets.get(preset, opts.enable_on_match)
+--     keywords = vim.list_extend(preset_keywords, keywords)
+--   end
+-- end
 local extend_keywords = function(opts)
   local keywords = opts.keywords and vim.tbl_map(string.lower, opts.keywords) or {}
 
-  if opts.presets_to_use and not vim.tbl_isempty(opts.presets_to_use) then
-    local presets = require("lazyflex.presets").from_collection(opts.presets_collection)
-    for _, preset in ipairs(opts.presets_to_use) do
-      local preset_keywords = presets.get(preset, opts.enable_on_match)
-      keywords = vim.list_extend(preset_keywords, keywords)
+  local function apply_preset(preset_keywords)
+    keywords = vim.list_extend(preset_keywords, keywords)
+  end
+  local function use(selected_presets)
+    return selected_presets and not vim.tbl_isempty(selected_presets)
+  end
+
+  if use(opts.presets_selected) then
+    local presets_module = require("lazyflex.presets").from_collection(opts.presets_collection)
+    apply_presets(opts.presets_selected, presets_module, opts.enable_on_match, apply_preset)
+  end
+  if use(opts.presets_personal) then
+    local ok, presets_personal_module = pcall(require, opts.presets_personal_module)
+    if ok then
+      apply_presets(opts.presets_personal, presets_personal_module, opts.enable_on_match, apply_preset)
     end
   end
 

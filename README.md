@@ -52,7 +52,7 @@ require("lazy").setup({
 References:
 
 - Plugin Spec: [**lazy.nvim**](https://github.com/folke/lazy.nvim#-plugin-spec)
-- Configuration: [**lazy.nvim**](https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration)
+- Configuration, `defaults.cond`: [**lazy.nvim**](https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration)
 
 **lazyflex** attaches a `cond` property to each plugin in the list of plugins managed by **lazy.nvim**.
 The value of the property is either `true` or `false`, depending on `enable_on_match`.

@@ -11,17 +11,17 @@ local defaults = {
 
   -- for lazyvim, each module has a corresponding preset containing keywords
   plugin_container = "lazyvim", -- extension point for other plugin containers.
-  presets_selected = {}, -- example: {"mini"}, only mini plugins
+  presets_selected = {}, -- example: {"coding"}: only with plugins from the coding module
 
   -- presets defined in a module in your config.
-  -- The module must provide a function: M.function = get_preset(name, enable_on_match)
+  -- The module must provide a function: M.function = get_preset_keywords(name, enable_on_match)
   presets_personal_module = "config.presets",
-  presets_personal = {}, -- example: {"test"}, when "test" provides keywords
+  presets_personal = {}, -- example: {"test"}, where "test" provides keywords
 
   -- keywords for plugins to always enable:
   keywords_always_enable = { "lazy", "tokyo" },
 
-  -- your own keywords will be merged with presets and always_enable:
+  -- your own keywords will be merged with presets and keywords_always_enable:
   keywords = {}, -- example: "line" matches lualine, bufferline and indent-blankline
 
   -- either enable or disable matching plugins
@@ -30,7 +30,7 @@ local defaults = {
 
 local apply_presets = function(selected_presets, presets_module, opts, apply_callback)
   for _, name in ipairs(selected_presets) do
-    local ok, preset_keywords = pcall(presets_module.get_preset, name, opts)
+    local ok, preset_keywords = pcall(presets_module.get_preset_keywords, name, opts)
     if ok then
       apply_callback(preset_keywords)
     end

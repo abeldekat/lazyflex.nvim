@@ -3,7 +3,7 @@ local M = {}
 local function presets()
   return {
     coding = {
-      "LuaSnip", -- TODO: no snippets when only this preset enabled?
+      "LuaSnip",
       "friendly-snippets",
       "nvim-cmp",
       "cmp-buffer",
@@ -34,7 +34,7 @@ local function presets()
       "neodev",
       "mason.nvim",
       "mason-lspconfig.nvim",
-      "cmp-nvim-lsp", -- TODO: see coding, has a cond property!
+      "cmp-nvim-lsp", --NOTE: see coding, has a cond property!
       "neodev",
       "none-ls",
       "null-ls",
@@ -110,6 +110,7 @@ M.return_container_spec = function(opts)
     {
       "LazyVim/LazyVim",
       opts = { defaults = { autocmds = opts.config.autocmds, keymaps = opts.config.keymaps } },
+      optional = true,
     },
   }
 end

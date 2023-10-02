@@ -2,18 +2,21 @@ if vim.g.vscode or vim.g.started_by_firenvim then
   return {}
 end
 local opts = require("lazyflex.config").setup()
-local cond = require("lazyflex.utils").cond
+local cond = require("lazyflex.core").cond
 
--- same approach as in lazyvim.config.init():
+-- same approach as in lazyvim.config.init.init():
 local Plugin = require("lazy.core.plugin")
 local original_add = Plugin.Spec.add
 
 ---@diagnostic disable-next-line: duplicate-set-field
 Plugin.Spec.add = function(self, plugin, ...)
   local plugin_result = original_add(self, plugin, ...)
-  if plugin_result then
-    plugin_result.cond = cond(plugin_result.name, opts)
+
+  local name = plugin_result and plugin_result.name or nil
+  if not (plugin_result and name) then
+    return plugin_result
   end
+  plugin_result.cond = cond(name, opts)
   return plugin_result
 end
 

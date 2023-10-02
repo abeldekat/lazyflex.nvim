@@ -1,5 +1,8 @@
 --[[
 deprecated, but keep for now
+overwrites the default cond function.
+less powerful, plugins can define their own cond function...
+
 use intercept.lua
 --]]
 if vim.g.vscode or vim.g.started_by_firenvim then

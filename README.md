@@ -22,8 +22,10 @@ References:
 ## Installation
 
 The plugin must be the first item in the spec!
-It's not possible to configure multiple fragments of the plugin. Operation starts
-before those fragments are merged into the final spec.
+
+It is not possible to configure multiple fragments of the plugin.
+
+The hooks are applied immediately when **lazy.nvim** requires `"lazyflex.plugins.intercept"`
 
 ```lua
 local use_flex = false -- true activates the plugin
@@ -32,7 +34,7 @@ local plugin_flex = not use_flex and {}
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.plugins.intercept",
     opts = {
-      -- Three plugins by default: "LazyVim", "lazy.nvim", and "tokyonight"
+      -- 3 plugins by default: "LazyVim", "lazy.nvim", and "tokyonight"
     },
   }
 require("lazy").setup({

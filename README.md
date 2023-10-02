@@ -156,7 +156,7 @@ Add:
 }
 ```
 
-### Personal configuration, without a Neovim setup like LazyVim
+### Personal configuration only
 
 ```lua
 print("todo")

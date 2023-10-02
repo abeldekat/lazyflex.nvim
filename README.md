@@ -209,8 +209,8 @@ print("todo")
 The plugin has two examples for writing reproducible configurations
 using `lazyflex` in the `./repro` folder:
 
-- `repro_lazy.lua`
-- `repro_lazyvim.lua`
+- [`repro_lazy.lua`](https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazy.lua)
+- [`repro_lazyvim.lua`](https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazyvim.lua)
 
 ## History
 

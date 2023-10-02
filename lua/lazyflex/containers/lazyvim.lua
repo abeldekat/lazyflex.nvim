@@ -99,17 +99,19 @@ M.get_preset_keywords = function(name, opts)
 end
 
 M.intercept_options = function(opts)
-  if not opts.config.options then
+  local config = opts.container and opts.container.config or {}
+  if not config.options then
     package.loaded["lazyvim.config.options"] = true
     vim.g.mapleader, vim.g.maplocalleader = " ", "\\"
   end
 end
 
-M.return_container_spec = function(opts)
+M.return_spec = function(opts)
+  local config = opts.container and opts.container.config or {}
   return {
     {
       "LazyVim/LazyVim",
-      opts = { defaults = { autocmds = opts.config.autocmds, keymaps = opts.config.keymaps } },
+      opts = { defaults = { autocmds = config.autocmds, keymaps = config.keymaps } },
       optional = true,
     },
   }

@@ -16,10 +16,10 @@ Plugin.Spec.add = function(self, plugin, ...)
   if not (plugin_result and name) then
     return plugin_result
   end
-  plugin_result.cond = cond(name, opts)
+  plugin_result[opts.target_property] = cond(name, opts)
   return plugin_result
 end
 
-local preset = require("lazyflex.presets").factory(opts.plugin_container)
-preset.intercept_options(opts)
-return preset.return_container_spec(opts)
+local container = require("lazyflex.containers").factory(opts)
+container.intercept_options(opts)
+return container.return_spec(opts)

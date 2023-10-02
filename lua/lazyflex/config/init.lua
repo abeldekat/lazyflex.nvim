@@ -1,31 +1,40 @@
 local M = {}
 
 local defaults = {
-  -- by default, load the config supplied by the plugin container:
-  config = {
-    enabled = true, -- quick switch, disabling the three options below:
-    options = true, -- use config.options
-    autocmds = true, -- use config.autocmds
-    keymaps = true, -- use config.keymaps
+
+  -- any setup like LazyVim, containing both configuration and specs:
+  container = { -- see lazyflex.containers.lazyvim
+    enabled = true,
+    name = "LazyVim", -- for lazyvim, a preset exists for each module containing keywords
+    presets = {}, -- example: {"coding"}: only with plugins from the coding module
+
+    -- by default, load the config supplied by the plugin container:
+    config = {
+      enabled = true, -- quick switch, disabling the three options below:
+      options = true, -- use config.options
+      autocmds = true, -- use config.autocmds
+      keymaps = true, -- use config.keymaps
+    },
   },
 
-  -- for lazyvim, each module has a corresponding preset containing keywords
-  plugin_container = "lazyvim", -- extension point for other plugin containers.
-  presets_selected = {}, -- example: {"coding"}: only with plugins from the coding module
-
-  -- presets defined in a module in your config.
-  -- The module must provide a function: M.function = get_preset_keywords(name, enable_on_match)
-  presets_personal_module = "config.presets",
-  presets_personal = {}, -- example: {"test"}, where "test" provides keywords
+  -- user config:
+  user = {
+    -- presets defined in a module in your config:
+    -- The module must have: M.function = get_preset_keywords(name, enable_on_match)
+    module = "config.presets",
+    presets = {}, -- example: {"test"}, where "test" provides keywords
+  },
 
   -- keywords for plugins to always enable:
   keywords_always_enable = { "lazy", "tokyo" },
-
-  -- your own keywords will be merged with presets and keywords_always_enable:
+  -- keywords specified by the user are merged with the keywords found in presets
+  -- and the keywords in keywords_always_enable:
   keywords = {}, -- example: "line" matches lualine, bufferline and indent-blankline
 
   -- either enable or disable matching plugins
   enable_on_match = true,
+  -- the plugin property to set
+  target_property = "cond", -- or: "enable"
 }
 
 local apply_presets = function(selected_presets, presets_module, opts, apply_callback)
@@ -47,14 +56,18 @@ local extend_keywords = function(opts)
     return selected_presets and not vim.tbl_isempty(selected_presets)
   end
 
-  if use(opts.presets_selected) then
-    local presets_module = require("lazyflex.presets").factory(opts.plugin_container)
-    apply_presets(opts.presets_selected, presets_module, opts, apply_callback)
+  if opts.container and opts.container.enabled then
+    if use(opts.container.presets) then
+      local preset_module = require("lazyflex.containers").factory(opts)
+      apply_presets(opts.container.presets, preset_module, opts, apply_callback)
+    end
   end
-  if use(opts.presets_personal) then
-    local ok, presets_personal_module = pcall(require, opts.presets_personal_module)
-    if ok then
-      apply_presets(opts.presets_personal, presets_personal_module, opts, apply_callback)
+  if opts.user then
+    if use(opts.user.presets) then
+      local ok, preset_module = pcall(require, opts.user.module)
+      if ok then
+        apply_presets(opts.user.presets, preset_module, opts, apply_callback)
+      end
     end
   end
 
@@ -72,11 +85,13 @@ M.setup = function()
   opts = vim.tbl_deep_extend("force", defaults, opts or {})
   opts.keywords = extend_keywords(opts)
 
-  if not opts.config.enabled then
-    opts.config.options = false
-    opts.config.autocmds, opts.config.keymaps = false, false
+  if opts.container and opts.container.config then
+    local container_conf = opts.container.config
+    if not container_conf.enabled then
+      container_conf.options = false
+      container_conf.autocmds, container_conf.keymaps = false, false
+    end
   end
-
   return opts
 end
 return M

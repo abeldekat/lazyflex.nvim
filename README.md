@@ -71,62 +71,95 @@ References:
 
 ## Examples
 
+### LazyVim as a neovim setup
+
 ```lua
--- lazy.nvim: LazyVim can be used as plugin provider
--- plugins: lazy.nvim, LazyVim, tokyonight
+-- Test a new plugin in isolation
+-- plugins: 44 disabled
 {
   "abeldekat/lazyflex.nvim",
   import = "lazyflex.plugins.intercept",
   opts = {
-    config = { enabled = false },
+    keywords = { "harpoon", "plenary" }, -- or "har" for the lazy...
   },
 }
 
--- lazy.nvim: Using LazyVim's telescope and plenary specs
--- plugins: lazy.nvim, LazyVim, tokyonight, telescope, plenary
-{
-  "abeldekat/lazyflex.nvim",
-  import = "lazyflex.plugins.intercept",
-  opts = {
-    config = { enabled = false },
-    keywords = { "tele", "plen" },
-  },
-}
-
--- lazy.nvim: Using all LazyVim's specs except the UI
--- plugins: 11 disabled
-{
-  "abeldekat/lazyflex.nvim",
-  import = "lazyflex.plugins.intercept",
-  opts = {
-    config = { enabled = false },
-    enable_on_match = false,
-    presets_selected = {"ui"},
-  },
-}
-
--- LazyVim: only use the coding module, and telescope and plenary
+-- Only use the coding module, and telescope and plenary
 -- plugins: 31 disabled
 {
   "abeldekat/lazyflex.nvim",
   import = "lazyflex.plugins.intercept",
   opts = {
-    presets_selected = {"coding"},
+    container = { presets = { "coding" } },
     keywords = { "tele", "plen" },
   },
 }
 
--- LazyVim: disable plugins from the lsp module, and telescope and plenary
--- plugins: 9 disabled
+-- Disable telescope and all plugins in the lsp module
+-- plugins: 8 disabled
 {
   "abeldekat/lazyflex.nvim",
   import = "lazyflex.plugins.intercept",
   opts = {
     enable_on_match = false,
-    presets_selected = {"lsp"},
+    container = { presets = { "lsp" } },
+    keywords = { "tele" },
+  },
+}
+
+```
+
+### LazyVim as a plugin provider
+
+**LazyVim** can be used without loading its options, autocommands and keymappings.
+The settings of the resulting configuration will default to stock neovim.
+
+This can be useful during testing or when reporting an issue for one of its plugins.
+Instead of adding the full spec to a reproducible configuration, LazyVim's spec
+can be used.
+
+Add:
+
+> container = { config = { enabled = false } },
+
+```lua
+-- LazyVim as a plugin provider
+-- plugins: lazy.nvim, LazyVim, tokyonight
+{
+  "abeldekat/lazyflex.nvim",
+  import = "lazyflex.plugins.intercept",
+  opts = {
+    container = { config = { enabled = false } },
+  },
+}
+
+-- Using LazyVim's telescope and plenary specs
+-- plugins: lazy.nvim, LazyVim, tokyonight, telescope, plenary
+{
+  "abeldekat/lazyflex.nvim",
+  import = "lazyflex.plugins.intercept",
+  opts = {
+    container = { config = { enabled = false } },
     keywords = { "tele", "plen" },
   },
 }
+
+-- Using all of LazyVim's specs except the UI
+-- plugins: 11 disabled
+{
+  "abeldekat/lazyflex.nvim",
+  import = "lazyflex.plugins.intercept",
+  opts = {
+    enable_on_match = false,
+    container = { config = { enabled = false }, presets = { "ui" } },
+  },
+}
+```
+
+### Personal configuration, without a Neovim setup like LazyVim
+
+```lua
+print("todo")
 ```
 
 ## Configuration
@@ -135,33 +168,49 @@ References:
 
 ```lua
 {
-  -- by default, load the config supplied by the plugin container:
-  config = {
-    enabled = true, -- quick switch, disabling the three options below:
-    options = true, -- use config.options
-    autocmds = true, -- use config.autocmds
-    keymaps = true, -- use config.keymaps
+  -- any setup like LazyVim, containing both configuration and specs:
+  container = { -- see lazyflex.containers.lazyvim
+    enabled = true,
+    name = "LazyVim", -- for lazyvim, a preset exists for each module containing keywords
+    presets = {}, -- example: { "coding" }: only with plugins from the coding module
+
+    -- by default, load the config supplied by the plugin container:
+    config = {
+      enabled = true, -- quick switch, disabling the three options below:
+      options = true, -- use config.options
+      autocmds = true, -- use config.autocmds
+      keymaps = true, -- use config.keymaps
+    },
   },
 
-  -- for lazyvim, each module has a corresponding preset containing keywords
-  plugin_container = "lazyvim", -- extension point for other plugin containers.
-  presets_selected = {}, -- example: {"coding"}: only with plugins from the coding module
-
-  -- presets defined in a module in your config.
-  -- The module must provide a function: M.function = get_preset_keywords(name, enable_on_match)
-  presets_personal_module = "config.presets",
-  presets_personal = {}, -- example: {"test"}, where "test" provides keywords
+  -- user config
+  user = {
+    -- presets defined in a module in your config:
+    -- The module must have: M.function = get_preset_keywords(name, enable_on_match)
+    module = "config.presets",
+    presets = {}, -- example: {"test"}, where "test" provides keywords
+  },
 
   -- keywords for plugins to always enable:
   keywords_always_enable = { "lazy", "tokyo" },
-
-  -- your own keywords will be merged with presets and keywords_always_enable:
+  -- keywords specified by the user are merged with the keywords found in presets
+  -- and the keywords in keywords_always_enable:
   keywords = {}, -- example: "line" matches lualine, bufferline and indent-blankline
 
   -- either enable or disable matching plugins
   enable_on_match = true,
+  -- the plugin property to set
+  target_property = "cond", -- or: "enable"
 }
 ```
+
+## Templates for "repro"
+
+The plugin has two examples for writing reproducible configurations
+using `lazyflex` in the `./repro` folder:
+
+- `repro_lazy.lua`
+- `repro_lazyvim.lua`
 
 ## History
 
@@ -175,4 +224,4 @@ The idea grew over time:
 ## Acknowledgements
 
 - [**lazy.nvim**](https://github.com/folke/lazy.nvim): The architecture, semantics and enhanced possibilities.
-- [**LazyVim**](https://github.com/LazyVim/LazyVim): The concept of a plugin as a thin container for other plugins.
+- [**LazyVim**](https://github.com/LazyVim/LazyVim): The concept of a plugin as a container for other plugins.

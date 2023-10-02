@@ -172,7 +172,7 @@ print("todo")
   container = { -- see lazyflex.containers.lazyvim
     enabled = true,
     name = "LazyVim", -- for lazyvim, a preset exists for each module containing keywords
-    presets = {}, -- example: { "coding" }: only with plugins from the coding module
+    presets = {}, -- example: { "coding" }: matches plugins from the coding module
 
     -- by default, load the config supplied by the plugin container:
     config = {

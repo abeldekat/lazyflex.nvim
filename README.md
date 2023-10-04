@@ -40,7 +40,6 @@ local plugin_flex = not use_flex and {}
 require("lazy").setup({
   spec = {
     plugin_flex,
-    -- your plugins:
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     { import = "plugins" },
   },

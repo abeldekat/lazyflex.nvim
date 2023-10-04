@@ -277,7 +277,7 @@ return M
   -- user collection:
   user = {
     -- collection defined in a module in your config.
-    -- The module must implement the stub:
+    -- The module must implement the following stub:
     mod = "lazyflex.collections.stub", -- for example: "config.lazyflex"
     presets = {}, -- example: {"test"}, where "test" provides keywords
   },
@@ -301,7 +301,7 @@ return M
 ## Templates for "repro"
 
 The plugin has two examples for writing reproducible configurations
-using `lazyflex` in the `./repro` folder:
+using `lazyflex`, located in the `./repro` folder:
 
 - [`repro_lazy.lua`](https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazy.lua)
 - [`repro_lazyvim.lua`](https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazyvim.lua)

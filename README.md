@@ -15,7 +15,7 @@ The plugin facilitates troubleshooting and writing reproducible configurations.
 
 ## Requirements
 
-References:
+**References**:
 
 - Requirements section: [**lazy.nvim**](https://github.com/folke/lazy.nvim#%EF%B8%8F-requirements)
 
@@ -47,7 +47,7 @@ require("lazy").setup({
 })
 ```
 
-References:
+**References**:
 
 - Installation section: [**lazy.nvim**](https://github.com/folke/lazy.nvim#-installation)
 - `config.lazy.lua`: [**LazyVim starter**](https://github.com/LazyVim/starter/blob/a13d5c90769ce6177d1e27b46efd967ed52c1d68/lua/config/lazy.lua#L11)
@@ -66,7 +66,7 @@ A similar approach can also be found in the following code:
 - `vscode.lua`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/plugins/extras/vscode.lua#L24)
 - `config.init`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/config/init.lua#L187)
 
-References:
+**References**:
 
 - Plugin Spec: [**lazy.nvim**](https://github.com/folke/lazy.nvim#-plugin-spec)
 - Configuration, `defaults.cond`: [**lazy.nvim**](https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration)

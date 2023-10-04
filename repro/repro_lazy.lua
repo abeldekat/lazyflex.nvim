@@ -21,7 +21,7 @@ local plugin_flex = not use_flex and {}
   or {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.plugins.intercept",
-    opts = { plugin_container = "" },
+    opts = { collection = false },
   }
 
 -- install plugins

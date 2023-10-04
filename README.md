@@ -56,7 +56,7 @@ require("lazy").setup({
 
 By default, **lazyflex** attaches a `cond` property to each plugin managed by **lazy.nvim**.
 The value of the property is either `true` or `false`, depending on the `enable_on_match` setting.
-It is also possible to attach the `enable` property instead, allowing plugins to be cleaned.
+It is also possible to attach the `enabled` property instead, allowing plugins to be cleaned.
 
 The property needs to be attached before **lazy.nvim** starts marking plugins enabled or disabled.
 This can only be done in the `spec phase`. See: `:Lazy profile`.

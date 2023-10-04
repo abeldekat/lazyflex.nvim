@@ -59,7 +59,7 @@ The value of the property is either `true` or `false`, depending on the `enable_
 It is also possible to attach the `enable` property instead, allowing plugins to be cleaned.
 
 The property needs to be attached before **lazy.nvim** starts marking plugins enabled or disabled.
-This can only be done in the `spec phase`, see `:Lazy profile`.
+This can only be done in the `spec phase`. See: `:Lazy profile`.
 
 A similar approach can also be found in the following code:
 

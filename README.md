@@ -1,6 +1,6 @@
 # lazyflex.nvim
 
-**lazyflex.nvim** hooks into [**lazy.nvim**](https://github.com/folke/lazy.nvim), a modern plugin manager for Neovim.
+**lazyflex.nvim** is an add-on for [**lazy.nvim**](https://github.com/folke/lazy.nvim), a modern plugin manager for Neovim.
 
 The plugin facilitates troubleshooting and writing reproducible configurations.
 
@@ -318,4 +318,4 @@ The idea grew over time:
 ## Acknowledgements
 
 - [**lazy.nvim**](https://github.com/folke/lazy.nvim): The architecture, semantics and enhanced possibilities.
-- [**LazyVim**](https://github.com/LazyVim/LazyVim): The concept of a plugin as a container for other plugins.
+- [**LazyVim**](https://github.com/LazyVim/LazyVim): The concept of a plugin as a collection of other plugins.

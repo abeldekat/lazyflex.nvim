@@ -5,7 +5,7 @@ local mods = {}
 
 local defaults = {
   -- the "user" collection is always included:
-  collection = { "lazyvim" }, -- set to false when not using any community plugin
+  collection = { "lazyvim" }, -- set to false when not using a community setup
 
   -- lazyvim collection:
   lazyvim = {

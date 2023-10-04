@@ -73,7 +73,7 @@ A similar approach can also be found in the following code:
 
 ## Examples
 
-### Using a community plugin like LazyVim
+### Using a community setup like LazyVim
 
 > Prerequisite: Add **LazyVim** to your plugin spec
 
@@ -113,7 +113,7 @@ A similar approach can also be found in the following code:
 
 ```
 
-### LazyVim as a collection of plugins
+### Borrowing from LazyVim's collection of plugins
 
 **LazyVim** can be used without loading its options, autocommands and keymappings.
 The settings of the resulting configuration will default to stock neovim.
@@ -177,7 +177,7 @@ print("todo")
 ```lua
 {
   -- the "user" collection is always included:
-  collection = { "lazyvim" }, -- set to false when not using any community plugin
+  collection = { "lazyvim" }, -- set to false when not using a community setup
 
   -- lazyvim collection:
   lazyvim = {

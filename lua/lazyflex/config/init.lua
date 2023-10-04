@@ -39,7 +39,7 @@ local defaults = {
   -- either enable or disable matching plugins:
   enable_on_match = true,
   -- the property of the plugin to set:
-  target_property = "cond", -- or: "enable"
+  target_property = "cond", -- or: "enabled"
 }
 
 local function sanitize(opts)

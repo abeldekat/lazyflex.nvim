@@ -1,13 +1,13 @@
 local M = {}
 
-M.cond = function(name, opts)
+M.match = function(name, keywords, enable_on_match)
   name = string.lower(name)
-  for _, keyword in ipairs(opts.keywords) do
+  for _, keyword in ipairs(keywords) do
     if name:find(keyword, 1, true) then
-      return opts.enable_on_match
+      return enable_on_match
     end
   end
-  return not opts.enable_on_match
+  return not enable_on_match
 end
 
 return M

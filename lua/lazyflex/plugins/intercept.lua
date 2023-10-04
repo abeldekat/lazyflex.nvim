@@ -1,25 +1,29 @@
+---@diagnostic disable: duplicate-set-field
+
 if vim.g.vscode or vim.g.started_by_firenvim then
   return {}
 end
-local opts = require("lazyflex.config").setup()
-local cond = require("lazyflex.core").cond
+local Config = require("lazyflex.config")
+local opts = Config.setup()
+local match = require("lazyflex.core").match
 
--- same approach as in lazyvim.config.init.init():
 local Plugin = require("lazy.core.plugin")
-local original_add = Plugin.Spec.add
+local add = Plugin.Spec.add
 
----@diagnostic disable-next-line: duplicate-set-field
 Plugin.Spec.add = function(self, plugin, ...)
-  local plugin_result = original_add(self, plugin, ...)
+  local added = add(self, plugin, ...)
 
-  local name = plugin_result and plugin_result.name or nil
-  if not (plugin_result and name) then
-    return plugin_result
+  local name = added and added.name or nil
+  if not name then
+    return added
   end
-  plugin_result[opts.target_property] = cond(name, opts)
-  return plugin_result
+
+  added[opts.target_property] = match(name, opts.keywords, opts.enable_on_match)
+  return added
 end
 
-local container = require("lazyflex.containers").factory(opts)
-container.intercept_options(opts)
-return container.return_spec(opts)
+local result = {}
+Config.for_each_collection(opts, function(mod, config)
+  table.insert(result, mod.return_spec(config))
+end)
+return result

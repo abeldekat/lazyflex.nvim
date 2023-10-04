@@ -23,7 +23,8 @@ References:
 
 The plugin must be the first item in the spec!
 
-The hooks are applied immediately when **lazy.nvim** _requires_ `"lazyflex.plugins.intercept"`
+The hooks are applied immediately when **lazy.nvim** _requires_ `"lazyflex.plugins.intercept"`.
+
 Thus, it is not possible to configure multiple fragments of the plugin.
 
 ```lua

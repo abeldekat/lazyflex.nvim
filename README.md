@@ -162,10 +162,92 @@ Add to **lazyflex**:
   },
 ```
 
-### Personal configuration only
+### Without using a community setup
+
+The plugin can also be used when your personal configuration is not build upon
+a community setup like **LazyVim**.
+
+Add to **lazyflex**:
+
+> collection = false
 
 ```lua
-print("todo")
+  -- enable only harpoon and plenary:
+  {
+    "abeldekat/lazyflex.nvim",
+    import = "lazyflex.plugins.intercept",
+    opts = {
+      collection = false,
+      keywords = { "har", "plen" },
+    },
+  },
+
+  -- disable only telescope and harpoon:
+  {
+    "abeldekat/lazyflex.nvim",
+    import = "lazyflex.plugins.intercept",
+    opts = {
+      collection = false,
+      enable_on_match = false,
+      keywords = { "tele", "har" },
+    },
+  },
+```
+
+### Adding custom presets
+
+Custom presets can be added in a `lua` module in your configuration.
+The module should implement `lazyflex.collections.stub`.
+
+Add to **lazyflex**:
+
+> user = { mod = "config.lazyflex", presets = { "test" } },
+
+```lua
+  -- use your own presets:
+  {
+    "abeldekat/lazyflex.nvim",
+    import = "lazyflex.plugins.intercept",
+    opts = {
+      collection = false,
+      user = { mod = "config.lazyflex", presets = { "test" } },
+    },
+  },
+```
+
+Example implementation, `config.lazyflex`:
+
+```lua
+local M = {}
+
+local presets = {
+  test = { "harpoon" },
+}
+
+-- only act on plenary when enabling plugins
+-- other plugins might crash when plenary is disabled
+local when_enabling = {
+  test = { "plenary" },
+}
+
+M.get_preset_keywords = function(name, enable_on_match)
+  local result = presets[name]
+
+  if result and enable_on_match then
+    local extra = when_enabling[name]
+    if extra then
+      result = vim.list_extend({}, result)
+      result = vim.list_extend(result, extra)
+    end
+  end
+  return result or {}
+end
+
+M.return_spec = function(_) -- config
+  return {}
+end
+
+return M
 ```
 
 ## Configuration
@@ -197,7 +279,7 @@ print("todo")
   user = {
     -- collection defined in a module in your config.
     -- The module must implement the stub:
-    mod = "lazyflex.collections.stub", -- implement for example: "config.lazyflex"
+    mod = "lazyflex.collections.stub", -- for example: "config.lazyflex"
     presets = {}, -- example: {"test"}, where "test" provides keywords
   },
 

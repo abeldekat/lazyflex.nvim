@@ -1,6 +1,6 @@
 local M = {}
 
--- for each item in collection: The corresponding lua module
+-- for each valid item in collection: The corresponding lua module
 local mods = {}
 
 local defaults = {
@@ -24,8 +24,8 @@ local defaults = {
   -- user collection:
   user = {
     -- collection defined in a module in your config.
-    -- The module must implement the stub:
-    mod = "lazyflex.collections.stub", -- implement for example: "config.lazyflex"
+    -- The module must implement the following stub:
+    mod = "lazyflex.collections.stub", -- for example: "config.lazyflex"
     presets = {}, -- example: {"test"}, where "test" provides keywords
   },
 
@@ -93,11 +93,12 @@ M.setup = function()
   -- merge
   opts = vim.tbl_deep_extend("force", defaults, opts or {})
 
+  -- sanitize
   -- each name in "collection" should match a corresponding key in opts
   -- the mod property of a collection must be requireable
   opts.collection = sanitize(opts)
 
-  -- keywords
+  -- calculate keywords
   local keywords = {}
   if opts.enable_on_match then
     keywords = vim.list_extend(keywords, opts.keywords_to_always_enable)

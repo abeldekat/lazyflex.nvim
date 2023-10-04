@@ -196,7 +196,7 @@ Add to **lazyflex**:
 ### Adding custom presets
 
 Custom presets can be added in a `lua` module in your configuration.
-The module should implement `lazyflex.collections.stub`.
+The module should implement [`lazyflex.collections.stub`](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua).
 
 Add to **lazyflex**:
 

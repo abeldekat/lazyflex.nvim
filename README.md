@@ -118,8 +118,8 @@ A similar approach can also be found in the following code:
 The settings of the resulting configuration will default to stock neovim.
 
 This can be useful during testing or when reporting an issue for one of the plugins.
-Instead of adding the full spec to a reproducible configuration, LazyVim's spec
-can be used.
+Instead of adding the full spec to a reproducible configuration,
+the spec as defined in **LazyVim** can be used.
 
 > Prerequisite: Add **LazyVim** to your plugin spec
 

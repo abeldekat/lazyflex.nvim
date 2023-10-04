@@ -128,7 +128,7 @@ Add to **lazyflex**:
 > lazyvim = { config = { enabled = false } },
 
 ```lua
-  -- LazyVim, only as a collection of plugin
+  -- LazyVim, only as a collection of plugins
   -- plugins: lazy.nvim, LazyVim, tokyonight
   {
     "abeldekat/lazyflex.nvim",

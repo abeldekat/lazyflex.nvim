@@ -28,18 +28,16 @@ The hooks are applied immediately when **lazy.nvim** _requires_ `"lazyflex.plugi
 Thus, it is not possible to configure multiple fragments of the plugin.
 
 ```lua
-local use_flex = false -- true activates the plugin
-local plugin_flex = not use_flex and {}
-  or {
-    "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
-    opts = {
-      -- 3 plugins by default: "LazyVim", "lazy.nvim", and "tokyonight"
-    },
-  }
+local use_flex = false -- activate the plugin
+local import_flex = use_flex and "lazyflex.plugins.intercept" or "lazyflex.plugins.noop"
 require("lazy").setup({
   spec = {
-    plugin_flex,
+    {
+      "abeldekat/lazyflex.nvim",
+      cond = use_flex,
+      import = import_flex,
+      opts = {},
+    },
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     { import = "plugins" },
   },

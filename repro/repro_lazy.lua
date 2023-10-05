@@ -18,7 +18,7 @@ bootstrap(root)
 -- optional: enable lazyflex.nvim
 local use_flex = false
 local plugin_flex = not use_flex and {}
-  or { -- specify at least one option to activate lazyflex
+  or {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.plugins.intercept",
     -- opts = { collection = false },

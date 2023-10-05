@@ -85,11 +85,7 @@ local function from_presets(name, opts)
   return keywords
 end
 
-M.setup = function()
-  local Config = require("lazy.core.config")
-  local Plugin = require("lazy.core.plugin")
-  local opts = Plugin.values(Config.spec.plugins["lazyflex.nvim"], "opts", false)
-
+M.setup = function(opts)
   -- merge
   opts = vim.tbl_deep_extend("force", defaults, opts or {})
 

@@ -1,16 +1,22 @@
 ---@diagnostic disable: duplicate-set-field
-
 if vim.g.vscode or vim.g.started_by_firenvim then
   return {}
 end
+
+local lazyflex_plugin = require("lazy.core.config").spec.plugins["lazyflex.nvim"]
+local opts = lazyflex_plugin.opts
+if opts == nil or type(opts) == "table" and vim.tbl_isempty(opts) then
+  return {}
+end
+
 local Config = require("lazyflex.config")
-local opts = Config.setup()
+opts = Config.setup(opts)
+
+local LazyPlugin = require("lazy.core.plugin")
+local add = LazyPlugin.Spec.add
 local match = require("lazyflex.core").match
 
-local Plugin = require("lazy.core.plugin")
-local add = Plugin.Spec.add
-
-Plugin.Spec.add = function(self, plugin, ...)
+LazyPlugin.Spec.add = function(self, plugin, ...)
   local added = add(self, plugin, ...)
 
   local name = added and added.name or nil

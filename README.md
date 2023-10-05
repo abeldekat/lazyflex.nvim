@@ -23,10 +23,6 @@ The plugin facilitates troubleshooting and writing reproducible configurations.
 
 The plugin must be the first item in the spec!
 
-The hooks are applied immediately when **lazy.nvim** _requires_ `"lazyflex.plugins.intercept"`.
-
-Thus, it is not possible to configure multiple fragments of the plugin.
-
 ```lua
 local cond_flex = true -- enable lazyflex.nvim
 local import_flex = cond_flex and "lazyflex.plugins.intercept" or "lazyflex.plugins.noop"
@@ -55,24 +51,29 @@ When there are no keywords to enable/disable, **lazyflex** opts-out without modi
 any existing plugins.
 
 When enabling, do not forget to add the name of the colorscheme to the keywords!
+
 Or, alternatively:
 
-1 Add the name to property `keywords_to_always_enable`.
-2 when using custom presets: Add the name to the logic in the corresponding module.
+1. Add the name to property `keywords_to_always_enable`.
+2. When using custom presets: Add the name to the logic in the corresponding module.
+
+_Note_: It is not possible to configure multiple fragments of the plugin.
 
 ## Enabling/disabling in lazy.nvim
 
-By default, **lazyflex** attaches a `cond` property to each plugin managed by **lazy.nvim**.
-The value of the property is either `true` or `false`, depending on the `enable_on_match` setting.
-It is also possible to attach to the `enabled` property instead, allowing plugins to be cleaned.
+By default, **lazyflex** sets a `cond` property on each plugin managed by **lazy.nvim**.
+The value of the property is either `true` or `false`, as configured in the `enable_on_match` setting.
 
-The property needs to be attached before **lazy.nvim** starts marking plugins enabled or disabled.
-This can only be done in the `spec phase`. See: `:Lazy profile`.
+The property needs to be set before **lazy.nvim** starts marking plugins enabled or disabled.
+Therefore, **lazyflex** operates in the `spec phase`. See: `:Lazy profile`.
+As part of the `spec phase`, **lazy.nvim** _requires_ `"lazyflex.plugins.intercept"`.
 
 A similar approach can also be found in the following code:
 
 - `vscode.lua`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/plugins/extras/vscode.lua#L24)
 - `config.init`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/config/init.lua#L187)
+
+_Note_: It is also possible to attach to the `enabled` property instead, allowing plugins to be cleaned.
 
 **References**:
 

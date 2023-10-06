@@ -55,7 +55,8 @@ When enabling, do not forget to add the name of the colorscheme to the keywords!
 Or, alternatively:
 
 1. Add the name to property `keywords_to_always_enable`.
-2. When using custom presets: Add the name to the logic in the corresponding module.
+2. When using LazyVim: Use the `colorscheme` preset.
+3. When using custom presets: Create a `colorscheme` preset.
 
 _Note_: It is not possible to configure multiple fragments of the plugin.
 
@@ -99,14 +100,14 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
     },
   },
 
-  -- Only use the coding module and telescope
-  -- plugins: 31 disabled
+  -- Only use telescope and the following modules: coding, colorscheme
+  -- plugins: 30 disabled
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.plugins.intercept",
     opts = {
-      lazyvim = { presets = { "coding" } },
-      keywords = { "tele", "plen", "tokyo" },
+      lazyvim = { presets = { "coding", "colorscheme" } },
+      keywords = { "tele", "plen" },
     },
   },
 
@@ -151,14 +152,14 @@ Add to **lazyflex**:
     },
   },
 
-  -- Using LazyVim's telescope spec
-  -- plugins: lazy.nvim, LazyVim, tokyonight, telescope, plenary
+  -- Using LazyVim's telescope spec and colorscheme module
+  -- plugins: lazy.nvim, LazyVim, tokyonight, catppuccin, telescope, plenary
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.plugins.intercept",
     opts = {
-      lazyvim = { config = { enabled = false } },
-      keywords = { "tele", "plen", "tokyo" },
+      lazyvim = { config = { enabled = false }, presets = {"colorscheme"} },
+      keywords = { "tele", "plen" },
     },
   },
 

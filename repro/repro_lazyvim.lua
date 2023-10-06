@@ -14,18 +14,10 @@ end
 local root = vim.fn.fnamemodify("./.repro", ":p")
 bootstrap(root)
 
--- optional: enable lazyflex.nvim
-local use_flex = false
-local plugin_flex = not use_flex and {}
-  or {
-    "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
-    -- opts = {},
-  }
-
 -- install plugins
 local plugins = {
-  plugin_flex,
+  -- optional: reduce the number of plugins needed to reproduce the problem
+  { "abeldekat/lazyflex.nvim", enabled = false, import = "lazyflex.plugins.intercept" },
   "folke/tokyonight.nvim",
   { "LazyVim/LazyVim", import = "lazyvim.plugins" },
   -- add any other plugins here

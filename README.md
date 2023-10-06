@@ -24,14 +24,12 @@ The plugin facilitates troubleshooting and writing reproducible configurations.
 The plugin must be the first item in the spec!
 
 ```lua
-local cond_flex = true -- enable lazyflex.nvim
-local import_flex = cond_flex and "lazyflex.plugins.intercept" or "lazyflex.plugins.noop"
 require("lazy").setup({
   spec = {
     {
       "abeldekat/lazyflex.nvim",
-      cond = cond_flex,
-      import = import_flex,
+      import = "lazyflex.plugins.intercept",
+      cond = true, -- enable lazyflex.nvim
       -- opts = {},
     },
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },

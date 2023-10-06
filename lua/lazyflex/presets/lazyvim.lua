@@ -13,7 +13,7 @@ M.presets = {
     "mini.comment",
     "mini.ai",
   },
-  colorscheme = { "catppuccin" }, -- tokyonight should always be enabled
+  colorscheme = { "tokyonight", "catppuccin" },
   core = {}, -- dummy preset: core should always be enabled
   editor = {
     "neo-tree.nvim",
@@ -33,7 +33,7 @@ M.presets = {
     "neodev",
     "mason.nvim",
     "mason-lspconfig.nvim",
-    "cmp-nvim-lsp", --NOTE: see coding, has a cond property!
+    "cmp-nvim-lsp",
     "neodev",
     "none-ls",
     "null-ls",

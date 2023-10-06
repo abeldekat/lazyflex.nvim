@@ -1,4 +1,8 @@
 -- Minimal `init.lua` to reproduce an issue. Save as `repro.lua` and run with `nvim -u repro.lua`
+--
+-- This example is for personal use only!
+-- Use lazyflex and the plugins provided to create different testing scenarios.
+-- As a minimal repro in an issue, lazyflex is superfluous.
 
 -- sets std paths to use .repro and bootstraps lazy
 -- DO NOT change the paths and don't remove the colorscheme
@@ -15,18 +19,16 @@ end
 local root = vim.fn.fnamemodify("./.repro", ":p")
 bootstrap(root)
 
--- optional: enable lazyflex.nvim
-local use_flex = false
-local plugin_flex = not use_flex and {}
-  or {
-    "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
-    -- opts = { collection = false },
-  }
-
 -- install plugins
 local plugins = {
-  plugin_flex,
+  {
+    "abeldekat/lazyflex.nvim",
+    enabled = false,
+    import = "lazyflex.plugins.intercept",
+    opts = {
+      collection = false, -- use lazyflex without LazyVim
+    },
+  },
   "folke/tokyonight.nvim",
   -- add any other plugins here
 }

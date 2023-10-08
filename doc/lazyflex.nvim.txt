@@ -1,4 +1,4 @@
-*lazyflex.nvim.txt*      For Neovim >= 0.8.0      Last change: 2023 October 07
+*lazyflex.nvim.txt*      For Neovim >= 0.8.0      Last change: 2023 October 08
 
 ==============================================================================
 Table of Contents                            *lazyflex.nvim-table-of-contents*
@@ -11,7 +11,7 @@ Table of Contents                            *lazyflex.nvim-table-of-contents*
   - Enabling/disabling in lazy.nvim|lazyflex.nvim-lazyflex.nvim-enabling/disabling-in-lazy.nvim|
   - Examples                            |lazyflex.nvim-lazyflex.nvim-examples|
   - Configuration                  |lazyflex.nvim-lazyflex.nvim-configuration|
-  - Templates for “repro”|lazyflex.nvim-lazyflex.nvim-templates-for-“repro”|
+  - Minimal reproducible configurations|lazyflex.nvim-lazyflex.nvim-minimal-reproducible-configurations|
   - History                              |lazyflex.nvim-lazyflex.nvim-history|
   - Acknowledgements            |lazyflex.nvim-lazyflex.nvim-acknowledgements|
 
@@ -27,11 +27,12 @@ The plugin facilitates troubleshooting and writing reproducible configurations.
 FEATURES                                *lazyflex.nvim-lazyflex.nvim-features*
 
 - Easier troubleshooting/testing from one central location.
-- Enable/disable multiple plugins by keyword.
-- Define and use presets for your own configuration
-- Has presets for each plugin module in **LazyVim** <https://github.com/LazyVim/LazyVim>.
-- Has options to skip loading the configuration modules provided by **LazyVim**.
+    - Enable/disable multiple plugins by keyword.
+    - Define and use presets for your own configuration
+    - Has presets for each plugin module in **LazyVim** <https://github.com/LazyVim/LazyVim>.
+    - Has options to skip loading the configuration modules provided by **LazyVim**.
 - When creating an issue, facilitates writing a concise reproducible configuration.
+    - Contains |lazyflex.nvim-examples| for minimal configurations using **lazyflex**.
 
 
 REQUIREMENTS                        *lazyflex.nvim-lazyflex.nvim-requirements*
@@ -50,8 +51,9 @@ The plugin must be the first item in the spec!
       spec = {
         {
           "abeldekat/lazyflex.nvim",
+          version = "*",
+          cond = true, -- enable/disable lazyflex.nvim
           import = "lazyflex.plugins.intercept",
-          cond = true, -- enable lazyflex.nvim
           -- opts = {},
         },
         { "LazyVim/LazyVim", import = "lazyvim.plugins" },
@@ -63,7 +65,7 @@ The plugin must be the first item in the spec!
 **References**
 
 - Installationsection: **lazy.nvim** <https://github.com/folke/lazy.nvim#-installation>
-- `config.lazy.lua`**LazyVim starter** <https://github.com/LazyVim/starter/blob/a13d5c90769ce6177d1e27b46efd967ed52c1d68/lua/config/lazy.lua#L11>
+- `config.lazy`**LazyVim starter** <https://github.com/LazyVim/starter/blob/a13d5c90769ce6177d1e27b46efd967ed52c1d68/lua/config/lazy.lua#L11>
 
 
 IMPORTANT                              *lazyflex.nvim-lazyflex.nvim-important*
@@ -74,11 +76,11 @@ modifying any existing plugins.
 When enabling, do not forget to add the name of the colorscheme to the
 keywords!
 
-Or, alternatively:
+Alternatively:
 
-1. Add the name to property `keywords_to_always_enable`.
-2. When using LazyVim: Use the `colorscheme` preset.
-3. When using custom presets: Create a `colorscheme` preset.
+1. Add the name to property |lazyflex.nvim-keywords_to_always_enable|
+2. When using **LazyVim**Use the `colorscheme` preset.
+3. When using |lazyflex.nvim-custom-presets|Create a `colorscheme` preset.
 
 _Note_It is not possible to configure multiple fragments of the plugin.
 
@@ -105,7 +107,7 @@ plugins to be cleaned.
 **References**
 
 - PluginSpec: **lazy.nvim** <https://github.com/folke/lazy.nvim#-plugin-spec>
-- Configuration, `defaults.cond`**lazy.nvim** <https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration>
+- Configuration `defaults.cond`**lazy.nvim** <https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration>
 
 
 EXAMPLES                                *lazyflex.nvim-lazyflex.nvim-examples*
@@ -153,7 +155,7 @@ _Note_A preset setting that does not match a predefined preset will be ignored.
 <
 
 
-BORROWING FROM LAZYVIM’S COLLECTION OF PLUGINS ~
+REUSING SPECS FROM A COLLECTION OF PLUGINS ~
 
 **LazyVim** can be used without loading its options, autocommands and
 keymappings. The settings of the resulting configuration will default to stock
@@ -205,7 +207,7 @@ Add to **lazyflex**
 <
 
 
-WITHOUT USING A COMMUNITY SETUP ~
+USING ONLY A PERSONAL CONFIGURATION ~
 
 The plugin can also be used when your personal configuration is not build upon
 a community setup like **LazyVim**.
@@ -240,13 +242,17 @@ Add to **lazyflex**
 
 ADDING CUSTOM PRESETS ~
 
-Custom presets can be added to a `lua` module in the configuration of the user.
-This is an optional step. When the module is not present, **lazyflex** uses
-`lazyflex.collections.stub`.
+As an _optional_ step, custom presets can be added to a `lua` module in the
+configuration of the user. When absent, **lazyflex** uses
+lazyflex.collections.stub
+<https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua>
+for the `user` collection.
 
-The default name **lazyflex** expects is `config.lazyflex`. The module should
-implement `lazyflex.collections.stub`
+The default name of the module **lazyflex** tries to `require` is
+`config.lazyflex`. When present, the module should implement
+lazyflex.collections.stub
 <https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua>.
+
 User presets will only apply when properly implemented and are otherwise
 ignored.
 
@@ -269,7 +275,7 @@ The name of the module **lazyflex** expects can be changed:
       },
 <
 
-Example implementation, added to `config.lazyflex`
+Example implementation:
 
 >lua
     local M = {}
@@ -360,7 +366,7 @@ CONFIGURATION                      *lazyflex.nvim-lazyflex.nvim-configuration*
 <
 
 
-TEMPLATES FOR “REPRO”*lazyflex.nvim-lazyflex.nvim-templates-for-“repro”*
+MINIMAL REPRODUCIBLE CONFIGURATIONS*lazyflex.nvim-lazyflex.nvim-minimal-reproducible-configurations*
 
 The plugin has two examples for writing reproducible configurations using
 `lazyflex`, located in the `./repro` folder:

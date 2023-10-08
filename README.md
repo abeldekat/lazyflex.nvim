@@ -34,6 +34,7 @@ require("lazy").setup({
       import = "lazyflex.hook",
       -- opts = {},
     },
+    -- your plugins:
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     { import = "plugins" },
   },

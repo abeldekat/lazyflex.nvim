@@ -24,7 +24,7 @@ describe("lazyflex.nvim", function()
       {
         "abeldekat/lazyflex.nvim",
         dir = get_dir(),
-        import = "lazyflex.plugins.intercept",
+        import = "lazyflex.hook",
         opts = { keywords = { "paint" } },
       },
       "folke/neodev.nvim",

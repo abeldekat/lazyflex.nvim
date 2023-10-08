@@ -1,4 +1,4 @@
 #!/bin/sh
 
-# nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests/core/e2e_spec.lua {minimal_init = 'tests//init.lua', sequential = true}"
+# nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests/core/lazyflex_spec.lua {minimal_init = 'tests//init.lua', sequential = true}"
 nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests {minimal_init = 'tests//init.lua', sequential = true}"

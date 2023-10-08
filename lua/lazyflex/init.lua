@@ -33,7 +33,7 @@ local function spec(opts)
   return result
 end
 
-function M.on_hooked(adapter)
+function M.on_hook(adapter)
   if vim.g.vscode or vim.g.started_by_firenvim then
     return {}
   end

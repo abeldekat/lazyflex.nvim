@@ -31,7 +31,7 @@ require("lazy").setup({
       "abeldekat/lazyflex.nvim",
       version = "*",
       cond = true, -- enable/disable lazyflex.nvim
-      import = "lazyflex.plugins.intercept",
+      import = "lazyflex.hook",
       -- opts = {},
     },
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
@@ -67,7 +67,7 @@ The value of the property is either `true` or `false`, as configured in the `ena
 
 The property needs to be set before **lazy.nvim** starts marking plugins enabled or disabled.
 Therefore, **lazyflex** operates in the `spec phase`. See: `:Lazy profile`.
-As part of the `spec phase`, **lazy.nvim** _requires_ `"lazyflex.plugins.intercept"`.
+As part of the `spec phase`, **lazy.nvim** _requires_ `"lazyflex.hook"`.
 
 A similar approach can also be found in the following code:
 
@@ -94,7 +94,7 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
   -- plugins: 44 disabled
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
       keywords = { "harpoon", "plenary", "tokyo" }, -- or "har" for the lazy...
     },
@@ -104,7 +104,7 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
   -- plugins: 30 disabled
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
       lazyvim = { presets = { "coding", "colorscheme" } },
       keywords = { "tele", "plen" },
@@ -115,7 +115,7 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
   -- plugins: 8 disabled
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
       enable_on_match = false,
       lazyvim = { presets = { "lsp" } },
@@ -145,7 +145,7 @@ Add to **lazyflex**:
   -- plugins: lazy.nvim, LazyVim, tokyonight
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
       lazyvim = { config = { enabled = false } },
       keywords = { "tokyo" }, --> at least one keyword is needed!
@@ -156,7 +156,7 @@ Add to **lazyflex**:
   -- plugins: lazy.nvim, LazyVim, tokyonight, catppuccin, telescope, plenary
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
       lazyvim = { config = { enabled = false }, presets = {"colorscheme"} },
       keywords = { "tele", "plen" },
@@ -167,7 +167,7 @@ Add to **lazyflex**:
   -- plugins: 11 disabled
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
       enable_on_match = false,
       lazyvim = { config = { enabled = false }, presets = { "ui" } },
@@ -188,7 +188,7 @@ Add to **lazyflex**:
   -- enable only harpoon, plenary and tokyonight:
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
       collection = false,
       keywords = { "har", "plen", "tokyo" },
@@ -198,7 +198,7 @@ Add to **lazyflex**:
   -- disable only telescope and harpoon:
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
       collection = false,
       enable_on_match = false,
@@ -230,7 +230,7 @@ The name of the module **lazyflex** expects can be changed:
   -- use your own presets:
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
       user = { presets = { "test" } },
     },

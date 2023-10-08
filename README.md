@@ -7,11 +7,12 @@ The plugin facilitates troubleshooting and writing reproducible configurations.
 ## Features
 
 - Easier troubleshooting/testing from one central location.
-- Enable/disable multiple plugins by keyword.
-- Define and use presets for your own configuration
-- Has presets for each plugin module in [**LazyVim**](https://github.com/LazyVim/LazyVim).
-- Has options to skip loading the configuration modules provided by **LazyVim**.
+  - Enable/disable multiple plugins by keyword.
+  - Define and use presets for your own configuration
+  - Has presets for each plugin module in [**LazyVim**](https://github.com/LazyVim/LazyVim).
+  - Has options to skip loading the configuration modules provided by **LazyVim**.
 - When creating an issue, facilitates writing a concise reproducible configuration.
+  - Contains examples for minimal configurations using **lazyflex**.
 
 ## Requirements
 
@@ -28,8 +29,9 @@ require("lazy").setup({
   spec = {
     {
       "abeldekat/lazyflex.nvim",
+      version = "*",
+      cond = true, -- enable/disable lazyflex.nvim
       import = "lazyflex.plugins.intercept",
-      cond = true, -- enable lazyflex.nvim
       -- opts = {},
     },
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
@@ -327,7 +329,7 @@ Those properties are all set to `false`, when the `user.config` section is not p
 
 <!-- config:end -->
 
-## Templates for "repro"
+## Templates for minimal repro
 
 The plugin has two examples for writing reproducible configurations
 using `lazyflex`, located in the `./repro` folder:

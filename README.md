@@ -12,7 +12,7 @@ The plugin facilitates troubleshooting and writing reproducible configurations.
   - Has presets for each plugin module in [**LazyVim**](https://github.com/LazyVim/LazyVim).
   - Has options to skip loading the configuration modules provided by **LazyVim**.
 - When creating an issue, facilitates writing a concise reproducible configuration.
-  - Contains examples for minimal configurations using **lazyflex**.
+  - Contains [examples](#minimal-reproducible-configurations) for minimal configurations using **lazyflex**.
 
 ## Requirements
 
@@ -43,7 +43,7 @@ require("lazy").setup({
 **References**:
 
 - Installation section: [**lazy.nvim**](https://github.com/folke/lazy.nvim#-installation)
-- `config.lazy.lua`: [**LazyVim starter**](https://github.com/LazyVim/starter/blob/a13d5c90769ce6177d1e27b46efd967ed52c1d68/lua/config/lazy.lua#L11)
+- `config.lazy`: [**LazyVim starter**](https://github.com/LazyVim/starter/blob/a13d5c90769ce6177d1e27b46efd967ed52c1d68/lua/config/lazy.lua#L11)
 
 ## Important
 
@@ -52,11 +52,11 @@ any existing plugins.
 
 When enabling, do not forget to add the name of the colorscheme to the keywords!
 
-Or, alternatively:
+Alternatively:
 
-1. Add the name to property `keywords_to_always_enable`.
-2. When using LazyVim: Use the `colorscheme` preset.
-3. When using custom presets: Create a `colorscheme` preset.
+1. Add the name to property [keywords_to_always_enable](#configuration)
+2. When using **LazyVim**: Use the `colorscheme` preset.
+3. When using [custom presets](#configuration): Create a `colorscheme` preset.
 
 _Note_: It is not possible to configure multiple fragments of the plugin.
 
@@ -79,7 +79,7 @@ _Note_: It is also possible to attach to the `enabled` property instead, allowin
 **References**:
 
 - Plugin Spec: [**lazy.nvim**](https://github.com/folke/lazy.nvim#-plugin-spec)
-- Configuration, `defaults.cond`: [**lazy.nvim**](https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration)
+- Configuration `defaults.cond`: [**lazy.nvim**](https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration)
 
 ## Examples
 
@@ -125,7 +125,7 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
 
 ```
 
-### Borrowing from LazyVim's collection of plugins
+### Reusing specs from a collection of plugins
 
 **LazyVim** can be used without loading its options, autocommands and keymappings.
 The settings of the resulting configuration will default to stock neovim.
@@ -175,7 +175,7 @@ Add to **lazyflex**:
   },
 ```
 
-### Without using a community setup
+### Using only a personal configuration
 
 The plugin can also be used when your personal configuration is not build upon
 a community setup like **LazyVim**.
@@ -209,12 +209,13 @@ Add to **lazyflex**:
 
 ### Adding custom presets
 
-Custom presets can be added to a `lua` module in the configuration of the user.
-This is an optional step.
-When the module is not present, **lazyflex** uses `lazyflex.collections.stub`.
+As an _optional_ step, custom presets can be added to a `lua` module in the configuration of the user.
+When absent, **lazyflex** uses [lazyflex.collections.stub](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
+for the `user` collection.
 
-The default name **lazyflex** expects is `config.lazyflex`.
-The module should implement [`lazyflex.collections.stub`](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua).
+The default name of the module **lazyflex** tries to `require` is `config.lazyflex`.
+When present, the module should implement [lazyflex.collections.stub](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua).
+
 User presets will only apply when properly implemented and are otherwise ignored.
 
 Add to **lazyflex**:
@@ -236,7 +237,7 @@ The name of the module **lazyflex** expects can be changed:
   },
 ```
 
-Example implementation, added to `config.lazyflex`:
+Example implementation:
 
 ```lua
 local M = {}
@@ -329,7 +330,7 @@ Those properties are all set to `false`, when the `user.config` section is not p
 
 <!-- config:end -->
 
-## Templates for minimal repro
+## Minimal reproducible configurations
 
 The plugin has two examples for writing reproducible configurations
 using `lazyflex`, located in the `./repro` folder:

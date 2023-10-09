@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/abeldekat/lazyflex.nvim/compare/v1.0.0...v2.0.0) (2023-10-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* changed the names of several options. Changed the import hook. ([#22](https://github.com/abeldekat/lazyflex.nvim/issues/22))
+
+### Code Refactoring
+
+* changed the names of several options. Changed the import hook. ([#22](https://github.com/abeldekat/lazyflex.nvim/issues/22)) ([a24235b](https://github.com/abeldekat/lazyflex.nvim/commit/a24235b94a33f753db1f6e19d69a8f5a61b9b816))
+
 ## 1.0.0 (2023-10-07)
 
 

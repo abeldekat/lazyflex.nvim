@@ -1,10 +1,10 @@
 local M = {}
 
-M.get_preset_keywords = function(name, enable_on_match)
+M.get_preset_keywords = function(name, enable_match)
   local presets = require("lazyflex.presets.lazyvim")
   local result = presets.presets[name]
 
-  if result and enable_on_match then
+  if result and enable_match then
     local extra = presets.when_enabling[name]
     if extra then
       result = vim.list_extend(vim.list_extend({}, result), extra)

@@ -41,23 +41,23 @@ local defaults = {
   keywords = {}, -- example: "line" matches lualine, bufferline and indent-blankline
 
   -- either enable or disable matching plugins:
-  enable_on_match = true,
+  enable_match = true,
   -- the property of the plugin to set:
   target_property = "cond", -- or: "enabled"
 }
 
-local function sanitize(opts)
-  local function sanitize_config_options(col)
-    if not col.config then
-      col.config = { enabled = false }
-    end
-    if not col.config.enabled then
-      col.config.options = false
-      col.config.autocmds = false
-      col.config.keymaps = false
-    end
+local function sanitize_config_options(collection)
+  if not collection.config then
+    collection.config = { enabled = false }
   end
+  if not collection.config.enabled then
+    collection.config.options = false
+    collection.config.autocmds = false
+    collection.config.keymaps = false
+  end
+end
 
+local function sanitize(opts)
   local collection = opts.collection or {}
   if not vim.tbl_contains(collection, "user") then
     table.insert(collection, "user")
@@ -67,7 +67,7 @@ local function sanitize(opts)
   -- each name is a table key referring to a corresponding table in opts
   -- each table representing the collection has a mod property that will be "required".
   return vim.tbl_filter(function(name)
-    local result = false -- by default: only add when name is correct
+    local result = false -- by default: only add when name is valid
 
     local col = opts[name] -- the named collection
     if col then
@@ -95,7 +95,7 @@ local function from_presets(name, opts)
 
   local keywords = {}
   for _, preset in ipairs(col.presets) do
-    local words = mod.get_preset_keywords(preset, opts.enable_on_match)
+    local words = mod.get_preset_keywords(preset, opts.enable_match)
     keywords = vim.list_extend(keywords, words)
   end
   return keywords

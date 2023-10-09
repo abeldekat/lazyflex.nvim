@@ -15,7 +15,7 @@ local function get_opts(adapter)
     return nil -- no keywords to enable/disable...
   end
 
-  if opts.enable_on_match then
+  if opts.enable_match then
     opts.keywords = vim.list_extend(vim.list_extend({}, opts.keywords_to_always_enable), opts.keywords)
   end
   return opts

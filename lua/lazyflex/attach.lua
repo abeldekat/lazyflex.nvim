@@ -1,13 +1,13 @@
 local M = {}
 
-local function match(name, keywords, enable_on_match)
+local function match(name, keywords, enable_match)
   name = string.lower(name)
   for _, keyword in ipairs(keywords) do
     if name:find(keyword, 1, true) then
-      return enable_on_match
+      return enable_match
     end
   end
-  return not enable_on_match
+  return not enable_match
 end
 
 -- deprecated: less powerful: plugins can define their own cond function...
@@ -15,7 +15,7 @@ end
 -- function M.attach(opts, _)
 --   local LazyConfig = require("lazy.core.config")
 --   LazyConfig.options.defaults.cond = function(plugin)
---     return match(plugin.name, opts.keywords, opts.enable_on_match)
+--     return match(plugin.name, opts.keywords, opts.enable_match)
 --   end
 -- end
 
@@ -32,7 +32,7 @@ function M.attach(opts, adapter)
       return plugin_to_use
     end
 
-    plugin_to_use[opts.target_property] = match(name, opts.keywords, opts.enable_on_match)
+    plugin_to_use[opts.target_property] = match(name, opts.keywords, opts.enable_match)
     return plugin_to_use
   end
 end

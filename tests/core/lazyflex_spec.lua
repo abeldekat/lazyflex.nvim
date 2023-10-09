@@ -55,10 +55,10 @@ local function activate(opts, target)
   end
 end
 
-local function collect(results, target_property, enable_on_match)
+local function collect(results, target_property, enable_match)
   local actual = {}
   for _, plugin in ipairs(results) do
-    if plugin[target_property] == enable_on_match then
+    if plugin[target_property] == enable_match then
       table.insert(actual, plugin.name)
     end
   end
@@ -84,7 +84,7 @@ describe("a match", function()
 
   it("can also be disabled", function()
     local results, target = setup()
-    activate({ enable_on_match = false, keywords = { "snip" } }, target)
+    activate({ enable_match = false, keywords = { "snip" } }, target)
 
     local expected = {
       "LuaSnip",

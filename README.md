@@ -42,7 +42,7 @@ require("lazy").setup({
 })
 ```
 
-*Note*: The `cond` property in the snippet above is practical for quickly toggling
+_Note_: The `cond` property in the snippet above is practical for quickly toggling
 **lazyflex** on/off, whilst still keeping the plugin installed.
 It is also possible to keep the plugin activated. **Lazyflex** is heavily optimized
 and will opt-out very early when there are no keywords to process.
@@ -65,7 +65,7 @@ Alternatively:
 2. When using **LazyVim**: Use the `colorscheme` preset.
 3. When using [custom presets](#adding-custom-presets): Create a `colorscheme` preset.
 
-*Note*: It is not possible to configure multiple fragments of the plugin.
+_Note_: It is not possible to configure multiple fragments of the plugin.
 
 ## Enabling/disabling in lazy.nvim
 
@@ -74,14 +74,14 @@ The value of the property is either `true` or `false`, as configured in the `ena
 
 The property needs to be set before **lazy.nvim** starts marking plugins enabled or disabled.
 Therefore, **lazyflex** operates in the `spec phase`. See: `:Lazy profile`.
-As part of the `spec phase`, **lazy.nvim** *requires* `"lazyflex.hook"`.
+As part of the `spec phase`, **lazy.nvim** _requires_ `"lazyflex.hook"`.
 
 A similar approach can also be found in the following code:
 
 - `vscode.lua`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/plugins/extras/vscode.lua#L24)
 - `config.init`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/config/init.lua#L187)
 
-*Note*: It is also possible to attach to the `enabled` property instead, allowing plugins to be cleaned. (See [target_property](#configuration))
+_Note_: It is also possible to attach to the `enabled` property instead, allowing plugins to be cleaned. (See [target_property](#configuration))
 
 **References**:
 
@@ -126,7 +126,7 @@ Add to **lazyflex**:
 
 > Prerequisite: Add **LazyVim** to your plugin spec
 
-*Note*: A preset setting that does not match a predefined preset will be ignored.
+_Note_: A preset setting that does not match a predefined preset will be ignored.
 
 ```lua
   -- Test a new plugin in isolation
@@ -216,7 +216,7 @@ Add to **lazyflex**:
 
 ### Adding custom presets
 
-As an *optional* step, custom presets can be added to a `lua` module in the configuration of the user.
+As an _optional_ step, custom presets can be added to a `lua` module in the configuration of the user.
 When absent, **lazyflex** uses [lazyflex.collections.stub](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
 for the `user` collection.
 
@@ -279,7 +279,7 @@ end
 return M
 ```
 
-*Note*: It is possible to configure the `config` argument, passed into method `return_spec`.
+_Note_: It is possible to configure the `config` argument, passed into method `return_spec`.
 The `user` collection contains `user.config` implicitly, having the same properties
 as defined in `lazyvim.config`.
 Those properties are all set to `false`, when the `user.config` section is not present in `opts`.

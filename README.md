@@ -9,8 +9,8 @@ The plugin facilitates troubleshooting and writing reproducible configurations.
 - Easier troubleshooting/testing from one central location.
   - Enable/disable multiple plugins by keyword.
   - Define and use presets for your own configuration.
-  - Has presets for each plugin module in [**LazyVim**](https://github.com/LazyVim/LazyVim).
-  - Has options to skip loading the configuration modules provided by **LazyVim**.
+  - Has presets for each default plugin module in [**LazyVim**](https://github.com/LazyVim/LazyVim).
+  - Has options to skip loading the configuration modules (`options`, `autocmds`, `keymaps`) provided by **LazyVim**.
 - Helps to verify the independence of the components in the configuration.
 - When creating an issue, facilitates writing a concise reproducible configuration.
   - Contains [examples](#minimal-reproducible-configurations) for minimal configurations using **lazyflex**.
@@ -42,7 +42,7 @@ require("lazy").setup({
 })
 ```
 
-_Note_: The `cond` property in the instruction above is practical for quickly toggling
+_Note_: The `cond` property in the snippet above is practical for quickly toggling
 **lazyflex** on/off, whilst still keeping the plugin installed.
 It is also possible to keep the plugin activated. **Lazyflex** is heavily optimized
 and will opt-out very early when there are no keywords to process.
@@ -63,7 +63,7 @@ Alternatively:
 
 1. Add the name to property [kw_always_enable](#configuration)
 2. When using **LazyVim**: Use the `colorscheme` preset.
-3. When using [custom presets](#configuration): Create a `colorscheme` preset.
+3. When using [custom presets](#adding-custom-presets): Create a `colorscheme` preset.
 
 _Note_: It is not possible to configure multiple fragments of the plugin.
 
@@ -81,7 +81,7 @@ A similar approach can also be found in the following code:
 - `vscode.lua`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/plugins/extras/vscode.lua#L24)
 - `config.init`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/config/init.lua#L187)
 
-_Note_: It is also possible to attach to the `enabled` property instead, allowing plugins to be cleaned.
+_Note_: It is also possible to attach to the `enabled` property instead, allowing plugins to be cleaned. (See [target_property](#configuration))
 
 **References**:
 
@@ -167,11 +167,11 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
 ### Reusing specs from a collection of plugins
 
 **LazyVim** can be used without loading its options, autocommands and keymappings.
-The settings of the resulting configuration will default to stock neovim.
+The settings of the resulting configuration will default to stock Neovim.
 
 This can be useful during testing or when reporting an issue for one of the plugins.
 Instead of adding the full spec to a reproducible configuration,
-the spec as defined in **LazyVim** can be used.
+the spec as defined in **LazyVim** collection can be used.
 
 > Prerequisite: Add **LazyVim** to your plugin spec
 

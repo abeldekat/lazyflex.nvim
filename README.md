@@ -8,9 +8,10 @@ The plugin facilitates troubleshooting and writing reproducible configurations.
 
 - Easier troubleshooting/testing from one central location.
   - Enable/disable multiple plugins by keyword.
-  - Define and use presets for your own configuration
+  - Define and use presets for your own configuration.
   - Has presets for each plugin module in [**LazyVim**](https://github.com/LazyVim/LazyVim).
   - Has options to skip loading the configuration modules provided by **LazyVim**.
+- Helps to verify the independence of the components in the configuration.
 - When creating an issue, facilitates writing a concise reproducible configuration.
   - Contains [examples](#minimal-reproducible-configurations) for minimal configurations using **lazyflex**.
 
@@ -40,6 +41,11 @@ require("lazy").setup({
   },
 })
 ```
+
+_Note_: The `cond` property in the instruction above is practical for quickly toggling
+**lazyflex** on/off, whilst still keeping the plugin installed.
+It is also possible to keep the plugin activated. **Lazyflex** is heavily optimized
+and will opt-out very early when there are no keywords to process.
 
 **References**:
 

@@ -49,10 +49,11 @@ end
 
 local function activate(opts, target)
   local adapter = fake_adapter(opts, target) -- mimic lazy.nvim internals...
-  require("lazyflex").on_hook(adapter) -- run the plugin, decorate target.add
+  local return_spec = require("lazyflex").on_hook(adapter) -- run the plugin, decorate target.add
   for _, plugin in ipairs(fake_spec()) do -- simulate lazy.nvim
     target.add(_, plugin)
   end
+  return return_spec
 end
 
 local function collect(results, target_property, enable_match)
@@ -65,6 +66,7 @@ local function collect(results, target_property, enable_match)
   return actual
 end
 
+-- test matching
 describe("a match", function()
   it("is enabled by default", function()
     local results, target = setup()
@@ -123,5 +125,56 @@ describe("a match", function()
       "none-ls.nvim",
     }
     assert.same(collect(results, "cond", true), expected)
+  end)
+end)
+
+-- test opt-out early
+describe("lazyflex", function()
+  it("opts-out without keywords", function()
+    local results, target = setup()
+    activate({ kw = {}, enable_match = true }, target)
+    assert(#collect(results, "cond", nil) == #fake_spec())
+  end)
+  it("opts-out without keywords or presets", function()
+    local results, target = setup()
+    activate({ lazyvim = { presets = {} }, kw = {}, enable_match = true }, target)
+    assert(#collect(results, "cond", nil) == #fake_spec())
+  end)
+  it("opts-out without keywords or -valid- lazyvim presets", function()
+    local results, target = setup()
+    activate({ lazyvim = { presets = { "dummy" } }, kw = {}, enable_match = true }, target)
+    assert(#collect(results, "cond", nil) == #fake_spec())
+  end)
+  it("opts-out without keywords or -valid- user presets", function()
+    local results, target = setup()
+    activate({ user = { presets = { "dummy" } }, kw = {}, enable_match = true }, target)
+    assert(#collect(results, "cond", nil) == #fake_spec())
+  end)
+end)
+
+-- test disabling settings
+-- disabling options is tested in e2e_spec
+describe("settings from LazyVim", function()
+  it("are activated by default", function()
+    local results, target = setup()
+    local return_spec = activate({ kw = { "LazyVim" } }, target)
+    assert(#collect(results, "cond", true) == 2)
+
+    local LazyVim = return_spec[1]
+    assert(LazyVim.opts.defaults.autocmds == true)
+    assert(LazyVim.opts.defaults.keymaps == true)
+  end)
+  it("can be turned off", function()
+    local results, target = setup()
+    local return_spec = activate({
+      kw = { "LazyVim" },
+      lazyvim = { config = { enabled = false } },
+    }, target)
+
+    assert(#collect(results, "cond", true) == 2)
+
+    local LazyVim = return_spec[1]
+    assert(LazyVim.opts.defaults.autocmds == false)
+    assert(LazyVim.opts.defaults.keymaps == false)
   end)
 end)

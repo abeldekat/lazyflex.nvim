@@ -11,12 +11,12 @@ local function get_opts(adapter)
   end
 
   opts = require("lazyflex.config").setup(opts)
-  if vim.tbl_isempty(opts.keywords) then
+  if vim.tbl_isempty(opts.kw) then
     return nil -- no keywords to enable/disable...
   end
 
   if opts.enable_match then
-    opts.keywords = vim.list_extend(vim.list_extend({}, opts.keywords_to_always_enable), opts.keywords)
+    opts.kw = vim.list_extend(vim.list_extend({}, opts.kw_always_enable), opts.kw)
   end
   return opts
 end

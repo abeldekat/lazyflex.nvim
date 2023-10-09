@@ -28,22 +28,24 @@ local defaults = {
     -- The module is -optional- in the user's configuration,
     -- and should implement "lazyflex.collections.stub"
     mod = "config.lazyflex",
-    -- without user.mod, any user.presets specified will have no effect:
     fallback = "lazyflex.collections.stub", -- do not modify
+    -- without user.mod, any user.presets specified will have no effect:
     presets = {}, -- example when implemented: { "test" }
   },
 
-  -- keywords for plugins to always enable:
-  keywords_to_always_enable = { "lazy" },
-
-  -- keywords specified by the user
-  -- Merged with the keywords from the presets and keywords_to_always_enable:
-  keywords = {}, -- example: "line" matches lualine, bufferline and indent-blankline
+  -- the property of the plugin to set:
+  target_property = "cond", -- or: "enabled"
 
   -- either enable or disable matching plugins:
   enable_match = true,
-  -- the property of the plugin to set:
-  target_property = "cond", -- or: "enabled"
+
+  -- keywords for plugins to always enable:
+  kw_always_enable = { "lazy" }, -- lazy.nvim, LazyVim, lazyflex
+
+  -- keywords specified by the user:
+  -- keywords from presets and kw_always_enable are merged in by lazyflex
+  -- keywords specified by the user are appended to the final result
+  kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
 }
 
 local function sanitize_config_options(collection)
@@ -113,8 +115,8 @@ M.setup = function(opts)
   for _, name in ipairs(opts.collection) do
     keywords = vim.list_extend(keywords, from_presets(name, opts))
   end
-  local user_keywords = opts.keywords and vim.tbl_map(string.lower, opts.keywords) or {}
-  opts.keywords = vim.list_extend(keywords, user_keywords) -- the result
+  local user_keywords = opts.kw and vim.tbl_map(string.lower, opts.kw) or {}
+  opts.kw = vim.list_extend(keywords, user_keywords) -- the result
 
   return opts
 end

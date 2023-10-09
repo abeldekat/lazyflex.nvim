@@ -68,7 +68,7 @@ end
 describe("a match", function()
   it("is enabled by default", function()
     local results, target = setup()
-    activate({ keywords = { "cmp", "snip" } }, target)
+    activate({ kw = { "cmp", "snip" } }, target)
 
     local expected = {
       "lazy.nvim",
@@ -84,7 +84,7 @@ describe("a match", function()
 
   it("can also be disabled", function()
     local results, target = setup()
-    activate({ enable_match = false, keywords = { "snip" } }, target)
+    activate({ enable_match = false, kw = { "snip" } }, target)
 
     local expected = {
       "LuaSnip",
@@ -95,7 +95,7 @@ describe("a match", function()
 
   it("can target the enabled property", function()
     local results, target = setup()
-    activate({ target_property = "enabled", keywords = { "snip" } }, target)
+    activate({ target_property = "enabled", kw = { "snip" } }, target)
 
     local expected = {
       "lazy.nvim",
@@ -110,7 +110,7 @@ describe("a match", function()
     local results, target = setup()
 
     -- enable mini.comment and all plugins in lazyvim's lsp and ui modules
-    activate({ lazyvim = { presets = { "lsp", "ui" } }, keywords = { "com" } }, target)
+    activate({ lazyvim = { presets = { "lsp", "ui" } }, kw = { "com" } }, target)
 
     local expected = {
       "lazy.nvim",

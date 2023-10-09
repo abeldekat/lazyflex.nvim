@@ -15,7 +15,7 @@ end
 -- function M.attach(opts, _)
 --   local LazyConfig = require("lazy.core.config")
 --   LazyConfig.options.defaults.cond = function(plugin)
---     return match(plugin.name, opts.keywords, opts.enable_match)
+--     return match(plugin.name, opts.kw, opts.enable_match)
 --   end
 -- end
 
@@ -32,7 +32,7 @@ function M.attach(opts, adapter)
       return plugin_to_use
     end
 
-    plugin_to_use[opts.target_property] = match(name, opts.keywords, opts.enable_match)
+    plugin_to_use[opts.target_property] = match(name, opts.kw, opts.enable_match)
     return plugin_to_use
   end
 end

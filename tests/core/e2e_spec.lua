@@ -25,7 +25,7 @@ describe("lazyflex.nvim", function()
         "abeldekat/lazyflex.nvim",
         dir = get_dir(),
         import = "lazyflex.hook",
-        opts = { keywords = { "paint" } },
+        opts = { kw = { "paint" } },
       },
       "folke/neodev.nvim",
       "folke/paint.nvim",

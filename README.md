@@ -8,9 +8,10 @@ The plugin facilitates troubleshooting and writing reproducible configurations.
 
 - Easier troubleshooting/testing from one central location.
   - Enable/disable multiple plugins by keyword.
-  - Define and use presets for your own configuration
+  - Define and use presets for your own configuration.
   - Has presets for each plugin module in [**LazyVim**](https://github.com/LazyVim/LazyVim).
   - Has options to skip loading the configuration modules provided by **LazyVim**.
+- Helps to verify the independence of the components in the configuration.
 - When creating an issue, facilitates writing a concise reproducible configuration.
   - Contains [examples](#minimal-reproducible-configurations) for minimal configurations using **lazyflex**.
 
@@ -31,14 +32,20 @@ require("lazy").setup({
       "abeldekat/lazyflex.nvim",
       version = "*",
       cond = true, -- enable/disable lazyflex.nvim
-      import = "lazyflex.plugins.intercept",
+      import = "lazyflex.hook",
       -- opts = {},
     },
+    -- your plugins:
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     { import = "plugins" },
   },
 })
 ```
+
+_Note_: The `cond` property in the instruction above is practical for quickly toggling
+**lazyflex** on/off, whilst still keeping the plugin installed.
+It is also possible to keep the plugin activated. **Lazyflex** is heavily optimized
+and will opt-out very early when there are no keywords to process.
 
 **References**:
 
@@ -54,7 +61,7 @@ When enabling, do not forget to add the name of the colorscheme to the keywords!
 
 Alternatively:
 
-1. Add the name to property [keywords_to_always_enable](#configuration)
+1. Add the name to property [kw_always_enable](#configuration)
 2. When using **LazyVim**: Use the `colorscheme` preset.
 3. When using [custom presets](#configuration): Create a `colorscheme` preset.
 
@@ -63,11 +70,11 @@ _Note_: It is not possible to configure multiple fragments of the plugin.
 ## Enabling/disabling in lazy.nvim
 
 By default, **lazyflex** sets a `cond` property on each plugin managed by **lazy.nvim**.
-The value of the property is either `true` or `false`, as configured in the `enable_on_match` setting.
+The value of the property is either `true` or `false`, as configured in the `enable_match` setting.
 
 The property needs to be set before **lazy.nvim** starts marking plugins enabled or disabled.
 Therefore, **lazyflex** operates in the `spec phase`. See: `:Lazy profile`.
-As part of the `spec phase`, **lazy.nvim** _requires_ `"lazyflex.plugins.intercept"`.
+As part of the `spec phase`, **lazy.nvim** _requires_ `"lazyflex.hook"`.
 
 A similar approach can also be found in the following code:
 
@@ -83,6 +90,38 @@ _Note_: It is also possible to attach to the `enabled` property instead, allowin
 
 ## Examples
 
+### Using a personal configuration
+
+The plugin can be used when your personal configuration is not build upon
+a community setup like **LazyVim**.
+
+Add to **lazyflex**:
+
+> collection = false
+
+```lua
+  -- enable only harpoon, plenary and tokyonight:
+  {
+    "abeldekat/lazyflex.nvim",
+    import = "lazyflex.hook",
+    opts = {
+      collection = false,
+      kw = { "har", "plen", "tokyo" },
+    },
+  },
+
+  -- disable only telescope and harpoon:
+  {
+    "abeldekat/lazyflex.nvim",
+    import = "lazyflex.hook",
+    opts = {
+      collection = false,
+      enable_match = false,
+      kw = { "tele", "har" },
+    },
+  },
+```
+
 ### Using a community setup like LazyVim
 
 > Prerequisite: Add **LazyVim** to your plugin spec
@@ -94,9 +133,9 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
   -- plugins: 44 disabled
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
-      keywords = { "harpoon", "plenary", "tokyo" }, -- or "har" for the lazy...
+      kw = { "harpoon", "plenary", "tokyo" }, -- or "har" for the lazy...
     },
   },
 
@@ -104,10 +143,10 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
   -- plugins: 30 disabled
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
       lazyvim = { presets = { "coding", "colorscheme" } },
-      keywords = { "tele", "plen" },
+      kw = { "tele", "plen" },
     },
   },
 
@@ -115,11 +154,11 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
   -- plugins: 8 disabled
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
-      enable_on_match = false,
+      enable_match = false,
       lazyvim = { presets = { "lsp" } },
-      keywords = { "tele" },
+      kw = { "tele" },
     },
   },
 
@@ -145,21 +184,21 @@ Add to **lazyflex**:
   -- plugins: lazy.nvim, LazyVim, tokyonight
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
       lazyvim = { config = { enabled = false } },
-      keywords = { "tokyo" }, --> at least one keyword is needed!
+      kw = { "tokyo" }, --> at least one keyword is needed!
     },
   },
 
-  -- Using LazyVim's telescope spec and colorscheme module
+  -- Using LazyVim's telescope spec and the colorscheme module
   -- plugins: lazy.nvim, LazyVim, tokyonight, catppuccin, telescope, plenary
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
       lazyvim = { config = { enabled = false }, presets = {"colorscheme"} },
-      keywords = { "tele", "plen" },
+      kw = { "tele", "plen" },
     },
   },
 
@@ -167,42 +206,10 @@ Add to **lazyflex**:
   -- plugins: 11 disabled
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
-      enable_on_match = false,
+      enable_match = false,
       lazyvim = { config = { enabled = false }, presets = { "ui" } },
-    },
-  },
-```
-
-### Using only a personal configuration
-
-The plugin can also be used when your personal configuration is not build upon
-a community setup like **LazyVim**.
-
-Add to **lazyflex**:
-
-> collection = false
-
-```lua
-  -- enable only harpoon, plenary and tokyonight:
-  {
-    "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
-    opts = {
-      collection = false,
-      keywords = { "har", "plen", "tokyo" },
-    },
-  },
-
-  -- disable only telescope and harpoon:
-  {
-    "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
-    opts = {
-      collection = false,
-      enable_on_match = false,
-      keywords = { "tele", "har" },
     },
   },
 ```
@@ -230,7 +237,7 @@ The name of the module **lazyflex** expects can be changed:
   -- use your own presets:
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.plugins.intercept",
+    import = "lazyflex.hook",
     opts = {
       user = { presets = { "test" } },
     },
@@ -253,10 +260,10 @@ local when_enabling = {
   test = { "plenary", "tokyo" },
 }
 
-M.get_preset_keywords = function(name, enable_on_match)
+M.get_preset_keywords = function(name, enable_match)
   local result = presets[name]
 
-  if result and enable_on_match then
+  if result and enable_match then
     local extra = when_enabling[name]
     if extra then
       result = vim.list_extend(vim.list_extend({}, result), extra)
@@ -280,8 +287,6 @@ Those properties are all set to `false`, when the `user.config` section is not p
 ## Configuration
 
 **lazyflex.nvim** comes with the following defaults:
-
-<!-- config:start -->
 
 ```lua
 {
@@ -309,26 +314,26 @@ Those properties are all set to `false`, when the `user.config` section is not p
     -- The module is -optional- in the user's configuration,
     -- and should implement "lazyflex.collections.stub"
     mod = "config.lazyflex",
-    -- without user.mod, any user.presets specified will have no effect:
     fallback = "lazyflex.collections.stub", -- do not modify
+    -- without user.mod, any user.presets specified will have no effect:
     presets = {}, -- example when implemented: { "test" }
   },
 
-  -- keywords for plugins to always enable:
-  keywords_to_always_enable = { "lazy" },
-
-  -- keywords specified by the user
-  -- Merged with the keywords from the presets and keywords_to_always_enable:
-  keywords = {}, -- example: "line" matches lualine, bufferline and indent-blankline
-
-  -- either enable or disable matching plugins:
-  enable_on_match = true,
   -- the property of the plugin to set:
   target_property = "cond", -- or: "enabled"
+
+  -- either enable or disable matching plugins:
+  enable_match = true,
+
+  -- keywords for plugins to always enable:
+  kw_always_enable = { "lazy" }, -- lazy.nvim, LazyVim, lazyflex
+
+  -- keywords specified by the user:
+  -- keywords from presets and kw_always_enable are merged in by lazyflex
+  -- keywords specified by the user are appended to the final result
+  kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
 }
 ```
-
-<!-- config:end -->
 
 ## Minimal reproducible configurations
 

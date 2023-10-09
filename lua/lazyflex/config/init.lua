@@ -28,36 +28,38 @@ local defaults = {
     -- The module is -optional- in the user's configuration,
     -- and should implement "lazyflex.collections.stub"
     mod = "config.lazyflex",
-    -- without user.mod, any user.presets specified will have no effect:
     fallback = "lazyflex.collections.stub", -- do not modify
+    -- without user.mod, any user.presets specified will have no effect:
     presets = {}, -- example when implemented: { "test" }
   },
 
-  -- keywords for plugins to always enable:
-  keywords_to_always_enable = { "lazy" },
-
-  -- keywords specified by the user
-  -- Merged with the keywords from the presets and keywords_to_always_enable:
-  keywords = {}, -- example: "line" matches lualine, bufferline and indent-blankline
-
-  -- either enable or disable matching plugins:
-  enable_on_match = true,
   -- the property of the plugin to set:
   target_property = "cond", -- or: "enabled"
+
+  -- either enable or disable matching plugins:
+  enable_match = true,
+
+  -- keywords for plugins to always enable:
+  kw_always_enable = { "lazy" }, -- lazy.nvim, LazyVim, lazyflex
+
+  -- keywords specified by the user:
+  -- keywords from presets and kw_always_enable are merged in by lazyflex
+  -- keywords specified by the user are appended to the final result
+  kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
 }
 
-local function sanitize(opts)
-  local function sanitize_config_options(col)
-    if not col.config then
-      col.config = { enabled = false }
-    end
-    if not col.config.enabled then
-      col.config.options = false
-      col.config.autocmds = false
-      col.config.keymaps = false
-    end
+local function sanitize_config_options(collection)
+  if not collection.config then
+    collection.config = { enabled = false }
   end
+  if not collection.config.enabled then
+    collection.config.options = false
+    collection.config.autocmds = false
+    collection.config.keymaps = false
+  end
+end
 
+local function sanitize(opts)
   local collection = opts.collection or {}
   if not vim.tbl_contains(collection, "user") then
     table.insert(collection, "user")
@@ -67,7 +69,7 @@ local function sanitize(opts)
   -- each name is a table key referring to a corresponding table in opts
   -- each table representing the collection has a mod property that will be "required".
   return vim.tbl_filter(function(name)
-    local result = false -- by default: only add when name is correct
+    local result = false -- by default: only add when name is valid
 
     local col = opts[name] -- the named collection
     if col then
@@ -95,7 +97,7 @@ local function from_presets(name, opts)
 
   local keywords = {}
   for _, preset in ipairs(col.presets) do
-    local words = mod.get_preset_keywords(preset, opts.enable_on_match)
+    local words = mod.get_preset_keywords(preset, opts.enable_match)
     keywords = vim.list_extend(keywords, words)
   end
   return keywords
@@ -113,8 +115,8 @@ M.setup = function(opts)
   for _, name in ipairs(opts.collection) do
     keywords = vim.list_extend(keywords, from_presets(name, opts))
   end
-  local user_keywords = opts.keywords and vim.tbl_map(string.lower, opts.keywords) or {}
-  opts.keywords = vim.list_extend(keywords, user_keywords) -- the result
+  local user_keywords = opts.kw and vim.tbl_map(string.lower, opts.kw) or {}
+  opts.kw = vim.list_extend(keywords, user_keywords) -- the result
 
   return opts
 end

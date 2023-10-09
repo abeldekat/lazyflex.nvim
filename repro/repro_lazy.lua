@@ -24,7 +24,8 @@ local plugins = {
   {
     "abeldekat/lazyflex.nvim",
     enabled = false,
-    import = "lazyflex.plugins.intercept",
+    version = "*",
+    import = "lazyflex.hook",
     opts = {
       collection = false, -- use lazyflex without LazyVim
     },

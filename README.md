@@ -45,7 +45,7 @@ require("lazy").setup({
 _Note_: The `cond` property in the snippet above is practical for quickly toggling
 **lazyflex** on or off, whilst still keeping the plugin installed.
 It is also possible to keep the plugin activated. **Lazyflex** is heavily optimized
-and will opt-out very early when there are no keywords to process.
+and will return immediately when there are no keywords to process.
 
 **References**:
 
@@ -219,6 +219,11 @@ As an _optional_ step, custom presets can be added to a `lua` module in the conf
 
 > Example: Copy file [`lazyflex/collections/stub.lua`](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
 > to `lua/config/lazyflex.lua`
+
+Alternatively, if you have a custom configuration with no `lua/config` directory, the file `lazyflex.lua` should at least be at the root of `/lua` directory and definitely not in the `lua/plugins` folder from where `lazy.nvim` imports the specs of its plugins. The name of `mod` should also be changed accordingly.
+
+> Example: Copy file [`lazyflex/collections/stub.lua`](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
+> to `lua/lazyflex.lua` and change `opts.user.mod = "lazyflex"`
 
 When the user module is not found, **lazyflex** falls back to its [lazyflex.collections.stub](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua).
 User presets will only apply when correctly implemented and are otherwise ignored.

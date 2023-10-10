@@ -12,10 +12,9 @@ end
 
 function M.attach(opts, adapter)
   local target = adapter.get_target()
-  local property_to_decorate = adapter.get_property_to_decorate()
-  local snapshot = target[property_to_decorate]
+  local snapshot = target.add
 
-  target[property_to_decorate] = function(self, plugin, ...)
+  target.add = function(self, plugin, ...)
     local plugin_to_use = snapshot(self, plugin, ...)
 
     local name = plugin_to_use and plugin_to_use.name or nil
@@ -27,14 +26,5 @@ function M.attach(opts, adapter)
     return plugin_to_use
   end
 end
-
--- deprecated: less powerful: plugins can define their own cond function...
--- uncomment to compare:
--- function M.attach(opts, _)
---   local LazyConfig = require("lazy.core.config")
---   LazyConfig.options.defaults.cond = function(plugin)
---     return match(plugin.name, opts.kw, opts.enable_match)
---   end
--- end
 
 return M

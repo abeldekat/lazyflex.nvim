@@ -10,9 +10,6 @@ local function fake_adapter(opts, target)
     get_target = function()
       return target
     end,
-    get_property_to_decorate = function()
-      return "add"
-    end,
   }
 end
 

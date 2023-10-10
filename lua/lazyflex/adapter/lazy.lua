@@ -10,15 +10,16 @@ local M = {}
 
 function M.get_opts()
   local lazyflex_plugin = require("lazy.core.config").spec.plugins["lazyflex.nvim"]
-  return lazyflex_plugin.opts
+  local opts = lazyflex_plugin.opts or {}
+
+  if type(opts) == "function" then
+    return opts(lazyflex_plugin, {})
+  end
+  return opts
 end
 
 function M.get_target()
   return require("lazy.core.plugin").Spec
-end
-
-function M.get_property_to_decorate()
-  return "add"
 end
 
 return M

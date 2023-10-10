@@ -33,9 +33,6 @@ local defaults = {
     presets = {}, -- example when implemented: { "test" }
   },
 
-  -- the property of the plugin to set:
-  target_property = "cond", -- or: "enabled"
-
   -- either enable or disable matching plugins:
   enable_match = true,
 

@@ -10,15 +10,6 @@ local function match(name, keywords, enable_match)
   return not enable_match
 end
 
--- deprecated: less powerful: plugins can define their own cond function...
--- uncomment to compare:
--- function M.attach(opts, _)
---   local LazyConfig = require("lazy.core.config")
---   LazyConfig.options.defaults.cond = function(plugin)
---     return match(plugin.name, opts.kw, opts.enable_match)
---   end
--- end
-
 function M.attach(opts, adapter)
   local target = adapter.get_target()
   local property_to_decorate = adapter.get_property_to_decorate()
@@ -32,9 +23,18 @@ function M.attach(opts, adapter)
       return plugin_to_use
     end
 
-    plugin_to_use[opts.target_property] = match(name, opts.kw, opts.enable_match)
+    plugin_to_use.cond = match(name, opts.kw, opts.enable_match)
     return plugin_to_use
   end
 end
+
+-- deprecated: less powerful: plugins can define their own cond function...
+-- uncomment to compare:
+-- function M.attach(opts, _)
+--   local LazyConfig = require("lazy.core.config")
+--   LazyConfig.options.defaults.cond = function(plugin)
+--     return match(plugin.name, opts.kw, opts.enable_match)
+--   end
+-- end
 
 return M

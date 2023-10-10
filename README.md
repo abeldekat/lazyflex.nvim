@@ -93,9 +93,9 @@ A similar approach can also be found in the following code:
 The plugin can be used when your personal configuration is not build upon
 a community setup like **LazyVim**.
 
-Add to **lazyflex**:
+Add to the options:
 
-> collection = false
+> `collection = false`
 
 ```lua
   -- Enable: harpoon, plenary and tokyonight
@@ -174,9 +174,9 @@ instead of adding the full spec to a reproducible configuration.
 
 > Prerequisite: Add **LazyVim** to your [plugin spec](#installation)
 
-Add to **lazyflex**:
+Add to the options:
 
-> lazyvim = { config = { enabled = false } },
+> `lazyvim = { config = { enabled = false } }`
 
 ```lua
   -- LazyVim: very minimal...
@@ -215,29 +215,26 @@ Add to **lazyflex**:
 
 ### Adding custom presets
 
-As an _optional_ step, custom presets can be added to a `lua` module in the configuration of the user.
+As an _optional_ step, custom presets can be added to a `lua` module in your configuration.
 
-> Example: Copy file [`lazyflex/collections/stub.lua`](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
-> to `lua/config/lazyflex.lua`
+> Example: Copy the lazyflex module [`lazyflex.collections.stub`](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
+> to `your-neovim-config-folder/lua/config/lazyflex.lua`
 
-Alternatively, if you have a custom configuration with no `lua/config` directory, the file `lazyflex.lua` should at least be at the root of `/lua` directory and definitely not in the `lua/plugins` folder from where `lazy.nvim` imports the specs of its plugins. The name of `mod` should also be changed accordingly.
+_Note_: User presets will only apply when the module is correctly implemented and are otherwise ignored.
 
-> Example: Copy file [`lazyflex/collections/stub.lua`](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
-> to `lua/lazyflex.lua` and change `opts.user.mod = "lazyflex"`
+When the user module is not present, **lazyflex** falls back to [lazyflex.collections.stub.](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
 
-When the user module is not found, **lazyflex** falls back to its [lazyflex.collections.stub](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua).
-User presets will only apply when correctly implemented and are otherwise ignored.
+The path _or_ the name of the default user module location can be changed:
 
-Add to **lazyflex**:
+> user = { mod = "somewhere-else-inside-your-lua-folder.another-name"}
 
-> user = { presets = { "test" } },
+_Note_: Do not use a folder `lazy.nvim` [imports](https://github.com/folke/lazy.nvim#%EF%B8%8F-importing-specs-config--opts) from.
 
-The name of the module **lazyflex** expects can be changed:
+Add to the options:
 
-> user = { mod = "config.anothername"}
+> `user = { presets = { "your-coding", "your-editor"}}`
 
 ```lua
-  -- use your own presets:
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",

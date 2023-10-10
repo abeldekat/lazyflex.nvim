@@ -36,14 +36,14 @@ require("lazy").setup({
       -- opts = {},
     },
     -- your plugins:
-    { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-    { import = "plugins" },
+    -- { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    -- { import = "plugins" },
   },
 })
 ```
 
 _Note_: The `cond` property in the snippet above is practical for quickly toggling
-**lazyflex** on/off, whilst still keeping the plugin installed.
+**lazyflex** on or off, whilst still keeping the plugin installed.
 It is also possible to keep the plugin activated. **Lazyflex** is heavily optimized
 and will opt-out very early when there are no keywords to process.
 
@@ -54,8 +54,7 @@ and will opt-out very early when there are no keywords to process.
 
 ## Important
 
-When there are no keywords to enable/disable, **lazyflex** opts-out without modifying
-any existing plugins.
+Without keywords to operate on, **lazyflex** returns immediately and does not apply any changes.
 
 When enabling, do not forget to add the name of the colorscheme to the keywords!
 
@@ -67,14 +66,15 @@ Alternatively:
 
 _Note_: It is not possible to configure multiple fragments of the plugin.
 
-## Enabling/disabling in lazy.nvim
+## About enabling and disabling
 
 By default, **lazyflex** sets a `cond` property on each plugin managed by **lazy.nvim**.
 The value of the property is either `true` or `false`, as configured in the `enable_match` setting.
 
-The property needs to be set before **lazy.nvim** starts marking plugins enabled or disabled.
-Therefore, **lazyflex** operates in the `spec phase`. See: `:Lazy profile`.
-As part of the `spec phase`, **lazy.nvim** _requires_ `"lazyflex.hook"`.
+The property needs to be set before **lazy.nvim** starts marking plugins _enabled_ or _disabled_.
+Therefore, **lazyflex** operates in the `spec phase`.
+
+> See: `:Lazy profile`. As part of the `spec phase`, **lazy.nvim** _requires_ `"lazyflex.hook"`.
 
 A similar approach can also be found in the following code:
 
@@ -100,7 +100,8 @@ Add to **lazyflex**:
 > collection = false
 
 ```lua
-  -- enable only harpoon, plenary and tokyonight:
+  -- Enable: harpoon, plenary and tokyonight
+  -- Disable: all other plugins
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
@@ -110,7 +111,8 @@ Add to **lazyflex**:
     },
   },
 
-  -- disable only telescope and harpoon:
+  -- Disable: telescope and harpoon
+  -- Enable: all other plugins
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
@@ -124,13 +126,13 @@ Add to **lazyflex**:
 
 ### Using a community setup like LazyVim
 
-> Prerequisite: Add **LazyVim** to your plugin spec
+> Prerequisite: Add **LazyVim** to your [plugin spec](#installation)
 
 _Note_: A preset setting that does not match a predefined preset will be ignored.
 
 ```lua
-  -- Test a new plugin in isolation
-  -- plugins: 44 disabled
+  -- New plugin: harpoon
+  -- Plugins: 44 disabled
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
@@ -139,8 +141,8 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
     },
   },
 
-  -- Only use telescope and the following modules: coding, colorscheme
-  -- plugins: 30 disabled
+  -- Lazyvim: telescope and the following modules: coding, colorscheme
+  -- Plugins: 30 disabled
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
@@ -150,8 +152,8 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
     },
   },
 
-  -- Disable telescope and all plugins in the lsp module
-  -- plugins: 8 disabled
+  -- LazyVim: disable telescope and all plugins in the lsp module
+  -- Plugins: 8 disabled
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
@@ -169,19 +171,18 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
 **LazyVim** can be used without loading its options, autocommands and keymappings.
 The settings of the resulting configuration will default to stock Neovim.
 
-This can be useful during testing or when reporting an issue for one of the plugins.
-Instead of adding the full spec to a reproducible configuration,
-the spec as defined in **LazyVim** collection can be used.
+This can be useful during testing or when reporting an issue for one of the plugins,
+instead of adding the full spec to a reproducible configuration.
 
-> Prerequisite: Add **LazyVim** to your plugin spec
+> Prerequisite: Add **LazyVim** to your [plugin spec](#installation)
 
 Add to **lazyflex**:
 
 > lazyvim = { config = { enabled = false } },
 
 ```lua
-  -- LazyVim, only as a collection of plugins
-  -- plugins: lazy.nvim, LazyVim, tokyonight
+  -- LazyVim: very minimal...
+  -- Plugins: lazy.nvim, LazyVim, tokyonight
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
@@ -191,8 +192,8 @@ Add to **lazyflex**:
     },
   },
 
-  -- Using LazyVim's telescope spec and the colorscheme module
-  -- plugins: lazy.nvim, LazyVim, tokyonight, catppuccin, telescope, plenary
+  -- LazyVim: telescope spec and the colorscheme module
+  -- Plugins: lazy.nvim, LazyVim, tokyonight, catppuccin, telescope, plenary
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
@@ -202,8 +203,8 @@ Add to **lazyflex**:
     },
   },
 
-  -- Using all of LazyVim's specs except the UI
-  -- plugins: 11 disabled
+  -- LazyVim: all specs except the ones defined in UI
+  -- Plugins: 11 disabled
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
@@ -217,13 +218,12 @@ Add to **lazyflex**:
 ### Adding custom presets
 
 As an _optional_ step, custom presets can be added to a `lua` module in the configuration of the user.
-When absent, **lazyflex** uses [lazyflex.collections.stub](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
-for the `user` collection.
 
-The default name of the module **lazyflex** tries to `require` is `config.lazyflex`.
-When present, the module should implement [lazyflex.collections.stub](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua).
+> Example: Copy file [`lazyflex/collections/stub.lua`](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
+> to `lua/config/lazyflex.lua`
 
-User presets will only apply when properly implemented and are otherwise ignored.
+When the user module is not found, **lazyflex** falls back to its [lazyflex.collections.stub](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua).
+User presets will only apply when correctly implemented and are otherwise ignored.
 
 Add to **lazyflex**:
 

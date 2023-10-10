@@ -24,12 +24,12 @@ local function fake_spec()
     -- most of the plugins from the coding module in lazyvim
     { name = "LuaSnip" },
     { name = "nvim-cmp" },
+    { name = "cmp-nvim-lsp" },
     { name = "cmp-luasnip" },
     { name = "cmp-buffer" },
     { name = "mini.comment" },
     -- all plugins from the lsp module in lazyvim
     { name = "nvim-lspconfig" },
-    { name = "cmp-nvim-lsp" },
     { name = "mason.nvim" },
     { name = "mason-lspconfig.nvim" },
     { name = "none-ls.nvim" },
@@ -106,7 +106,6 @@ describe("a match", function()
       "LazyVim",
       "mini.comment",
       "nvim-lspconfig",
-      "cmp-nvim-lsp",
       "mason.nvim",
       "mason-lspconfig.nvim",
       "none-ls.nvim",

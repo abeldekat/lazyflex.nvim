@@ -81,8 +81,6 @@ A similar approach can also be found in the following code:
 - `vscode.lua`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/plugins/extras/vscode.lua#L24)
 - `config.init`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/config/init.lua#L187)
 
-_Note_: It is also possible to attach to the `enabled` property instead, allowing plugins to be cleaned. (See [target_property](#configuration))
-
 **References**:
 
 - Plugin Spec: [**lazy.nvim**](https://github.com/folke/lazy.nvim#-plugin-spec)
@@ -188,7 +186,7 @@ Add to **lazyflex**:
     import = "lazyflex.hook",
     opts = {
       lazyvim = { config = { enabled = false } },
-      kw = { "tokyo" }, --> at least one keyword is needed!
+      kw = { "tokyo" },
     },
   },
 
@@ -318,9 +316,6 @@ Those properties are all set to `false`, when the `user.config` section is not p
     -- without user.mod, any user.presets specified will have no effect:
     presets = {}, -- example when implemented: { "test" }
   },
-
-  -- the property of the plugin to set:
-  target_property = "cond", -- or: "enabled"
 
   -- either enable or disable matching plugins:
   enable_match = true,

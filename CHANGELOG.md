@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.1.0](https://github.com/abeldekat/lazyflex.nvim/compare/v2.0.0...v2.1.0) (2023-10-10)
+
+
+### Features
+
+* **core:** remove the target_property from the options: Always use cond ([#29](https://github.com/abeldekat/lazyflex.nvim/issues/29)) ([0721a69](https://github.com/abeldekat/lazyflex.nvim/commit/0721a696aa8813305da28778a06288fb1921e5e9))
+
+
+### Bug Fixes
+
+* lazyvim 9.7.0 lazyvim.plugins.core is now lazyvim.plugins.init ([#34](https://github.com/abeldekat/lazyflex.nvim/issues/34)) ([b50379f](https://github.com/abeldekat/lazyflex.nvim/commit/b50379f4f5f470ce792ccfdb694a587b29f53998))
+* **lazyvim:** new version adds telescope-fzf-native ([#35](https://github.com/abeldekat/lazyflex.nvim/issues/35)) ([8be70ad](https://github.com/abeldekat/lazyflex.nvim/commit/8be70add676b52b3730ce2eed8cdc2587d71e012))
+* **lazyvim:** v9.8.0 cmp-nvim-lsp moved to coding ([#33](https://github.com/abeldekat/lazyflex.nvim/issues/33)) ([7ef79ae](https://github.com/abeldekat/lazyflex.nvim/commit/7ef79aedb459e7413ecad6a1dd568f769d48f7c3))
+
 ## [2.0.0](https://github.com/abeldekat/lazyflex.nvim/compare/v1.0.0...v2.0.0) (2023-10-09)
 
 

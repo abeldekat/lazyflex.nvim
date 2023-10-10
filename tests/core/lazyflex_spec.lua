@@ -77,9 +77,9 @@ describe("a match", function()
       "LazyVim",
       "LuaSnip",
       "nvim-cmp",
+      "cmp-nvim-lsp",
       "cmp-luasnip",
       "cmp-buffer",
-      "cmp-nvim-lsp",
     }
     assert.same(collect(results, true), expected)
   end)

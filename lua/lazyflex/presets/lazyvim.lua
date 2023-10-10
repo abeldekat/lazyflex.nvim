@@ -19,6 +19,7 @@ M.presets = {
     "neo-tree.nvim",
     "nvim-spectre",
     "telescope.nvim",
+    "telescope-fzf-native.nvim",
     "flash.nvim",
     "which-key.nvim",
     "gitsigns.nvim",

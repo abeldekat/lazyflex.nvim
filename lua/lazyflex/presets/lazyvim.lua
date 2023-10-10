@@ -14,7 +14,6 @@ M.presets = {
     "mini.ai",
   },
   colorscheme = { "tokyonight", "catppuccin" },
-  init = {}, -- dummy preset: init should always be enabled
   editor = {
     "neo-tree.nvim",
     "nvim-spectre",

@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/abeldekat/lazyflex.nvim/compare/v2.1.0...v2.1.1) (2023-10-10)
+
+
+### Bug Fixes
+
+* **core:** error in lazyflex when opts is a function ([#39](https://github.com/abeldekat/lazyflex.nvim/issues/39)) ([780833b](https://github.com/abeldekat/lazyflex.nvim/commit/780833bc5eda7d0009c810bdc8e9a9606ffcf621))
+
 ## [2.1.0](https://github.com/abeldekat/lazyflex.nvim/compare/v2.0.0...v2.1.0) (2023-10-10)
 
 

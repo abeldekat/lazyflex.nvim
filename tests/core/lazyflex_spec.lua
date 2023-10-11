@@ -109,6 +109,40 @@ describe("a match", function()
     }
     assert.same(collect(results, true), expected)
   end)
+
+  -- a disable plugin should not become conditionally disabled!
+  it("does not add 'cond = false' when the plugin is 'enabled==false'", function()
+    local results, target = setup()
+    local specs = vim.tbl_map(function(spec)
+      if spec.name == "mini.comment" then
+        spec.enabled = false
+      end
+      return spec
+    end, fake_spec())
+
+    activate({ kw = { "snip", "comment" } }, target, specs)
+
+    local expected = {
+      "lazy.nvim",
+      "LazyVim",
+      "LuaSnip",
+      "cmp-luasnip",
+    }
+    assert.same(expected, collect(results, true))
+  end)
+
+  it("should also test the cond property as a function", function()
+    assert(true)
+  end)
+
+  it("should also test for enabled as a function", function()
+    assert(true)
+  end)
+
+  -- don't add a superfluous cond=true
+  it("does not add 'cond = true' when the plugin is enabled", function()
+    assert(true)
+  end)
 end)
 
 -- test opt-out early

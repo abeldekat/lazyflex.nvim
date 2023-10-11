@@ -1,21 +1,15 @@
+--[[
+ consider two fragments of a plugin, having enabled = false on the second fragment:
+ fid 1: { "foo/bar"}
+ lazyflex considers "bar" with fid 1 enabled
+    it sets cond = false, if should_enable returns false
+    or, it does not set a value, if should_enable returns true
+ fid 2: { "foo/bar", enabled = false} --> fid1 cond=false must be repaired
+--]]
+
 local M = {}
 
-local function override_cond_if_false(plugin_enabled_false)
-  -- cnosidera plugin, having enabled = false explicitly:
-  -- fid 1: { "foo/bar"}
-  -- lazyflex considers "bar" with fid 1 enabled
-  --    set cond = false, if should_enable returns false
-  --    or, do not set a value, if should_enable returns true
-  -- fid 2: { "foo/bar", enabled = false} --> fid1 must be overridden
-
-  if plugin_enabled_false.cond == false then
-    -- prevent a disabled plugin to become conditionally disabled:
-    plugin_enabled_false.cond = true
-  end
-  return plugin_enabled_false
-end
-
--- on match, return variable enable_on_match(either false or true)
+-- when matching, return variable enable_on_match(either false or true)
 local function should_enable(name, keywords, enable_on_match)
   name = string.lower(name)
   for _, keyword in ipairs(keywords) do
@@ -31,32 +25,35 @@ function M.attach(opts, adapter)
   local snapshot = object_to_attach.add
 
   -- each plugin can have multiple fragments, identified by fid
-  -- for the same plugin, this method can be called multiple times
-  object_to_attach.add = function(self, plugin, ...)
+  -- for the same plugin, the add method can be called multiple times:
+  object_to_attach.add = function(self, plugin_to_add, ...)
     -- call the original add method:
-    local plugin_to_use = snapshot(self, plugin, ...)
+    local plugin = snapshot(self, plugin_to_add, ...)
 
     -- return when invalid(see lazy.nvim):
-    local name = plugin_to_use and plugin_to_use.name or nil
+    local name = plugin and plugin.name or nil
     if not name then
-      return plugin_to_use
+      return plugin
     end
 
-    -- return when plugin is disabled(using enabled = false explicitly):
-    if plugin_to_use.enabled == false then
-      plugin_to_use = override_cond_if_false(plugin_to_use)
-      return plugin_to_use
+    -- return when plugin is unconditionally disabled:
+    if plugin.enabled == false then
+      -- repair conditionally disabled:
+      if plugin_to_add.cond == false then
+        plugin_to_add.cond = true
+      end
+      return plugin
     end
 
     -- return when plugin should be enabled:
     local enable = should_enable(name, opts.kw, opts.enable_match)
     if enable then
-      return plugin_to_use -- already enabled
+      return plugin -- already enabled
     end
 
     -- plugin needs to be disabled:
-    plugin_to_use.cond = false
-    return plugin_to_use
+    plugin.cond = false
+    return plugin
   end
 end
 

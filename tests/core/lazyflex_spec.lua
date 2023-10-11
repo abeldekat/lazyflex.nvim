@@ -161,7 +161,7 @@ describe("a match", function()
     assert(mini_comment["enabled"] == false)
   end)
 
-  it("is skipped when enabling and the plugin is unconditionally disabled", function()
+  it("is discarded when enabling and the plugin is unconditionally disabled", function()
     local fake_attach = setup()
     local spec = test_spec_change({ name = "mini.comment", enabled = false })
 
@@ -179,11 +179,19 @@ describe("a match", function()
     assert(mini_comment["cond"] == nil)
     assert(mini_comment["enabled"] == false)
   end)
-  --
-  -- it("should repair cond=false", function()
-  --   assert(true)
-  -- end)
-  --
+
+  it("should repair cond=false when the plugin is unconditionally disabled", function()
+    local fake_attach = setup()
+    local spec = { { name = "mini.comment", cond = false, enabled = false } }
+
+    -- disable mini.comment. However, mini.comment is already disabled!
+    activate({ enable_match = false, kw = { "comment" } }, fake_attach, spec)
+
+    local mini_comment = plugin_captured(fake_attach.captures, "mini.comment")
+    assert(mini_comment["cond"] == true)
+    assert(mini_comment["enabled"] == false)
+  end)
+
   -- it("should also test the cond property as a function", function()
   --   assert(true)
   -- end)

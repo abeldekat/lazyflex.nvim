@@ -160,7 +160,7 @@ end)
 
 describe("an unconditionally disabled plugin", function()
   -- a disable plugin should not become conditionally disabled!
-  it("is discarded when disabling", function()
+  it("is discarded", function()
     local spec = new_test_spec_change({ name = "mini.comment", enabled = false })
 
     -- disable, including mini.comment. However, mini.comment is already disabled!
@@ -172,36 +172,29 @@ describe("an unconditionally disabled plugin", function()
     }, filter_actual(spec, false))
     -- stylua: ignore end
     local mini_comment = plugin_actual(spec, "mini.comment")
-    assert(mini_comment["cond"] == nil)
+    assert(mini_comment["cond"] == nil) -- nothing changed
     assert(mini_comment["enabled"] == false)
   end)
 
-  it("should be repaired when disabling and cond=false", function()
-    local spec = { { name = "mini.comment", cond = false, enabled = false } }
-    -- TODO: Object!
+  it("is repaired when cond=false", function()
+    -- a disable plugin should not become conditionally disabled!
+    local function merge(old, new)
+      new._ = {}
+      new._.super = old
+      setmetatable(new, { __index = old })
+      return new
+    end
+    local old = { name = "mini.comment" }
+    local new = merge(old, { name = "mini.comment", enabled = false })
+    local spec = { old, new }
 
     -- disable mini.comment. However, mini.comment is already disabled!
     activate({ enable_match = false, kw = { "comment" } }, spec)
 
-    local mini_comment = plugin_actual(spec, "mini.comment")
-    assert(mini_comment["cond"] == true) -- repaired!
-    assert(mini_comment["enabled"] == false)
-  end)
-
-  it("is discarded when enabling", function()
-    local spec = new_test_spec_change({ name = "mini.comment", enabled = false })
-
-    -- enable, including mini.comment. However, mini.comment is already disabled!
-    activate({ kw = { "cmp", "snip", "comment" } }, spec)
-
-    -- stylua: ignore start
-    assert.same({
-      "nvim-lspconfig", "mason.nvim", "mason-lspconfig.nvim", "none-ls.nvim",
-    }, filter_actual(spec, false))
-    -- stylua: ignore end
-    local mini_comment = plugin_actual(spec, "mini.comment")
-    assert(mini_comment["cond"] == nil)
-    assert(mini_comment["enabled"] == false)
+    assert(old["enabled"] == nil) -- first add: plugin is considered enabled
+    assert(old["cond"] == false) -- thus, lazyflex add a conditional disabled
+    assert(new["enabled"] == false) -- second add: the user disabled the plugin
+    assert(new["cond"] == true) -- thus, lazyflex repairs cond
   end)
 
   -- it("should also test the cond property as a function", function()

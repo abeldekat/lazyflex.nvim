@@ -11,6 +11,7 @@ M.presets = {
     "cmp_luasnip",
     "mini.pairs",
     "mini.surround",
+    "nvim-ts-context-commentstring",
     "mini.comment",
     "mini.ai",
   },
@@ -28,20 +29,20 @@ M.presets = {
     "trouble.nvim",
     "todo-comments.nvim",
   },
+  formatting = { "conform.nvim" },
+  linting = { "nvim-lint" },
   lsp = {
     "nvim-lspconfig",
     "neoconf",
     "neodev",
     "mason.nvim",
     "mason-lspconfig.nvim",
-    "neodev",
-    "none-ls",
-    "null-ls",
   },
   treesitter = {
     "treesitter",
     "nvim-treesitter-textobjects",
-    "nvim-ts-context-commentstring",
+    "nvim-treesitter-context",
+    "nvim-ts-autotag",
   },
   ui = {
     "notify",
@@ -51,10 +52,9 @@ M.presets = {
     "indent-blankline",
     "indentscope",
     "noice",
-    "alpha",
-    "navic",
     "web-devicons",
     "nui.nvim",
+    "dashboard-nvim",
   },
   util = {
     "vim-startuptime",
@@ -67,15 +67,12 @@ M.when_enabling = {
   coding = {
     "treesitter",
     "nvim-treesitter-textobjects", -- mini.ai
-    "nvim-ts-context-commentstring", -- mini.comment
   },
   editor = {
     "nui.nvim", -- neo-tree
     "plenary.nvim", -- neo-tree, telescope
   },
-  lsp = {
-    "plenary.nvim", -- none-ls
-  },
+  formatting = { "mason.nvim" },
 }
 
 return M

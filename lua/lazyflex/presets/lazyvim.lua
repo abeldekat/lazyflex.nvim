@@ -73,9 +73,6 @@ M.when_enabling = {
     "plenary.nvim", -- neo-tree, telescope
   },
   formatting = { "mason.nvim" },
-  lsp = {
-    "plenary.nvim", -- none-ls
-  },
 }
 
 return M

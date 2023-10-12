@@ -16,7 +16,6 @@ local function new_test_spec()
     { name = "nvim-lspconfig" },
     { name = "mason.nvim" },
     { name = "mason-lspconfig.nvim" },
-    { name = "none-ls.nvim" },
   }
   return spec
 end
@@ -97,7 +96,7 @@ describe("a match", function()
 
     -- stylua: ignore start
     assert.same({
-      "mini.comment", "nvim-lspconfig", "mason.nvim", "mason-lspconfig.nvim", "none-ls.nvim",
+      "mini.comment", "nvim-lspconfig", "mason.nvim", "mason-lspconfig.nvim",
     }, filter_actual(spec, false))
     -- stylua: ignore end
   end)

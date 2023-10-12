@@ -77,14 +77,12 @@ local function filter_actual(spec, enable_match)
   return result
 end
 
-local function plugin_actual(spec, name)
-  local results = vim.tbl_filter(function(p)
-    if p.name == name then
-      return true
-    end
-    return false
-  end, spec)
-  return not vim.tbl_isempty(results) and results[1] or {}
+local function filter_disabled(spec)
+  return filter_actual(spec, false)
+end
+
+local function filter_not_modified(spec)
+  return filter_actual(spec, nil)
 end
 
 -- test matching
@@ -97,7 +95,7 @@ describe("a match", function()
     -- stylua: ignore start
     assert.same({
       "mini.comment", "nvim-lspconfig", "mason.nvim", "mason-lspconfig.nvim",
-    }, filter_actual(spec, false))
+    }, filter_disabled(spec))
     -- stylua: ignore end
   end)
 
@@ -108,7 +106,7 @@ describe("a match", function()
     assert.same({
       "LuaSnip",
       "cmp-luasnip",
-    }, filter_actual(spec, false))
+    }, filter_disabled(spec))
   end)
 
   it("can use presets", function()
@@ -121,7 +119,7 @@ describe("a match", function()
     -- stylua: ignore start
     assert.same({
       "LuaSnip", "nvim-cmp", "cmp-nvim-lsp", "cmp-luasnip", "cmp-buffer",
-    }, filter_actual(spec, false))
+    }, filter_disabled(spec))
     -- stylua: ignore end
   end)
 end)
@@ -139,28 +137,29 @@ describe("lazyflex", function()
     local spec = new_test_spec()
     local opts = { lazyvim = { presets = {} }, kw = {}, enable_match = true }
     activate(opts, spec)
-    assert(#spec == #filter_actual(spec, nil))
+    assert(#spec == #filter_not_modified(spec))
   end)
 
   it("opts-out without keywords or -valid- lazyvim presets", function()
     local spec = new_test_spec()
     local opts = { lazyvim = { presets = { "dummy" } }, kw = {}, enable_match = true }
     activate(opts, spec)
-    assert(#spec == #filter_actual(spec, nil))
+    assert(#spec == #filter_not_modified(spec))
   end)
 
   it("opts-out without keywords or -valid- user presets", function()
     local spec = new_test_spec()
     local opts = { user = { presets = { "dummy" } }, kw = {}, enable_match = true }
     activate(opts, spec)
-    assert(#spec == #filter_actual(spec, nil))
+    assert(#spec == #filter_not_modified(spec))
   end)
 end)
 
 describe("an unconditionally disabled plugin", function()
   -- a disable plugin should not become conditionally disabled!
   it("is discarded", function()
-    local spec = new_test_spec_change({ name = "mini.comment", enabled = false })
+    local mini_comment = { name = "mini.comment", enabled = false }
+    local spec = new_test_spec_change(mini_comment)
 
     -- disable, including mini.comment. However, mini.comment is already disabled!
     activate({ enable_match = false, kw = { "cmp", "snip", "comment" } }, spec)
@@ -170,7 +169,6 @@ describe("an unconditionally disabled plugin", function()
       "LuaSnip", "nvim-cmp", "cmp-nvim-lsp", "cmp-luasnip", "cmp-buffer",
     }, filter_actual(spec, false))
     -- stylua: ignore end
-    local mini_comment = plugin_actual(spec, "mini.comment")
     assert(mini_comment["cond"] == nil) -- nothing changed
     assert(mini_comment["enabled"] == false)
   end)
@@ -241,7 +239,7 @@ describe("settings from LazyVim", function()
     local return_spec = activate({ kw = { "LazyVim" } }, spec)
 
     -- only lazy.nvim and LazyVim enabled
-    assert(#spec - 2 == #filter_actual(spec, false))
+    assert(#spec - 2 == #filter_disabled(spec))
     local LazyVim = return_spec[1]
     assert(LazyVim.opts.defaults.autocmds == true)
     assert(LazyVim.opts.defaults.keymaps == true)
@@ -253,7 +251,7 @@ describe("settings from LazyVim", function()
     local return_spec = activate(opts, spec)
 
     -- only lazy.nvim and LazyVim enabled
-    assert(#spec - 2 == #filter_actual(spec, false))
+    assert(#spec - 2 == #filter_disabled(spec))
     local LazyVim = return_spec[1]
     assert(LazyVim.opts.defaults.autocmds == false)
     assert(LazyVim.opts.defaults.keymaps == false)

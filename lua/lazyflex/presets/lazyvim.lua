@@ -29,6 +29,8 @@ M.presets = {
     "trouble.nvim",
     "todo-comments.nvim",
   },
+  formatting = { "conform.nvim" },
+  linting = { "nvim-lint" },
   lsp = {
     "nvim-lspconfig",
     "neoconf",
@@ -71,6 +73,8 @@ M.when_enabling = {
     "nui.nvim", -- neo-tree
     "plenary.nvim", -- neo-tree, telescope
   },
+  formatting = { "mason.nvim" },
+  linting = { "mason.nvim" },
   lsp = {
     "plenary.nvim", -- none-ls
   },

@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.3](https://github.com/abeldekat/lazyflex.nvim/compare/v2.1.2...v2.1.3) (2023-10-12)
+
+
+### Bug Fixes
+
+* **lazyvim:** v10 incorporate changes ([#45](https://github.com/abeldekat/lazyflex.nvim/issues/45)) ([691e14f](https://github.com/abeldekat/lazyflex.nvim/commit/691e14faec5e1ee12ffc7ee52f68a420aaa3a756))
+
 ## [2.1.2](https://github.com/abeldekat/lazyflex.nvim/compare/v2.1.1...v2.1.2) (2023-10-12)
 
 

@@ -44,47 +44,39 @@ require("lazy").setup({
 
 _Note_: The `cond` property in the snippet above is practical for quickly toggling
 **lazyflex** on or off, whilst still keeping the plugin installed.
-It is also possible to keep the plugin activated. **Lazyflex** is heavily optimized
-and will return immediately when there are no keywords to process.
+**Lazyflex** is heavily optimized, and can be kept enabled.
+
+_Note_: It is not possible to configure multiple fragments of the plugin.
 
 **References**:
 
 - Installation section: [**lazy.nvim**](https://github.com/folke/lazy.nvim#-installation)
 - `config.lazy`: [**LazyVim starter**](https://github.com/LazyVim/starter/blob/a13d5c90769ce6177d1e27b46efd967ed52c1d68/lua/config/lazy.lua#L11)
 
-## Important
+## Concepts
 
-Without keywords to operate on, **lazyflex** returns immediately and does not apply any changes.
+**lazyflex**:
 
-When enabling, do not forget to add the name of the colorscheme to the keywords!
+1. Returns immediately when there are no keywords supplied to _enable_ or _disable_
+2. Only operates on plugins that are not unconditionally disabled(`plugin.enabled = false`)
+
+### Important properties
+
+- `kw`: a list of words matching names of plugins.
+- `preset`: a _predefined_ list of words matching names of plugins
+- `enable_match`:
+  - `true`(_enable_ incrementally, the default): _enable_ all plugins that match keywords, _disable_ the others.
+  - `false`(_disable_ incrementally): _disable_ all plugins that match keywords, _enable_ the others
+
+## Colorscheme
+
+_Important_: The name of the colorscheme must be in the keywords when `enabling`
 
 Alternatively:
 
-1. Add the name to property [kw_always_enable](#configuration)
+1. Add the name to property [kw_always_enable](#configuration) : `kw_always_enable = { "lazy", "name-of-color"}`
 2. When using **LazyVim**: Use the `colorscheme` preset.
 3. When using [custom presets](#adding-custom-presets): Create a `colorscheme` preset.
-
-_Note_: It is not possible to configure multiple fragments of the plugin.
-
-## About enabling and disabling
-
-By default, **lazyflex** sets a `cond` property on each plugin managed by **lazy.nvim**.
-The value of the property is either `true` or `false`, as configured in the `enable_match` setting.
-
-The property needs to be set before **lazy.nvim** starts marking plugins _enabled_ or _disabled_.
-Therefore, **lazyflex** operates in the `spec phase`.
-
-> See: `:Lazy profile`. As part of the `spec phase`, **lazy.nvim** _requires_ `"lazyflex.hook"`.
-
-A similar approach can also be found in the following code:
-
-- `vscode.lua`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/plugins/extras/vscode.lua#L24)
-- `config.init`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/config/init.lua#L187)
-
-**References**:
-
-- Plugin Spec: [**lazy.nvim**](https://github.com/folke/lazy.nvim#-plugin-spec)
-- Configuration `defaults.cond`: [**lazy.nvim**](https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration)
 
 ## Examples
 
@@ -130,7 +122,7 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
 
 ```lua
   -- New plugin: harpoon
-  -- Plugins: 44 disabled
+  -- Plugins: approximately 40 disabled
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
@@ -140,7 +132,7 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
   },
 
   -- Lazyvim: telescope and the following modules: coding, colorscheme
-  -- Plugins: 30 disabled
+  -- Plugins: approximately 30 disabled
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
@@ -151,7 +143,7 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
   },
 
   -- LazyVim: disable telescope and all plugins in the lsp module
-  -- Plugins: 8 disabled
+  -- Plugins: approximately 10 disabled
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
@@ -202,7 +194,7 @@ Add to the options:
   },
 
   -- LazyVim: all specs except the ones defined in UI
-  -- Plugins: 11 disabled
+  -- Plugins: approximately 10 disabled
   {
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
@@ -323,11 +315,9 @@ Those properties are all set to `false`, when the `user.config` section is not p
   enable_match = true,
 
   -- keywords for plugins to always enable:
-  kw_always_enable = { "lazy" }, -- lazy.nvim, LazyVim, lazyflex
+  kw_always_enable = { "lazy" }, -- matching lazy.nvim, LazyVim, lazyflex
 
   -- keywords specified by the user:
-  -- keywords from presets and kw_always_enable are merged in by lazyflex
-  -- keywords specified by the user are appended to the final result
   kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
 }
 ```
@@ -339,6 +329,26 @@ using `lazyflex`, located in the `./repro` folder:
 
 - [`repro_lazy.lua`](https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazy.lua)
 - [`repro_lazyvim.lua`](https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazyvim.lua)
+
+## About enabling and disabling
+
+For each plugin managed by _lazy.nvim_ that is not unconditionally `disabled`,
+**lazyflex** attaches `cond=false` when the plugin should be disabled.
+
+The `cond` property needs to be set before **lazy.nvim** starts taking its value into consideration.
+Therefore, **lazyflex** operates in the `spec phase`.
+
+> See: `:Lazy profile`. As part of the `spec phase`, **lazy.nvim** _requires_ `"lazyflex.hook"`.
+
+A similar approach can also be found in the following code:
+
+- `vscode.lua`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/plugins/extras/vscode.lua#L24)
+- `config.init`: [**LazyVim**](https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/config/init.lua#L187)
+
+**References**:
+
+- Plugin Spec: [**lazy.nvim**](https://github.com/folke/lazy.nvim#-plugin-spec)
+- Configuration `defaults.cond`: [**lazy.nvim**](https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration)
 
 ## History
 

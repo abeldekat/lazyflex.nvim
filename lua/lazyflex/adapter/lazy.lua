@@ -8,6 +8,7 @@ important benefit: testing...
 --]]
 local M = {}
 
+-- Returns the opts the user configured for lazyflex.nvim
 function M.get_opts()
   local lazyflex_plugin = require("lazy.core.config").spec.plugins["lazyflex.nvim"]
   local opts = lazyflex_plugin.opts or {}
@@ -18,7 +19,8 @@ function M.get_opts()
   return opts
 end
 
-function M.get_target()
+-- Returns the object in lazy.nvim holding the add method
+function M.get_object_to_attach()
   return require("lazy.core.plugin").Spec
 end
 

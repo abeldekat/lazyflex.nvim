@@ -1,20 +1,7 @@
 local assert = require("luassert")
 
--- see lazyflex.adapter.lazy:
--- closures on opts and target, accessible in the test
-local function fake_adapter(opts, target)
-  return {
-    get_opts = function()
-      return opts
-    end,
-    get_target = function()
-      return target
-    end,
-  }
-end
-
-local function fake_spec()
-  return {
+local function new_test_spec()
+  local spec = {
     -- always enabled
     { name = "lazy.nvim" },
     { name = "LazyVim" },
@@ -31,107 +18,219 @@ local function fake_spec()
     { name = "mason-lspconfig.nvim" },
     { name = "none-ls.nvim" },
   }
+  return spec
 end
 
-local function setup()
-  local results = {}
-  local target = {
+-- returns test_spec and changes one single item
+local function new_test_spec_change(single_spec)
+  local spec = new_test_spec()
+  if single_spec then
+    spec = vim.tbl_map(function(s)
+      if s.name == single_spec.name then
+        return single_spec
+      end
+      return s
+    end, spec)
+  end
+  return spec
+end
+
+-- see lazyflex.adapter.lazy: simulate the interaction with lazy.nvim
+local function fake_lazy(opts, to_attach)
+  return {
+    get_opts = function()
+      return opts
+    end,
+    get_object_to_attach = function()
+      return to_attach
+    end,
+  }
+end
+
+local function activate(opts, spec)
+  -- simulate lazy.nvim internals(adapter)
+  local lazy_attached = {
     add = function(_, plugin)
-      table.insert(results, plugin)
+      -- lazy.nvim adds and returns the plugin...
       return plugin
     end,
   }
-  return results, target
-end
+  local lazy = fake_lazy(opts, lazy_attached)
 
-local function activate(opts, target)
-  local adapter = fake_adapter(opts, target) -- mimic lazy.nvim internals...
-  local return_spec = require("lazyflex").on_hook(adapter) -- run the plugin, decorate target.add
-  for _, plugin in ipairs(fake_spec()) do -- simulate lazy.nvim
-    target.add(_, plugin)
+  -- run lazyflex. See lazyflex.hook. Decorates lazy_attached.add
+  local return_spec = require("lazyflex").on_hook(lazy)
+
+  -- lazy.nvim parses the spec
+  for _, plugin in ipairs(spec) do
+    lazy_attached.add(_, plugin)
   end
   return return_spec
 end
 
-local function collect(results, enable_match)
-  local actual = {}
-  for _, plugin in ipairs(results) do
+-- filters the spec using plugin.cond==enable_match
+local function filter_actual(spec, enable_match)
+  local result = {}
+  for _, plugin in ipairs(spec) do
     if plugin.cond == enable_match then
-      table.insert(actual, plugin.name)
+      table.insert(result, plugin.name)
     end
   end
-  return actual
+  return result
+end
+
+local function plugin_actual(spec, name)
+  local results = vim.tbl_filter(function(p)
+    if p.name == name then
+      return true
+    end
+    return false
+  end, spec)
+  return not vim.tbl_isempty(results) and results[1] or {}
 end
 
 -- test matching
 describe("a match", function()
-  it("is enabled by default", function()
-    local results, target = setup()
-    activate({ kw = { "cmp", "snip" } }, target)
+  it("uses enable_match=true by default", function()
+    local spec = new_test_spec()
 
-    local expected = {
-      "lazy.nvim",
-      "LazyVim",
-      "LuaSnip",
-      "nvim-cmp",
-      "cmp-nvim-lsp",
-      "cmp-luasnip",
-      "cmp-buffer",
-    }
-    assert.same(collect(results, true), expected)
+    activate({ kw = { "cmp", "snip" } }, spec)
+
+    -- stylua: ignore start
+    assert.same({
+      "mini.comment", "nvim-lspconfig", "mason.nvim", "mason-lspconfig.nvim", "none-ls.nvim",
+    }, filter_actual(spec, false))
+    -- stylua: ignore end
   end)
 
-  it("can also be disabled", function()
-    local results, target = setup()
-    activate({ enable_match = false, kw = { "snip" } }, target)
+  it("can also handle enable_match=false", function()
+    local spec = new_test_spec()
+    activate({ enable_match = false, kw = { "snip" } }, spec)
 
-    local expected = {
+    assert.same({
       "LuaSnip",
       "cmp-luasnip",
-    }
-    assert.same(collect(results, false), expected)
+    }, filter_actual(spec, false))
   end)
 
-  it("can be based on presets", function()
-    local results, target = setup()
+  it("can use presets", function()
+    local spec = new_test_spec()
 
-    -- enable mini.comment and all plugins in lazyvim's lsp and ui modules
-    activate({ lazyvim = { presets = { "lsp", "ui" } }, kw = { "com" } }, target)
+    -- enable mini.comment and all plugins in lazyvim's lsp module
+    local opts = { lazyvim = { presets = { "lsp", "dummy" } }, kw = { "com" } }
+    activate(opts, spec)
 
-    local expected = {
-      "lazy.nvim",
-      "LazyVim",
-      "mini.comment",
-      "nvim-lspconfig",
-      "mason.nvim",
-      "mason-lspconfig.nvim",
-      "none-ls.nvim",
-    }
-    assert.same(collect(results, true), expected)
+    -- stylua: ignore start
+    assert.same({
+      "LuaSnip", "nvim-cmp", "cmp-nvim-lsp", "cmp-luasnip", "cmp-buffer",
+    }, filter_actual(spec, false))
+    -- stylua: ignore end
   end)
 end)
 
 -- test opt-out early
 describe("lazyflex", function()
   it("opts-out without keywords", function()
-    local results, target = setup()
-    activate({ kw = {}, enable_match = true }, target)
-    assert(#collect(results, nil) == #fake_spec())
+    local spec = new_test_spec()
+    local opts = { kw = {}, enable_match = true }
+    activate(opts, spec)
+    assert(#spec == #filter_actual(spec, nil))
   end)
+
   it("opts-out without keywords or presets", function()
-    local results, target = setup()
-    activate({ lazyvim = { presets = {} }, kw = {}, enable_match = true }, target)
-    assert(#collect(results, nil) == #fake_spec())
+    local spec = new_test_spec()
+    local opts = { lazyvim = { presets = {} }, kw = {}, enable_match = true }
+    activate(opts, spec)
+    assert(#spec == #filter_actual(spec, nil))
   end)
+
   it("opts-out without keywords or -valid- lazyvim presets", function()
-    local results, target = setup()
-    activate({ lazyvim = { presets = { "dummy" } }, kw = {}, enable_match = true }, target)
-    assert(#collect(results, nil) == #fake_spec())
+    local spec = new_test_spec()
+    local opts = { lazyvim = { presets = { "dummy" } }, kw = {}, enable_match = true }
+    activate(opts, spec)
+    assert(#spec == #filter_actual(spec, nil))
   end)
+
   it("opts-out without keywords or -valid- user presets", function()
-    local results, target = setup()
-    activate({ user = { presets = { "dummy" } }, kw = {}, enable_match = true }, target)
-    assert(#collect(results, nil) == #fake_spec())
+    local spec = new_test_spec()
+    local opts = { user = { presets = { "dummy" } }, kw = {}, enable_match = true }
+    activate(opts, spec)
+    assert(#spec == #filter_actual(spec, nil))
+  end)
+end)
+
+describe("an unconditionally disabled plugin", function()
+  -- a disable plugin should not become conditionally disabled!
+  it("is discarded", function()
+    local spec = new_test_spec_change({ name = "mini.comment", enabled = false })
+
+    -- disable, including mini.comment. However, mini.comment is already disabled!
+    activate({ enable_match = false, kw = { "cmp", "snip", "comment" } }, spec)
+
+    -- stylua: ignore start
+    assert.same({
+      "LuaSnip", "nvim-cmp", "cmp-nvim-lsp", "cmp-luasnip", "cmp-buffer",
+    }, filter_actual(spec, false))
+    -- stylua: ignore end
+    local mini_comment = plugin_actual(spec, "mini.comment")
+    assert(mini_comment["cond"] == nil) -- nothing changed
+    assert(mini_comment["enabled"] == false)
+  end)
+
+  it("is repaired when cond=false", function()
+    -- a disable plugin should not become conditionally disabled!
+    local function merge(old, new)
+      new._ = {}
+      new._.super = old
+      setmetatable(new, { __index = old })
+      return new
+    end
+    local old = { name = "mini.comment" }
+    local new = merge(old, { name = "mini.comment", enabled = false })
+    local spec = { old, new }
+
+    -- disable mini.comment. However, mini.comment is already disabled!
+    activate({ enable_match = false, kw = { "comment" } }, spec)
+
+    assert(old["enabled"] == nil) -- first add: plugin is considered enabled
+    assert(old["cond"] == false) -- thus, lazyflex add a conditional disabled
+    assert(new["enabled"] == false) -- second add: the user disabled the plugin
+    assert(new["cond"] == true) -- thus, lazyflex repairs cond
+  end)
+end)
+
+describe("spec properties", function()
+  it("can be a function, ie. cond", function()
+    local plugin = {
+      name = "mini.comment",
+      cond = function()
+        return false
+      end,
+      enabled = false,
+    }
+    local spec = { plugin }
+    local opts = { enable_match = false, kw = { "com" } }
+
+    activate(opts, spec)
+
+    assert(plugin["enabled"] == false)
+    assert(plugin["cond"] == true) -- repaired, cond as function is recognized
+  end)
+
+  it("can be a function, ie. enabled", function()
+    local plugin = {
+      name = "mini.comment",
+      cond = false,
+      enabled = function()
+        return false
+      end,
+    }
+    local spec = { plugin }
+    local opts = { enable_match = false, kw = { "com" } }
+
+    activate(opts, spec)
+
+    assert(plugin["enabled"]() == false)
+    assert(plugin["cond"] == true) -- repaired, enabled as function is recognized
   end)
 end)
 
@@ -139,23 +238,23 @@ end)
 -- disabling options is tested in e2e_spec
 describe("settings from LazyVim", function()
   it("are activated by default", function()
-    local results, target = setup()
-    local return_spec = activate({ kw = { "LazyVim" } }, target)
-    assert(#collect(results, true) == 2)
+    local spec = new_test_spec()
+    local return_spec = activate({ kw = { "LazyVim" } }, spec)
 
+    -- only lazy.nvim and LazyVim enabled
+    assert(#spec - 2 == #filter_actual(spec, false))
     local LazyVim = return_spec[1]
     assert(LazyVim.opts.defaults.autocmds == true)
     assert(LazyVim.opts.defaults.keymaps == true)
   end)
+
   it("can be turned off", function()
-    local results, target = setup()
-    local return_spec = activate({
-      kw = { "LazyVim" },
-      lazyvim = { config = { enabled = false } },
-    }, target)
+    local spec = new_test_spec()
+    local opts = { kw = { "LazyVim" }, lazyvim = { config = { enabled = false } } }
+    local return_spec = activate(opts, spec)
 
-    assert(#collect(results, true) == 2)
-
+    -- only lazy.nvim and LazyVim enabled
+    assert(#spec - 2 == #filter_actual(spec, false))
     local LazyVim = return_spec[1]
     assert(LazyVim.opts.defaults.autocmds == false)
     assert(LazyVim.opts.defaults.keymaps == false)

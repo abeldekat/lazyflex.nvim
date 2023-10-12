@@ -1,4 +1,4 @@
-*lazyflex.nvim.txt*      For Neovim >= 0.8.0      Last change: 2023 October 10
+*lazyflex.nvim.txt*      For Neovim >= 0.8.0      Last change: 2023 October 12
 
 ==============================================================================
 Table of Contents                            *lazyflex.nvim-table-of-contents*
@@ -7,11 +7,12 @@ Table of Contents                            *lazyflex.nvim-table-of-contents*
   - Features                            |lazyflex.nvim-lazyflex.nvim-features|
   - Requirements                    |lazyflex.nvim-lazyflex.nvim-requirements|
   - Installation                    |lazyflex.nvim-lazyflex.nvim-installation|
-  - Important                          |lazyflex.nvim-lazyflex.nvim-important|
-  - About enabling and disabling|lazyflex.nvim-lazyflex.nvim-about-enabling-and-disabling|
+  - Concepts                            |lazyflex.nvim-lazyflex.nvim-concepts|
+  - Colorscheme                      |lazyflex.nvim-lazyflex.nvim-colorscheme|
   - Examples                            |lazyflex.nvim-lazyflex.nvim-examples|
   - Configuration                  |lazyflex.nvim-lazyflex.nvim-configuration|
   - Minimal reproducible configurations|lazyflex.nvim-lazyflex.nvim-minimal-reproducible-configurations|
+  - About enabling and disabling|lazyflex.nvim-lazyflex.nvim-about-enabling-and-disabling|
   - History                              |lazyflex.nvim-lazyflex.nvim-history|
   - Acknowledgements            |lazyflex.nvim-lazyflex.nvim-acknowledgements|
 
@@ -65,9 +66,10 @@ The plugin must be the first item in the spec!
 <
 
 _Note_The `cond` property in the snippet above is practical for quickly
-toggling **lazyflex** on or off, whilst still keeping the plugin installed. It
-is also possible to keep the plugin activated. **Lazyflex** is heavily
-optimized and will return immediately when there are no keywords to process.
+toggling **lazyflex** on or off, whilst still keeping the plugin installed.
+**Lazyflex** is heavily optimized, and can be kept enabled.
+
+_Note_It is not possible to configure multiple fragments of the plugin.
 
 **References**
 
@@ -75,44 +77,32 @@ optimized and will return immediately when there are no keywords to process.
 - `config.lazy`**LazyVim starter** <https://github.com/LazyVim/starter/blob/a13d5c90769ce6177d1e27b46efd967ed52c1d68/lua/config/lazy.lua#L11>
 
 
-IMPORTANT                              *lazyflex.nvim-lazyflex.nvim-important*
+CONCEPTS                                *lazyflex.nvim-lazyflex.nvim-concepts*
 
-Without keywords to operate on, **lazyflex** returns immediately and does not
-apply any changes.
+**lazyflex**
 
-When enabling, do not forget to add the name of the colorscheme to the
-keywords!
+1. Returnsimmediately when there are no keywords supplied to _enable_ or _disable_
+2. Only operates on plugins that are not unconditionally disabled(`plugin.enabled = false`)
+
+
+IMPORTANT PROPERTIES ~
+
+- `kw`a list of words matching names of plugins.
+- `preset`a _predefined_ list of words matching names of plugins
+- `enable_match`
+    - `true`(_enable_incrementally, the default): _enable_ all plugins that match keywords, _disable_ the others.
+    - `false`(_disable_ incrementally): _disable_ all plugins that match keywords, _enable_ the others
+
+
+COLORSCHEME                          *lazyflex.nvim-lazyflex.nvim-colorscheme*
+
+_Important_The name of the colorscheme must be in the keywords when `enabling`
 
 Alternatively:
 
-1. Add the name to property |lazyflex.nvim-kw_always_enable|
+1. Add the name to property |lazyflex.nvim-kw_always_enable| `kw_always_enable = { "lazy", "name-of-color"}`
 2. When using **LazyVim**Use the `colorscheme` preset.
 3. When using |lazyflex.nvim-custom-presets|Create a `colorscheme` preset.
-
-_Note_It is not possible to configure multiple fragments of the plugin.
-
-
-ABOUT ENABLING AND DISABLING*lazyflex.nvim-lazyflex.nvim-about-enabling-and-disabling*
-
-By default, **lazyflex** sets a `cond` property on each plugin managed by
-**lazy.nvim**. The value of the property is either `true` or `false`, as
-configured in the `enable_match` setting.
-
-The property needs to be set before **lazy.nvim** starts marking plugins
-_enabled_ or _disabled_. Therefore, **lazyflex** operates in the `spec phase`.
-
-
-  See: `:Lazy profile`. As part of the `spec phase`, **lazy.nvim** _requires_
-  `"lazyflex.hook"`.
-A similar approach can also be found in the following code:
-
-- `vscode.lua`**LazyVim** <https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/plugins/extras/vscode.lua#L24>
-- `config.init`**LazyVim** <https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/config/init.lua#L187>
-
-**References**
-
-- PluginSpec: **lazy.nvim** <https://github.com/folke/lazy.nvim#-plugin-spec>
-- Configuration `defaults.cond`**lazy.nvim** <https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration>
 
 
 EXAMPLES                                *lazyflex.nvim-lazyflex.nvim-examples*
@@ -161,7 +151,7 @@ _Note_A preset setting that does not match a predefined preset will be ignored.
 
 >lua
       -- New plugin: harpoon
-      -- Plugins: 44 disabled
+      -- Plugins: approximately 40 disabled
       {
         "abeldekat/lazyflex.nvim",
         import = "lazyflex.hook",
@@ -171,7 +161,7 @@ _Note_A preset setting that does not match a predefined preset will be ignored.
       },
     
       -- Lazyvim: telescope and the following modules: coding, colorscheme
-      -- Plugins: 30 disabled
+      -- Plugins: approximately 30 disabled
       {
         "abeldekat/lazyflex.nvim",
         import = "lazyflex.hook",
@@ -182,7 +172,7 @@ _Note_A preset setting that does not match a predefined preset will be ignored.
       },
     
       -- LazyVim: disable telescope and all plugins in the lsp module
-      -- Plugins: 8 disabled
+      -- Plugins: approximately 10 disabled
       {
         "abeldekat/lazyflex.nvim",
         import = "lazyflex.hook",
@@ -234,7 +224,7 @@ Add to the options:
       },
     
       -- LazyVim: all specs except the ones defined in UI
-      -- Plugins: 11 disabled
+      -- Plugins: approximately 10 disabled
       {
         "abeldekat/lazyflex.nvim",
         import = "lazyflex.hook",
@@ -364,11 +354,9 @@ CONFIGURATION                      *lazyflex.nvim-lazyflex.nvim-configuration*
       enable_match = true,
     
       -- keywords for plugins to always enable:
-      kw_always_enable = { "lazy" }, -- lazy.nvim, LazyVim, lazyflex
+      kw_always_enable = { "lazy" }, -- matching lazy.nvim, LazyVim, lazyflex
     
       -- keywords specified by the user:
-      -- keywords from presets and kw_always_enable are merged in by lazyflex
-      -- keywords specified by the user are appended to the final result
       kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
     }
 <
@@ -381,6 +369,28 @@ The plugin has two examples for writing reproducible configurations using
 
 - `repro_lazy.lua` <https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazy.lua>
 - `repro_lazyvim.lua` <https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazyvim.lua>
+
+
+ABOUT ENABLING AND DISABLING*lazyflex.nvim-lazyflex.nvim-about-enabling-and-disabling*
+
+For each plugin managed by _lazy.nvim_ that is not unconditionally `disabled`,
+**lazyflex** attaches `cond=false` when the plugin should be disabled.
+
+The `cond` property needs to be set before **lazy.nvim** starts taking its
+value into consideration. Therefore, **lazyflex** operates in the `spec phase`.
+
+
+  See: `:Lazy profile`. As part of the `spec phase`, **lazy.nvim** _requires_
+  `"lazyflex.hook"`.
+A similar approach can also be found in the following code:
+
+- `vscode.lua`**LazyVim** <https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/plugins/extras/vscode.lua#L24>
+- `config.init`**LazyVim** <https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/config/init.lua#L187>
+
+**References**
+
+- PluginSpec: **lazy.nvim** <https://github.com/folke/lazy.nvim#-plugin-spec>
+- Configuration `defaults.cond`**lazy.nvim** <https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration>
 
 
 HISTORY                                  *lazyflex.nvim-lazyflex.nvim-history*

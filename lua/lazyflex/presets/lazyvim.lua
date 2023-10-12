@@ -67,7 +67,6 @@ M.when_enabling = {
   coding = {
     "treesitter",
     "nvim-treesitter-textobjects", -- mini.ai
-    "nvim-ts-context-commentstring", -- mini.comment
   },
   editor = {
     "nui.nvim", -- neo-tree

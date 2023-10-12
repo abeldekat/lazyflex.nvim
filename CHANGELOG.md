@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/abeldekat/lazyflex.nvim/compare/v2.1.1...v2.1.2) (2023-10-12)
+
+
+### Bug Fixes
+
+* **core:** lazyflex must skip disabled plugins ([#41](https://github.com/abeldekat/lazyflex.nvim/issues/41)) ([773bedd](https://github.com/abeldekat/lazyflex.nvim/commit/773beddc091f09913205d4c10bf1ab83da28c24d))
+
 ## [2.1.1](https://github.com/abeldekat/lazyflex.nvim/compare/v2.1.0...v2.1.1) (2023-10-10)
 
 

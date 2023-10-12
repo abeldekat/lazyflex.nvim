@@ -37,11 +37,9 @@ local defaults = {
   enable_match = true,
 
   -- keywords for plugins to always enable:
-  kw_always_enable = { "lazy" }, -- lazy.nvim, LazyVim, lazyflex
+  kw_always_enable = { "lazy" }, -- matching lazy.nvim, LazyVim, lazyflex
 
   -- keywords specified by the user:
-  -- keywords from presets and kw_always_enable are merged in by lazyflex
-  -- keywords specified by the user are appended to the final result
   kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
 }
 

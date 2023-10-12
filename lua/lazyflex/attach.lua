@@ -1,5 +1,13 @@
 local M = {}
 
+-- cond and enabled can be a function
+local function get_value(prop_or_function, plugin)
+  if type(prop_or_function) == "function" then
+    return prop_or_function(plugin)
+  end
+  return prop_or_function
+end
+
 -- return the value of enable_match when there is a match
 local function should_enable(name, keywords, enable_match)
   name = string.lower(name)
@@ -15,11 +23,11 @@ end
 -- for the same plugin, the add method can be called multiple times:
 function M.attach(opts, adapter)
   local object_to_attach = adapter.get_object_to_attach()
-  local snapshot = object_to_attach.add
+  local add = object_to_attach.add
 
   object_to_attach.add = function(self, plugin_to_add, ...)
-    -- call the original add method:
-    local plugin = snapshot(self, plugin_to_add, ...)
+    -- call lazy's add
+    local plugin = add(self, plugin_to_add, ...)
 
     -- when invalid(see lazy.nvim):
     local name = plugin and plugin.name or nil
@@ -28,10 +36,10 @@ function M.attach(opts, adapter)
     end
 
     -- when unconditionally disabled:
-    if plugin.enabled == false then
+    if get_value(plugin.enabled, plugin) == false then
       -- see unit test: "is repaired when cond=false"
-      if plugin.cond == false then -- repair
-        plugin.cond = true
+      if get_value(plugin.cond, plugin) == false then
+        plugin.cond = true -- repair
       end
       return plugin
     end

@@ -90,7 +90,7 @@ end
 
 -- test matching
 describe("a match", function()
-  it("uses enable_target by default", function()
+  it("uses enable_match=true by default", function()
     local spec = new_test_spec()
 
     activate({ kw = { "cmp", "snip" } }, spec)
@@ -196,15 +196,42 @@ describe("an unconditionally disabled plugin", function()
     assert(new["enabled"] == false) -- second add: the user disabled the plugin
     assert(new["cond"] == true) -- thus, lazyflex repairs cond
   end)
+end)
 
-  -- it("should also test the cond property as a function", function()
-  --   assert(true)
-  -- end)
-  --
-  -- it("should also test for enabled as a function", function()
-  --   assert(true)
-  -- end)
-  --
+describe("spec properties", function()
+  it("can be a function, ie. cond", function()
+    local plugin = {
+      name = "mini.comment",
+      cond = function()
+        return false
+      end,
+      enabled = false,
+    }
+    local spec = { plugin }
+    local opts = { enable_match = false, kw = { "com" } }
+
+    activate(opts, spec)
+
+    assert(plugin["enabled"] == false)
+    assert(plugin["cond"] == true) -- repaired, cond as function is recognized
+  end)
+
+  it("can be a function, ie. enabled", function()
+    local plugin = {
+      name = "mini.comment",
+      cond = false,
+      enabled = function()
+        return false
+      end,
+    }
+    local spec = { plugin }
+    local opts = { enable_match = false, kw = { "com" } }
+
+    activate(opts, spec)
+
+    assert(plugin["enabled"]() == false)
+    assert(plugin["cond"] == true) -- repaired, enabled as function is recognized
+  end)
 end)
 
 -- test disabling settings

@@ -30,28 +30,25 @@ function M.attach(opts, adapter)
     -- call the original add method:
     local plugin = snapshot(self, plugin_to_add, ...)
 
-    -- return when invalid(see lazy.nvim):
+    -- when invalid(see lazy.nvim):
     local name = plugin and plugin.name or nil
     if not name then
       return plugin
     end
 
-    -- return when plugin is unconditionally disabled:
+    -- when unconditionally disabled:
     if plugin.enabled == false then
       -- repair conditionally disabled:
-      if plugin_to_add.cond == false then
-        plugin_to_add.cond = true
+      if plugin.cond == false then
+        plugin.cond = true
       end
       return plugin
     end
 
-    -- return when plugin should be enabled:
-    local enable = should_enable(name, opts.kw, opts.enable_match)
-    if enable then
+    -- when enabled:
+    if should_enable(name, opts.kw, opts.enable_match) then
       return plugin -- already enabled
     end
-
-    -- plugin needs to be disabled:
     plugin.cond = false
     return plugin
   end

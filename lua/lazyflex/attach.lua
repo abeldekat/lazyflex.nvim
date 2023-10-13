@@ -19,6 +19,15 @@ local function should_enable(name, keywords, enable_match)
   return not enable_match
 end
 
+local function is_optional_in_core(plugin)
+  -- when a plugin is removed from core,
+  -- plugin.optional and plugin.enabled are used to inform the user
+  if plugin.optional == true then
+    return plugin._.module and not plugin._.module:find("lazyvim.plugins.extras")
+  end
+  return false
+end
+
 -- each plugin can have multiple fragments, identified by fid
 -- for the same plugin, the add method can be called multiple times:
 function M.attach(opts, adapter)
@@ -34,9 +43,14 @@ function M.attach(opts, adapter)
     if not name then
       return plugin
     end
+    -- when optional in core:
+    if is_optional_in_core(plugin) then
+      return plugin
+    end
 
     -- when unconditionally disabled:
-    if get_value(plugin.enabled, plugin) == false then
+    local plugin_enabled = get_value(plugin.enabled, plugin)
+    if plugin_enabled == false then
       -- see unit test: "is repaired when cond=false"
       if get_value(plugin.cond, plugin) == false then
         plugin.cond = true -- repair
@@ -45,9 +59,7 @@ function M.attach(opts, adapter)
     end
 
     -- plugin is enabled:
-    if not should_enable(name, opts.kw, opts.enable_match) then
-      plugin.cond = false
-    end
+    plugin.cond = should_enable(name, opts.kw, opts.enable_match)
     return plugin
   end
 end

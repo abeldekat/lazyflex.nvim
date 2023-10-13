@@ -333,7 +333,7 @@ using `lazyflex`, located in the `./repro` folder:
 ## About enabling and disabling
 
 For each plugin managed by _lazy.nvim_ that is not unconditionally `disabled`,
-**lazyflex** attaches `cond=false` when the plugin should be disabled.
+**lazyflex** overrides its `cond` property.
 
 The `cond` property needs to be set before **lazy.nvim** starts taking its value into consideration.
 Therefore, **lazyflex** operates in the `spec phase`.

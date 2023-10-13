@@ -124,37 +124,7 @@ describe("a match", function()
   end)
 end)
 
--- test opt-out early
-describe("lazyflex", function()
-  it("opts-out without keywords", function()
-    local spec = new_test_spec()
-    local opts = { kw = {}, enable_match = true }
-    activate(opts, spec)
-    assert(#spec == #filter_actual(spec, nil))
-  end)
-
-  it("opts-out without keywords or presets", function()
-    local spec = new_test_spec()
-    local opts = { lazyvim = { presets = {} }, kw = {}, enable_match = true }
-    activate(opts, spec)
-    assert(#spec == #filter_not_modified(spec))
-  end)
-
-  it("opts-out without keywords or -valid- lazyvim presets", function()
-    local spec = new_test_spec()
-    local opts = { lazyvim = { presets = { "dummy" } }, kw = {}, enable_match = true }
-    activate(opts, spec)
-    assert(#spec == #filter_not_modified(spec))
-  end)
-
-  it("opts-out without keywords or -valid- user presets", function()
-    local spec = new_test_spec()
-    local opts = { user = { presets = { "dummy" } }, kw = {}, enable_match = true }
-    activate(opts, spec)
-    assert(#spec == #filter_not_modified(spec))
-  end)
-end)
-
+-- test unconditionally disabled plugin
 describe("an unconditionally disabled plugin", function()
   -- a disable plugin should not become conditionally disabled!
   it("is discarded", function()
@@ -195,15 +165,62 @@ describe("an unconditionally disabled plugin", function()
   end)
 end)
 
-describe("spec properties", function()
-  it("can be a function, ie. cond", function()
-    local plugin = {
+-- test plugin NOT unconditionally disabled
+describe("an enabled plugin", function()
+  local function get_plugin()
+    return {
       name = "mini.comment",
-      cond = function()
-        return false
-      end,
+      cond = false,
+      enabled = true,
+    }
+  end
+
+  it("is enabled when cond=true", function()
+    local plugin = get_plugin()
+    local spec = { plugin }
+
+    activate({ kw = { "comment" } }, spec)
+
+    assert(plugin["cond"] == true) -- no changes
+    assert(plugin["enabled"] == true) -- no changes
+  end)
+
+  it("is also enabled when cond=false", function()
+    local plugin = get_plugin()
+    local spec = { plugin }
+
+    activate({ kw = { "comment" } }, spec)
+
+    assert(plugin["cond"] == true) -- changed!
+    assert(plugin["enabled"] == true) -- unchanged
+  end)
+
+  it("is also enabled when cond=false and enabled is not set", function()
+    local plugin = get_plugin()
+    plugin.enabled = nil
+    local spec = { plugin }
+
+    activate({ kw = { "comment" } }, spec)
+
+    assert(plugin["cond"] == true) -- changed!
+    assert(plugin["enabled"] == nil) -- unchanged
+  end)
+end)
+
+-- test properties cond and enabled as a function
+describe("spec properties", function()
+  local function get_plugin()
+    return {
+      name = "mini.comment",
+      cond = false,
       enabled = false,
     }
+  end
+  it("can be a function, ie. cond", function()
+    local plugin = get_plugin()
+    plugin.cond = function()
+      return false
+    end
     local spec = { plugin }
     local opts = { enable_match = false, kw = { "com" } }
 
@@ -214,13 +231,10 @@ describe("spec properties", function()
   end)
 
   it("can be a function, ie. enabled", function()
-    local plugin = {
-      name = "mini.comment",
-      cond = false,
-      enabled = function()
-        return false
-      end,
-    }
+    local plugin = get_plugin()
+    plugin.enabled = function()
+      return false
+    end
     local spec = { plugin }
     local opts = { enable_match = false, kw = { "com" } }
 
@@ -228,6 +242,68 @@ describe("spec properties", function()
 
     assert(plugin["enabled"]() == false)
     assert(plugin["cond"] == true) -- repaired, enabled as function is recognized
+  end)
+end)
+
+-- test optional plugin
+describe("an optional plugin", function()
+  -- when a plugin is removed from core,
+  -- plugin.optional and plugin.enabled are used to inform the user
+
+  local function get_plugin(module_name)
+    return {
+      name = "mini.comment",
+      _ = { module = module_name },
+      optional = true,
+      enabled = true,
+    }
+  end
+
+  it("is discarded when that plugin is in core", function()
+    local mini_comment = get_plugin("lazyvim.plugins.coding")
+    local spec = { mini_comment }
+    -- try to disable this fragment
+    activate({ enable_match = false, kw = { "comment" } }, spec)
+    assert(mini_comment["cond"] == nil)
+  end)
+
+  it("is processed when that plugin is in extras", function()
+    local mini_comment = get_plugin("lazyvim.plugins.extras.mini")
+    local spec = { mini_comment }
+    -- try to disable this fragment
+    activate({ enable_match = false, kw = { "comment" } }, spec)
+    assert(mini_comment["cond"] == false)
+  end)
+end)
+
+-- test opt-out early
+describe("lazyflex", function()
+  it("opts-out without keywords", function()
+    local spec = new_test_spec()
+    local opts = { kw = {}, enable_match = true }
+    activate(opts, spec)
+    assert(#spec == #filter_actual(spec, nil))
+  end)
+
+  it("opts-out without keywords or presets", function()
+    local spec = new_test_spec()
+    local opts = { lazyvim = { presets = {} }, kw = {}, enable_match = true }
+    activate(opts, spec)
+    assert(#spec == #filter_not_modified(spec))
+  end)
+
+  it("opts-out without keywords or -valid- lazyvim presets", function()
+    local spec = new_test_spec()
+    local opts = { lazyvim = { presets = { "dummy" } }, kw = {}, enable_match = true }
+    activate(opts, spec)
+    assert(#spec == #filter_not_modified(spec))
+  end)
+
+  it("opts-out without keywords or -valid- user presets", function()
+    local spec = new_test_spec()
+    local opts = { user = { presets = { "dummy" } }, kw = {}, enable_match = true }
+    activate(opts, spec)
+    assert(#spec == #filter_not_modified(spec))
   end)
 end)
 

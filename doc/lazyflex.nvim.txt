@@ -1,4 +1,4 @@
-*lazyflex.nvim.txt*      For Neovim >= 0.8.0      Last change: 2023 October 12
+*lazyflex.nvim.txt*      For Neovim >= 0.8.0      Last change: 2023 October 13
 
 ==============================================================================
 Table of Contents                            *lazyflex.nvim-table-of-contents*
@@ -374,7 +374,7 @@ The plugin has two examples for writing reproducible configurations using
 ABOUT ENABLING AND DISABLING*lazyflex.nvim-lazyflex.nvim-about-enabling-and-disabling*
 
 For each plugin managed by _lazy.nvim_ that is not unconditionally `disabled`,
-**lazyflex** attaches `cond=false` when the plugin should be disabled.
+**lazyflex** overrides its `cond` property.
 
 The `cond` property needs to be set before **lazy.nvim** starts taking its
 value into consideration. Therefore, **lazyflex** operates in the `spec phase`.

@@ -50,6 +50,9 @@ local defaults = {
 
   -- keywords specified by the user:
   kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
+
+  -- keywords specified by the user to invert behavior of `enable_match` for matching keywords:
+  kw_invert = {},
 }
 
 local function sanitize_config_options(collection)
@@ -125,6 +128,7 @@ M.setup = function(opts)
   end
   local user_keywords = opts.kw and vim.tbl_map(string.lower, opts.kw) or {}
   opts.kw = vim.list_extend(keywords, user_keywords) -- the result
+  opts.kw_invert = opts.kw_invert and vim.tbl_map(string.lower, opts.kw_invert) or {}
 
   return opts
 end

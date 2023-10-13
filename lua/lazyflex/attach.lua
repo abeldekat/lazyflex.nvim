@@ -60,6 +60,14 @@ function M.attach(opts, adapter)
 
     -- plugin is enabled:
     plugin.cond = should_enable(name, opts.kw, opts.enable_match)
+    if opts.kw_invert and not vim.tbl_isempty(opts.kw_invert) then
+      for _, keyword in ipairs(opts.kw_invert) do
+        if name:find(keyword, 1, true) then
+          plugin.cond = not opts.enable_match
+        end
+      end
+    end
+
     return plugin
   end
 end

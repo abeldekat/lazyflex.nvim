@@ -74,7 +74,7 @@ _Important_: The name of the colorscheme must be in the keywords when `enabling`
 
 Alternatively:
 
-1. Add the name to property [kw_always_enable](#configuration) : `kw_always_enable = { "lazy", "name-of-color"}`
+1. Add the name to property [kw_always_enable](#configuration) : `kw_always_enable = { "name-of-colorscheme"}`
 2. When using **LazyVim**: Use the `colorscheme` preset.
 3. When using [custom presets](#adding-custom-presets): Create a `colorscheme` preset.
 
@@ -245,11 +245,10 @@ local presets = {
   test = { "harpoon" },
 }
 
--- only act on plenary when enabling plugins
--- other plugins might crash when plenary is disabled
--- always enable the colorscheme
+-- enable_match=true: harpoon needs plenary
+-- enable_match=false: plenary should not be disabled
 local when_enabling = {
-  test = { "plenary", "tokyo" },
+  test = { "plenary" },
 }
 
 M.get_preset_keywords = function(name, enable_match)
@@ -264,17 +263,24 @@ M.get_preset_keywords = function(name, enable_match)
   return result or {}
 end
 
-M.return_spec = function(_) -- config
+M.return_spec = function(config) -- config
+  if config.options == false then
+    package.loaded["config.options"] = true
+    vim.g.mapleader = " "
+    vim.g.maplocalleader = "\\"
+  end
+  if config.autocmds == false then
+    package.loaded["config.autocmds"] = true
+  end
+  if config.keymaps == false then
+    package.loaded["config.keymaps"] = true
+  end
+
   return {}
 end
 
 return M
 ```
-
-_Note_: It is possible to configure the `config` argument, passed into method `return_spec`.
-The `user` collection contains `user.config` implicitly, having the same properties
-as defined in `lazyvim.config`.
-Those properties are all set to `false`, when the `user.config` section is not present in `opts`.
 
 ## Configuration
 
@@ -309,13 +315,22 @@ Those properties are all set to `false`, when the `user.config` section is not p
     fallback = "lazyflex.collections.stub", -- do not modify
     -- without user.mod, any user.presets specified will have no effect:
     presets = {}, -- example when implemented: { "test" }
+
+    -- it's possible to implement custom loading of user settings in user.mod
+    -- by default, load user's settings:
+    config = {
+      enabled = true, -- quick switch. Disables the three options below:
+      options = true, -- use config.options
+      autocmds = true, -- use config.autocmds
+      keymaps = true, -- use config.keymaps
+    },
   },
 
   -- either enable or disable matching plugins:
   enable_match = true,
 
-  -- keywords for plugins to always enable:
-  kw_always_enable = { "lazy" }, -- matching lazy.nvim, LazyVim, lazyflex
+  -- keywords matching plugins to always enable:
+  kw_always_enable = {}, -- the "lazy" keyword is always included
 
   -- keywords specified by the user:
   kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline

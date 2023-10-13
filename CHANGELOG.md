@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.4](https://github.com/abeldekat/lazyflex.nvim/compare/v2.1.3...v2.1.4) (2023-10-13)
+
+
+### Bug Fixes
+
+* **core:** handle plugin.optional and always set plugin.cond when plugin is enabled ([#48](https://github.com/abeldekat/lazyflex.nvim/issues/48)) ([aa1ccb4](https://github.com/abeldekat/lazyflex.nvim/commit/aa1ccb445a4ebd9fb6869d7317c0e0c69830d033))
+
 ## [2.1.3](https://github.com/abeldekat/lazyflex.nvim/compare/v2.1.2...v2.1.3) (2023-10-12)
 
 

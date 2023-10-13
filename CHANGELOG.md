@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/abeldekat/lazyflex.nvim/compare/v2.1.4...v2.2.0) (2023-10-13)
+
+
+### Features
+
+* **core:** implemented config settings for the user. ([#50](https://github.com/abeldekat/lazyflex.nvim/issues/50)) ([b365f9d](https://github.com/abeldekat/lazyflex.nvim/commit/b365f9d87b42a20fe63f61f41aee9a459e5c7bcc))
+
 ## [2.1.4](https://github.com/abeldekat/lazyflex.nvim/compare/v2.1.3...v2.1.4) (2023-10-13)
 
 

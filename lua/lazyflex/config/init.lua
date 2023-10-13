@@ -31,13 +31,22 @@ local defaults = {
     fallback = "lazyflex.collections.stub", -- do not modify
     -- without user.mod, any user.presets specified will have no effect:
     presets = {}, -- example when implemented: { "test" }
+
+    -- it's possible to implement custom loading of user settings in user.mod
+    -- by default, load user's settings:
+    config = {
+      enabled = true, -- quick switch. Disables the three options below:
+      options = true, -- use config.options
+      autocmds = true, -- use config.autocmds
+      keymaps = true, -- use config.keymaps
+    },
   },
 
   -- either enable or disable matching plugins:
   enable_match = true,
 
-  -- keywords for plugins to always enable:
-  kw_always_enable = { "lazy" }, -- matching lazy.nvim, LazyVim, lazyflex
+  -- keywords matching plugins to always enable:
+  kw_always_enable = {}, -- the "lazy" keyword is always included
 
   -- keywords specified by the user:
   kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
@@ -55,6 +64,10 @@ local function sanitize_config_options(collection)
 end
 
 local function sanitize(opts)
+  local always_enable = opts.kw_always_enable or {}
+  if not vim.tbl_contains(always_enable, "lazy") then
+    table.insert(always_enable, "lazy")
+  end
   local collection = opts.collection or {}
   if not vim.tbl_contains(collection, "user") then
     table.insert(collection, "user")

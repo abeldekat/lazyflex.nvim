@@ -62,10 +62,10 @@ describe("override_kw", function()
 
     h.activate({
       enable_match = false,
-      kw = { "nvim-cmp", "cmp-nvim-lsp", "cmp_luasnip", "cmp-buffer" },
-      override_kw = { "cmp_luas" },
+      kw = { "luAsnip", "nvim-cmp", "cmp-nvim-lsp", "cmp_luasnip", "cmp-buffer" },
+      override_kw = { "cmp_lua" },
     }, spec)
 
-    assert.same({ "nvim-cmp", "cmp-nvim-lsp", "cmp-buffer" }, h.filter_disabled(spec))
+    assert.same({ "LuaSnip", "nvim-cmp", "cmp-nvim-lsp", "cmp-buffer" }, h.filter_disabled(spec))
   end)
 end)

@@ -1,8 +1,11 @@
+--[[
+presets should be lowercase!
+--]]
 local M = {}
 
 M.presets = {
   coding = {
-    "LuaSnip",
+    "luasnip",
     "friendly-snippets",
     "nvim-cmp",
     "cmp-nvim-lsp",

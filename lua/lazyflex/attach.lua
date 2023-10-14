@@ -1,22 +1,16 @@
 local M = {}
 
--- cond and enabled can be a function
-local function get_value(prop_or_function, plugin)
-  if type(prop_or_function) == "function" then
-    return prop_or_function(plugin)
-  end
-  return prop_or_function
-end
-
--- return the value of enable_match when there is a match
-local function should_enable(name, keywords, enable_match)
-  name = string.lower(name)
+local function find(name, keywords)
   for _, keyword in ipairs(keywords) do
     if name:find(keyword, 1, true) then
-      return enable_match
+      return true
     end
   end
-  return not enable_match
+  return false
+end
+
+local function is_also_found_in(name, keywords)
+  return keywords and not vim.tbl_isempty(keywords) and find(name, keywords)
 end
 
 local function is_optional_in_core(plugin)
@@ -26,6 +20,14 @@ local function is_optional_in_core(plugin)
     return plugin._.module and not plugin._.module:find("lazyvim.plugins.extras")
   end
   return false
+end
+
+-- cond and enabled can be a function
+local function get_value(prop_or_function, plugin)
+  if type(prop_or_function) == "function" then
+    return prop_or_function(plugin)
+  end
+  return prop_or_function
 end
 
 -- each plugin can have multiple fragments, identified by fid
@@ -47,10 +49,8 @@ function M.attach(opts, adapter)
     if is_optional_in_core(plugin) then
       return plugin
     end
-
     -- when unconditionally disabled:
-    local plugin_enabled = get_value(plugin.enabled, plugin)
-    if plugin_enabled == false then
+    if get_value(plugin.enabled, plugin) == false then
       -- see unit test: "is repaired when cond=false"
       if get_value(plugin.cond, plugin) == false then
         plugin.cond = true -- repair
@@ -59,7 +59,12 @@ function M.attach(opts, adapter)
     end
 
     -- plugin is enabled:
-    plugin.cond = should_enable(name, opts.kw, opts.enable_match)
+    local is_found = find(name, opts.kw)
+    plugin.cond = is_found and opts.enable_match
+    if is_found and is_also_found_in(name, opts.kw_invert) then
+      plugin.cond = not plugin.cond --override
+    end
+
     return plugin
   end
 end

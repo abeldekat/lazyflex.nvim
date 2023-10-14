@@ -6,59 +6,54 @@ local function new_test_spec()
     -- always enabled
     { name = "lazy.nvim" },
     { name = "LazyVim" },
-    -- coding module in lazyvim
+    -- lazyvim coding
     { name = "LuaSnip" },
     { name = "nvim-cmp" },
     { name = "cmp-nvim-lsp" },
     { name = "cmp_luasnip" },
     { name = "cmp-buffer" },
     { name = "mini.comment" },
-    -- lsp module in lazyvim
+    -- lazyvim lsp
     { name = "nvim-lspconfig" },
-    { name = "mason.nvim" },
-    { name = "mason-lspconfig.nvim" },
   }
   return spec
 end
 
 -- test matching
-describe("kw_invert testing", function()
-  it("does work when the kw is broader than kw_invert", function()
+describe("override_kw", function()
+  local expect_disabled = {
+    "LuaSnip",
+    "cmp_luasnip",
+    "mini.comment",
+    "nvim-lspconfig",
+  }
+  it("overrides when kw is more generic than override_kw", function()
     local spec = new_test_spec()
 
-    h.activate({ kw = { "cmp" }, kw_invert = { "cmp_luasnip" } }, spec)
+    h.activate({ kw = { "cmp" }, override_kw = { "cmp_luasnip" } }, spec)
 
-    -- stylua: ignore
-    assert.same({
-      "LuaSnip","cmp_luasnip", "mini.comment", "nvim-lspconfig", "mason.nvim", "mason-lspconfig.nvim",
-    }, h.filter_disabled(spec))
+    assert.same(expect_disabled, h.filter_disabled(spec))
   end)
 
-  it("works when the kw is equal to kw_invert", function()
+  it("overrides when kw is equal to override_kw", function()
     local spec = new_test_spec()
 
     h.activate({
       kw = { "nvim-cmp", "cmp-nvim-lsp", "cmp-luasnip", "cmp-buffer" },
-      kw_invert = { "cmp-luasnip" },
+      override_kw = { "cmp-luasnip" },
     }, spec)
 
-    -- stylua: ignore
-    assert.same({
-      "LuaSnip","cmp_luasnip", "mini.comment", "nvim-lspconfig", "mason.nvim", "mason-lspconfig.nvim",
-    }, h.filter_disabled(spec))
+    assert.same(expect_disabled, h.filter_disabled(spec))
   end)
 
-  it("works when kw_invert is broader than kw", function()
+  it("overrides when override_kw is more generic than kw", function()
     local spec = new_test_spec()
 
     h.activate({
       kw = { "nvim-cmp", "cmp-nvim-lsp", "cmp-luasnip", "cmp-buffer" },
-      kw_invert = { "cmp-luas" },
+      override_kw = { "cmp-luas" },
     }, spec)
 
-    -- stylua: ignore
-    assert.same({
-      "LuaSnip","cmp_luasnip", "mini.comment", "nvim-lspconfig", "mason.nvim", "mason-lspconfig.nvim",
-    }, h.filter_disabled(spec))
+    assert.same(expect_disabled, h.filter_disabled(spec))
   end)
 end)

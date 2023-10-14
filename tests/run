@@ -2,7 +2,7 @@
 
 # nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests/core/e2e_spec.lua {minimal_init = 'tests//init.lua', sequential = true}"
 # nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests/core/match_spec.lua {minimal_init = 'tests//init.lua', sequential = true}"
-# nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests/core/match_override_spec.lua {minimal_init = 'tests//init.lua', sequential = true}"
+nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests/core/match_override_spec.lua {minimal_init = 'tests//init.lua', sequential = true}"
 # nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests/core/opt_out_spec.lua {minimal_init = 'tests//init.lua', sequential = true}"
 # nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests/core/plugin_state_spec.lua {minimal_init = 'tests//init.lua', sequential = true}"
 # nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests/core/props_as_function_spec.lua {minimal_init = 'tests//init.lua', sequential = true}"

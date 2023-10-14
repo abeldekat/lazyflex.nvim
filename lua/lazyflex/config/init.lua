@@ -50,6 +50,10 @@ local defaults = {
 
   -- keywords specified by the user:
   kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
+
+  -- when the name of the plugin matches keywords in both kw and override_kw:
+  -- invert enable_match for that plugin
+  override_kw = {},
 }
 
 local function sanitize_config_options(collection)
@@ -125,6 +129,7 @@ M.setup = function(opts)
   end
   local user_keywords = opts.kw and vim.tbl_map(string.lower, opts.kw) or {}
   opts.kw = vim.list_extend(keywords, user_keywords) -- the result
+  opts.override_kw = opts.override_kw and vim.tbl_map(string.lower, opts.override_kw) or {}
 
   return opts
 end

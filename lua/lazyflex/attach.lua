@@ -61,8 +61,8 @@ function M.attach(opts, adapter)
     -- plugin is enabled:
     local is_found = find(name, opts.kw)
     plugin.cond = is_found and opts.enable_match
-    if is_found and is_also_found_in(name, opts.kw_invert) then
-      plugin.cond = not plugin.cond --override
+    if is_found and is_also_found_in(name, opts.override_kw) then
+      plugin.cond = not plugin.cond -- override
     end
 
     return plugin

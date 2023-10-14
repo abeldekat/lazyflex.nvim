@@ -27,7 +27,7 @@ describe("override_kw", function()
     "mini.comment",
     "nvim-lspconfig",
   }
-  it("overrides when kw is more generic than override_kw", function()
+  it("overrides when kw is broader than override_kw", function()
     local spec = new_test_spec()
 
     h.activate({ kw = { "cmp" }, override_kw = { "cmp_luasnip" } }, spec)
@@ -39,21 +39,33 @@ describe("override_kw", function()
     local spec = new_test_spec()
 
     h.activate({
-      kw = { "nvim-cmp", "cmp-nvim-lsp", "cmp-luasnip", "cmp-buffer" },
-      override_kw = { "cmp-luasnip" },
+      kw = { "nvim-cmp", "cmp-nvim-lsp", "cmp_luasnip", "cmp-buffer" },
+      override_kw = { "cmp_luasnip" },
     }, spec)
 
     assert.same(expect_disabled, h.filter_disabled(spec))
   end)
 
-  it("overrides when override_kw is more generic than kw", function()
+  it("overrides when override_kw is broader than kw", function()
     local spec = new_test_spec()
 
     h.activate({
-      kw = { "nvim-cmp", "cmp-nvim-lsp", "cmp-luasnip", "cmp-buffer" },
-      override_kw = { "cmp-luas" },
+      kw = { "nvim-cmp", "cmp-nvim-lsp", "cmp_luasnip", "cmp-buffer" },
+      override_kw = { "cmp_luas" },
     }, spec)
 
     assert.same(expect_disabled, h.filter_disabled(spec))
+  end)
+
+  it("overrides when enable_match=false", function()
+    local spec = new_test_spec()
+
+    h.activate({
+      enable_match = false,
+      kw = { "nvim-cmp", "cmp-nvim-lsp", "cmp_luasnip", "cmp-buffer" },
+      override_kw = { "cmp_luas" },
+    }, spec)
+
+    assert.same({ "nvim-cmp", "cmp-nvim-lsp", "cmp-buffer" }, h.filter_disabled(spec))
   end)
 end)

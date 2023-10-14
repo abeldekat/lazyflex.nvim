@@ -30,6 +30,19 @@ local function get_value(prop_or_function, plugin)
   return prop_or_function
 end
 
+local function calculate_cond(name, opts)
+  local cond = false
+  if not find(name, opts.kw) then
+    cond = not opts.enable_match
+  else
+    cond = opts.enable_match
+    if is_also_found_in(name, opts.override_kw) then
+      cond = not cond
+    end
+  end
+  return cond
+end
+
 -- each plugin can have multiple fragments, identified by fid
 -- for the same plugin, the add method can be called multiple times:
 function M.attach(opts, adapter)
@@ -41,7 +54,7 @@ function M.attach(opts, adapter)
     local plugin = add(self, plugin_to_add, ...)
 
     -- when invalid(see lazy.nvim):
-    local name = plugin and plugin.name or nil
+    local name = plugin and plugin.name and string.lower(plugin.name) or nil
     if not name then
       return plugin
     end
@@ -59,12 +72,7 @@ function M.attach(opts, adapter)
     end
 
     -- plugin is enabled:
-    local is_found = find(name, opts.kw)
-    plugin.cond = is_found and opts.enable_match
-    if is_found and is_also_found_in(name, opts.override_kw) then
-      plugin.cond = not plugin.cond -- override
-    end
-
+    plugin.cond = calculate_cond(name, opts)
     return plugin
   end
 end

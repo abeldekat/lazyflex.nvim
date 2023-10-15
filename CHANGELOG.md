@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/abeldekat/lazyflex.nvim/compare/v2.2.0...v2.3.0) (2023-10-15)
+
+
+### Features
+
+* **core:** add override_kw ([#53](https://github.com/abeldekat/lazyflex.nvim/issues/53)) ([218d29e](https://github.com/abeldekat/lazyflex.nvim/commit/218d29e6a2773c4748cac156401eda73504a7893))
+
 ## [2.2.0](https://github.com/abeldekat/lazyflex.nvim/compare/v2.1.4...v2.2.0) (2023-10-13)
 
 

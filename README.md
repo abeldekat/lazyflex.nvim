@@ -63,6 +63,8 @@ _Note_: It is not possible to configure multiple fragments of the plugin.
 ### Important properties
 
 - `kw`: a list of words matching names of plugins.
+- `override_kw`: a list of words matching names of plugins to override (these keywords only match on
+  plugins' names which have already been matched by `kw` or `preset` and whose behavior we would like to override)
 - `preset`: a _predefined_ list of words matching names of plugins
 - `enable_match`:
   - `true`(_enable_ incrementally, the default): _enable_ all plugins that match keywords, _disable_ the others.
@@ -151,6 +153,23 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
       enable_match = false,
       lazyvim = { presets = { "lsp" } },
       kw = { "tele" },
+    },
+  },
+
+  -- Lazyvim: enable plugins in editor module and plugins matching `cmp`
+  -- except plugins that are matched against `override_kw`
+  -- Plugins: approximately 33 disabled
+  {
+    "abeldekat/lazyflex.nvim",
+    cond = true, -- enable/disable lazyflex.nvim
+    import = "lazyflex.hook",
+    opts = {
+      lazyvim = { presets = { "editor" } },
+      kw_always_enable = { "tokyo" }, -- always enable your colorscheme
+      kw = { "cmp" },
+      -- override plugins that match these keywords, namely "cmp_luasnip",
+      -- "flash.nvim" and "nvim-spectre" should be disabled in this case
+      override_kw = { "spectre", "fla", "luasn" },
     },
   },
 
@@ -334,6 +353,10 @@ return M
 
   -- keywords specified by the user:
   kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
+
+  -- when the name of the plugin matches keywords in both kw/preset and override_kw
+  -- invert enable_match for that plugin
+  override_kw = {},
 }
 ```
 

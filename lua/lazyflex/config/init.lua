@@ -51,7 +51,7 @@ local defaults = {
   -- keywords specified by the user:
   kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
 
-  -- when the name of the plugin matches keywords in both kw and override_kw:
+  -- when the name of the plugin matches keywords in both kw/preset and override_kw:
   -- invert enable_match for that plugin
   override_kw = {},
 }

@@ -43,7 +43,7 @@ function M.on_hook(adapter)
     return {}
   end
 
-  attach(opts, adapter)
+  attach({ enable_match = opts.enable_match, kw = opts.kw, override_kw = opts.override_kw }, adapter)
 
   return spec(opts)
 end

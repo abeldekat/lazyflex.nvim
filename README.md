@@ -65,8 +65,10 @@ _Note_: It is not possible to configure multiple fragments of the plugin.
 - `kw`: a list of words matching names of plugins.
 - `preset`: a _predefined_ list of words matching names of plugins
 - `enable_match`:
-  - `true`(_enable_ incrementally, the default): _enable_ all plugins that match keywords, _disable_ the others.
+  - `true`(_enable_ incrementally, default): _enable_ all plugins that match keywords, _disable_ the others.
   - `false`(_disable_ incrementally): _disable_ all plugins that match keywords, _enable_ the others
+- `override_kw`: invert `enable_match` on a plugin when its name has a match
+in both this list of words **and** in `kw` including `presets` 
 
 ## Colorscheme
 
@@ -151,6 +153,21 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
       enable_match = false,
       lazyvim = { presets = { "lsp" } },
       kw = { "tele" },
+    },
+  },
+
+  -- Lazyvim: enable plugins in the editor module and plugins matching `cmp`,
+  -- except plugins that are also matched against `override_kw`
+  -- Plugins: approximately 30 disabled
+  {
+    "abeldekat/lazyflex.nvim",
+    import = "lazyflex.hook",
+    opts = {
+      kw_always_enable = { "tokyo" }, -- always enable your colorscheme
+      lazyvim = { presets = { "editor" } },
+      kw = { "cmp" },
+      --  don't enable: "nvim-spectre", "flash.nvim" and "cmp_luasnip"
+      override_kw = { "spectre", "fla", "luasn" },
     },
   },
 
@@ -263,7 +280,7 @@ M.get_preset_keywords = function(name, enable_match)
   return result or {}
 end
 
-M.return_spec = function(config) -- config
+M.return_spec = function(config)
   if config.options == false then
     package.loaded["config.options"] = true
     vim.g.mapleader = " "
@@ -334,6 +351,10 @@ return M
 
   -- keywords specified by the user:
   kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
+
+  -- when the name of the plugin matches keywords in both kw/preset and override_kw:
+  -- invert enable_match for that plugin
+  override_kw = {},
 }
 ```
 

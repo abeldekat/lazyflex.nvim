@@ -16,7 +16,7 @@ local function new_test_spec()
     { name = "LuaSnip" },
     { name = "nvim-cmp" },
     { name = "cmp-nvim-lsp" },
-    { name = "cmp-luasnip" },
+    { name = "cmp_luasnip" },
     { name = "cmp-buffer" },
     { name = "mini.comment" },
     -- all plugins from the lsp module in lazyvim
@@ -72,7 +72,7 @@ describe("the matching process", function()
 
     assert.same({
       "LuaSnip",
-      "cmp-luasnip",
+      "cmp_luasnip",
     }, h.filter_disabled(spec))
   end)
 
@@ -85,7 +85,7 @@ describe("the matching process", function()
 
     -- stylua: ignore start
     assert.same({
-      "LuaSnip", "nvim-cmp", "cmp-nvim-lsp", "cmp-luasnip", "cmp-buffer",
+      "LuaSnip", "nvim-cmp", "cmp-nvim-lsp", "cmp_luasnip", "cmp-buffer",
     }, h.filter_disabled(spec))
     -- stylua: ignore end
   end)

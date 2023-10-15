@@ -12,7 +12,7 @@ function M.fake_lazy(opts, to_attach)
   }
 end
 
-function M.activate(opts, spec)
+function M.activate(opts, spec, collection_names)
   -- simulate lazy.nvim internals(adapter)
   local lazy_attached = {
     add = function(_, plugin)
@@ -23,9 +23,12 @@ function M.activate(opts, spec)
   local lazy = M.fake_lazy(opts, lazy_attached)
 
   -- run lazyflex. See lazyflex.hook. Decorates lazy_attached.add
-  local return_spec = require("lazyflex").on_hook(lazy)
+  if not collection_names then
+    collection_names = { "lazyvim", "user" }
+  end
+  local return_spec = require("lazyflex").on_hook(lazy, collection_names)
 
-  -- lazy.nvim parses the spec
+  -- simulate lazy.nvim parsing the spec
   for _, plugin in ipairs(spec) do
     lazy_attached.add(_, plugin)
   end

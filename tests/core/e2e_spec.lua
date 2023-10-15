@@ -24,7 +24,7 @@ describe("lazyflex.nvim", function()
       {
         "abeldekat/lazyflex.nvim",
         dir = get_dir(),
-        import = "lazyflex.hook",
+        import = "lazyflex.entry.lazy",
         opts = { kw = { "paint" } },
       },
       "folke/neodev.nvim",
@@ -46,7 +46,7 @@ describe("lazyflex.nvim", function()
       {
         "abeldekat/lazyflex.nvim",
         dir = get_dir(),
-        import = "lazyflex.hook",
+        import = "lazyflex.entry.lazyvim",
         opts = {
           lazyvim = { config = { enabled = false } },
           kw = { "tokyo" }, -- only download LazyVim and tokyonight
@@ -70,7 +70,7 @@ describe("lazyflex.nvim", function()
       {
         "abeldekat/lazyflex.nvim",
         dir = get_dir(),
-        import = "lazyflex.hook",
+        import = "lazyflex.entry.lazyvim",
         opts = {
           kw = { "tokyo" }, -- only download LazyVim and tokyonight
         },

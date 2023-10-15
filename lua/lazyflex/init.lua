@@ -14,37 +14,36 @@ local function get_opts(adapter, collection_names)
   if vim.tbl_isempty(opts.kw) then
     return nil -- no keywords to enable/disable...
   end
+
   return opts
 end
 
-local function attach(opts, adapter)
-  require("lazyflex.attach").attach(opts, adapter)
-end
-
-local function change_settings(opts, collection_names)
-  local result = {}
-  for _, name in ipairs(collection_names) do
-    local c = opts[name]
-    if c then
-      table.insert(result, c.change_settings(c.settings))
-    end
-  end
-  return result
-end
-
 function M.on_hook(adapter, collection_names)
+  -- don't use when embedded
   if vim.g.vscode or vim.g.started_by_firenvim then
     return {}
   end
 
+  -- opts
   local opts = get_opts(adapter, collection_names)
   if opts == nil then
     return {}
   end
 
-  attach(opts, adapter)
+  -- keywords
+  local opts_for_attach = { enable_match = opts.enable_match, kw = opts.kw }
+  require("lazyflex.attach").attach(opts_for_attach, adapter)
 
-  return change_settings(opts, collection_names)
+  -- settings
+  local result = {}
+  for _, name in ipairs(collection_names) do
+    local c = opts[name]
+    if c then
+      local spec = c.change_settings(c.settings)
+      table.insert(result, spec)
+    end
+  end
+  return result
 end
 
 function M.setup(_)

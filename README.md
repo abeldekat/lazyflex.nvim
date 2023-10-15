@@ -280,7 +280,7 @@ M.get_preset_keywords = function(name, enable_match)
   return result or {}
 end
 
-M.return_spec = function(config) -- config
+M.return_spec = function(config)
   if config.options == false then
     package.loaded["config.options"] = true
     vim.g.mapleader = " "

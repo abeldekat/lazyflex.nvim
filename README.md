@@ -8,7 +8,7 @@ The plugin facilitates troubleshooting and writing reproducible configurations.
 
 - Easier troubleshooting/testing from one central location.
   - Enable/disable multiple plugins by keyword.
-  - Define and use presets for your own configuration.
+  - Define and use [presets](#custom-presets-and-settings) for your own configuration.
   - Has presets for each default plugin module in [**LazyVim**](https://github.com/LazyVim/LazyVim).
   - Has options to skip loading the configuration modules (`options`, `autocmds`, `keymaps`) provided by **LazyVim**.
 - Helps to verify the independence of the components in the configuration.
@@ -204,25 +204,80 @@ Add to the options:
   },
 ```
 
-### Optional: custom presets and settings
+## Configuration
 
+**lazyflex.nvim** comes with the following defaults:
+
+```lua
+{
+  -- lazyvim collection
+  lazyvim = {
+    -- any lazyvim.presets specified that don't match have no effect:
+    presets = {}, -- example: { "coding" }: matches all plugins in the coding module
+
+    -- load lazyvim's settings by default:
+    settings = {
+      enabled = true, -- quick switch. Disables the three options below:
+      options = true, -- use config.options
+      autocmds = true, -- use config.autocmds
+      keymaps = true, -- use config.keymaps
+    },
+  },
+
+  -- user collection
+  user = {
+    -- lazyflex.collections.stub is used by default as a pass-through
+
+    -- 1. optional: functions overriding lazyflex.collections.stub
+    get_preset_keywords = nil,
+    change_settings = nil,
+
+    -- 2. optional: a user module, "required" automatically
+    -- the module should contain an implementation of lazyflex.collections.stub
+    -- use lazyflex.collections.lazyvim as an example
+    mod = "config.lazyflex",
+
+    presets = {}, -- example, when implemented: { "editor" }
+
+    settings = { -- passed into function change_settings:
+      enabled = true, -- quick switch. Disables the three options below:
+      options = true,
+      autocmds = true,
+      keymaps = true,
+    },
+  },
+
+  -- either enable or disable matching plugins:
+  enable_match = true,
+
+  -- keywords matching plugins to always enable:
+  kw_always_enable = {}, -- the "lazy" keyword is always included
+
+  -- keywords specified by the user:
+  kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
+}
+```
+
+### Custom presets and settings
+
+As an *optional* step, the user can add custom functions for handling presets and changing settings.
 The following functions are used by **lazyflex**:
 
 1. presets: `get_preset_keywords(name, enable_match)`
   - `name`: the name of the preset
   - `enable_match`: true when enabling, false otherwise
-  - *returns*: a list with keywords or {}
+  - *returns*: a `list` with keywords or `{}`
 2. settings: `change_settings(settings)`
-  - `settings`: the settings provided in `opts`
-  - *returns*: a spec(used for LazyVim) or {}
+  - `settings`: the settings provided in [opts](#configuration)
+  - *returns*: a `spec`(used by **LazyVim**) or `{}`
 
 _Note_: User presets will only apply when the module is correctly implemented and are otherwise ignored.
 
 Add to the options:
 
-> `user = { presets = { "coding", "editor"}}`
+> `user = { presets = { "coding", "editor"} }`
 
-The user can add custom handling directly to the `opts`: 
+The user can add custom code directly into the [opts](#configuration): 
 
 ```lua
 user = {
@@ -237,16 +292,15 @@ user = {
 },
 ```
 
-The user can also add a `lua` module to the configuration:
+Alternatively, the user can add a `lua` module to the configuration:
 
 > Example: Copy the lazyflex module [`lazyflex.collections.stub`](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
 > to `your-neovim-config-folder/lua/config/lazyflex.lua`
 
 When the user module is not present, **lazyflex** falls back to [lazyflex.collections.stub.](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
+The path and the name of the module can be changed:
 
-The path _or_ the name of the default user module can be changed:
-
-> user = { mod = "somewhere-else-inside-your-lua-folder.another-name"}
+> user = { mod = "inside-your-lua-folder.another-name"}
 
 _Note_: Do not use a folder `lazy.nvim` [imports](https://github.com/folke/lazy.nvim#%EF%B8%8F-importing-specs-config--opts) from.
 
@@ -294,60 +348,6 @@ M.change_settings = function(settings)
 end
 
 return M
-```
-
-## Configuration
-
-**lazyflex.nvim** comes with the following defaults:
-
-```lua
-{
-  -- lazyvim collection
-  lazyvim = {
-    -- any lazyvim.presets specified that don't match have no effect:
-    presets = {}, -- example: { "coding" }: matches all plugins in the coding module
-
-    -- load lazyvim's settings by default:
-    settings = {
-      enabled = true, -- quick switch. Disables the three options below:
-      options = true, -- use config.options
-      autocmds = true, -- use config.autocmds
-      keymaps = true, -- use config.keymaps
-    },
-  },
-
-  -- user collection
-  user = {
-    -- lazyflex.collections.stub is used by default as a pass-through
-
-    -- 1. optional: functions overriding lazyflex.collections.stub
-    get_preset_keywords = nil,
-    change_settings = nil,
-
-    -- 2. optional: a user module, "required" automatically
-    -- the module should contain an implementation of lazyflex.collections.stub
-    -- use lazyflex.collections.lazyvim as an example
-    mod = "config.lazyflex",
-
-    presets = {}, -- example, when implemented: { "test" }
-
-    settings = { -- passed into function change_settings:
-      enabled = true, -- quick switch. Disables the three options below:
-      options = true,
-      autocmds = true,
-      keymaps = true,
-    },
-  },
-
-  -- either enable or disable matching plugins:
-  enable_match = true,
-
-  -- keywords matching plugins to always enable:
-  kw_always_enable = {}, -- the "lazy" keyword is always included
-
-  -- keywords specified by the user:
-  kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
-}
 ```
 
 ## Minimal reproducible configurations

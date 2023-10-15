@@ -204,36 +204,51 @@ Add to the options:
   },
 ```
 
-### Adding custom presets and settings
+### Optional: custom presets and settings
 
-As an _optional_ step, custom presets can be added to a `lua` module in your configuration.
+The following functions are used by **lazyflex**:
+
+1. presets: `get_preset_keywords(name, enable_match)`
+  - `name`: the name of the preset
+  - `enable_match`: true when enabling, false otherwise
+  - *returns*: a list with keywords or {}
+2. settings: `change_settings(settings)`
+  - `settings`: the settings provided in `opts`
+  - *returns*: a spec(used for LazyVim) or {}
+
+_Note_: User presets will only apply when the module is correctly implemented and are otherwise ignored.
+
+Add to the options:
+
+> `user = { presets = { "coding", "editor"}}`
+
+The user can add custom handling directly to the `opts`: 
+
+```lua
+user = {
+  get_preset_keywords = function(name, enable_match) return {} end,
+  change_settings = function(settings) return {} end,
+  settings = { -- passed into function change_settings:
+    enabled = true, -- quick switch. Disables the three options below:
+    options = true,
+    autocmds = true,
+    keymaps = true,
+  },
+},
+```
+
+The user can also add a `lua` module to the configuration:
 
 > Example: Copy the lazyflex module [`lazyflex.collections.stub`](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
 > to `your-neovim-config-folder/lua/config/lazyflex.lua`
 
-_Note_: User presets will only apply when the module is correctly implemented and are otherwise ignored.
-
 When the user module is not present, **lazyflex** falls back to [lazyflex.collections.stub.](https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua)
 
-The path _or_ the name of the default user module location can be changed:
+The path _or_ the name of the default user module can be changed:
 
 > user = { mod = "somewhere-else-inside-your-lua-folder.another-name"}
 
 _Note_: Do not use a folder `lazy.nvim` [imports](https://github.com/folke/lazy.nvim#%EF%B8%8F-importing-specs-config--opts) from.
-
-Add to the options:
-
-> `user = { presets = { "your-coding", "your-editor"}}`
-
-```lua
-  {
-    "abeldekat/lazyflex.nvim",
-    import = "lazyflex.entry.lazy",
-    opts = {
-      user = { presets = { "editor" } },
-    },
-  },
-```
 
 Example implementation:
 
@@ -275,7 +290,6 @@ M.change_settings = function(settings)
   if settings.keymaps == false then
     package.loaded["config.keymaps"] = true
   end
-
   return {}
 end
 

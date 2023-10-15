@@ -28,7 +28,7 @@ local defaults = {
     -- use lazyflex.collections.lazyvim as an example
     mod = "config.lazyflex",
 
-    presets = {}, -- example, when implemented: { "test" }
+    presets = {}, -- example, when implemented: { "editor" }
 
     settings = { -- passed into function change_settings:
       enabled = true, -- quick switch. Disables the three options below:

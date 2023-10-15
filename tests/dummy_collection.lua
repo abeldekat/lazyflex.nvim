@@ -8,7 +8,7 @@ end
 
 -- only to be used in unit test
 -- returns a dummy spec, using the options in config
-M.return_spec = function(config) -- config
+M.change_settings = function(config) -- config
   local result = {
     "foo/bar",
     opts = config,

@@ -21,7 +21,7 @@ describe("settings from LazyVim", function()
 
   it("can be turned off", function()
     local plugin = get_plugin()
-    local opts = { kw = { "LazyVim" }, lazyvim = { config = { enabled = false } } }
+    local opts = { kw = { "LazyVim" }, lazyvim = { settings = { enabled = false } } }
     local return_spec = h.activate(opts, { plugin })
 
     local LazyVim = return_spec[1]
@@ -55,7 +55,7 @@ describe("settings from the user", function()
 
   it("can be turned off using a custom module", function()
     local plugin = get_plugin()
-    local user = { mod = "tests.dummy_collection", config = { enabled = false } }
+    local user = { mod = "tests.dummy_collection", settings = { enabled = false } }
     local opts = { kw = { "com" }, user = user }
     local dummy_result = h.activate(opts, { plugin }, { "user" })
 
@@ -72,14 +72,14 @@ describe("settings from the user", function()
   it("can be turned off using a function", function()
     local plugin = get_plugin()
     local user = {
-      return_spec = function(config)
+      change_settings = function(config)
         local result = {
           "foo/bar",
           opts = config,
         }
         return result
       end,
-      config = { enabled = false },
+      settings = { enabled = false },
     }
     local opts = { kw = { "com" }, user = user }
     local dummy_result = h.activate(opts, { plugin }, { "user" })

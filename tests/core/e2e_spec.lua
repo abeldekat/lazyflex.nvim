@@ -48,7 +48,7 @@ describe("lazyflex.nvim", function()
         dir = get_dir(),
         import = "lazyflex.entry.lazyvim",
         opts = {
-          lazyvim = { config = { enabled = false } },
+          lazyvim = { settings = { enabled = false } },
           kw = { "tokyo" }, -- only download LazyVim and tokyonight
         },
       },

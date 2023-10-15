@@ -21,12 +21,12 @@ local function attach(opts, adapter)
   require("lazyflex.attach").attach(opts, adapter)
 end
 
-local function spec(opts, collection_names)
+local function change_settings(opts, collection_names)
   local result = {}
   for _, name in ipairs(collection_names) do
     local c = opts[name]
     if c then
-      table.insert(result, c.return_spec(c.config))
+      table.insert(result, c.change_settings(c.settings))
     end
   end
   return result
@@ -44,7 +44,7 @@ function M.on_hook(adapter, collection_names)
 
   attach(opts, adapter)
 
-  return spec(opts, collection_names)
+  return change_settings(opts, collection_names)
 end
 
 function M.setup(_)

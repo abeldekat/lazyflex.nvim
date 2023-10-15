@@ -6,7 +6,7 @@ M.get_preset_keywords = function(_, _) -- name, enable_match
   return {}
 end
 
-M.return_spec = function(_) -- config
+M.change_settings = function(_) -- settings
   return {}
 end
 

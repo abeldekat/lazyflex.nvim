@@ -6,8 +6,8 @@ local defaults = {
     -- any lazyvim.presets specified that don't match have no effect:
     presets = {}, -- example: { "coding" }: matches all plugins in the coding module
 
-    -- by default, load lazyvim's settings:
-    config = {
+    -- load lazyvim's settings by default:
+    settings = {
       enabled = true, -- quick switch. Disables the three options below:
       options = true, -- use config.options
       autocmds = true, -- use config.autocmds
@@ -17,19 +17,24 @@ local defaults = {
 
   -- user collection
   user = {
-    get_preset_keywords = nil, -- a function, see chapter on custom presets
-    return_spec = nil, -- a function, see chaper on custom presets
+    -- lazyflex.collections.stub is used by default as a pass-through
+
+    -- 1. optional: functions overriding lazyflex.collections.stub
+    get_preset_keywords = nil,
+    change_settings = nil,
+
+    -- 2. optional: a user module, "required" automatically
+    -- the module should contain an implementation of lazyflex.collections.stub
+    -- use lazyflex.collections.lazyvim as an example
     mod = "config.lazyflex",
 
-    presets = {}, -- example when implemented: { "test" }
+    presets = {}, -- example, when implemented: { "test" }
 
-    -- it's possible to implement custom loading of user settings in user.mod
-    -- by default, load user's settings:
-    config = {
+    settings = { -- passed into function change_settings:
       enabled = true, -- quick switch. Disables the three options below:
-      options = true, -- use config.options
-      autocmds = true, -- use config.autocmds
-      keymaps = true, -- use config.keymaps
+      options = true,
+      autocmds = true,
+      keymaps = true,
     },
   },
 
@@ -48,12 +53,12 @@ local handlers = {
     local mod = require("lazyflex.collections.lazyvim")
     return {
       get_preset_keywords = mod.get_preset_keywords,
-      return_spec = mod.return_spec,
+      change_settings = mod.change_settings,
     }
   end,
   user = function(collection)
     local mod = nil
-    if not (collection.get_preset_keywords or collection.return_spec) then
+    if not (collection.get_preset_keywords or collection.change_settings) then
       local ok, usermod = pcall(require, collection.mod)
       if ok then
         mod = usermod
@@ -63,21 +68,22 @@ local handlers = {
     end
     return {
       get_preset_keywords = collection.get_preset_keywords or mod and mod.get_preset_keywords,
-      return_spec = collection.return_spec or mod and mod.return_spec,
+      change_settings = collection.change_settings or mod and mod.change_settings,
     }
   end,
 }
 
-local function sanitize_config_options(collection)
-  if not collection.config then
-    collection.config = { enabled = false }
+local function sanitize_settings(config)
+  local result = config
+  if not result then
+    result = { enabled = false }
   end
-  if not collection.config.enabled then
-    collection.config.options = false
-    collection.config.autocmds = false
-    collection.config.keymaps = false
+  if not result.enabled then
+    result.options = false
+    result.autocmds = false
+    result.keymaps = false
   end
-  return collection.config
+  return result
 end
 
 local function sanitze_always_enable(kw_always_enable)
@@ -88,53 +94,55 @@ local function sanitze_always_enable(kw_always_enable)
   return always_enable
 end
 
-local function presets_to_kw(handler, presets, enable_match)
+local function to_kw(handler, presets, enable_match)
   local keywords = {}
   if vim.tbl_isempty(presets) then
     return keywords
   end
 
   for _, preset in ipairs(presets) do
-    local words = handler.get_preset_keywords(preset, enable_match)
-    keywords = vim.list_extend(keywords, words)
+    keywords = vim.list_extend(keywords, handler.get_preset_keywords(preset, enable_match))
   end
   return keywords
 end
 
 local function transform(collection_names, opts_supplied)
-  local actual = {}
+  local opts = {}
 
-  actual["enable_match"] = opts_supplied.enable_match
-  actual["kw_always_enable"] = sanitze_always_enable(opts_supplied.kw_always_enable)
-  actual["kw"] = {}
+  opts["enable_match"] = opts_supplied.enable_match
+  opts["kw_always_enable"] = sanitze_always_enable(opts_supplied.kw_always_enable)
+  opts["kw"] = {}
 
   for _, name in ipairs(collection_names) do
-    local c = opts_supplied[name] -- the configuraton of the collection
+    local c = opts_supplied[name] -- the supplied options of the collection
     if c then
-      local handler = handlers[name](c) -- the functions doing the actual work
-
-      actual.kw = vim.list_extend(actual.kw, presets_to_kw(handler, c.presets, actual.enable_match))
-      actual[name] = {
-        return_spec = handler.return_spec,
-        config = sanitize_config_options(c),
+      -- the handler has functions for presets and settings
+      local handler = handlers[name](c)
+      -- settings: add the settings and the corresponding handler
+      opts[name] = {
+        settings = sanitize_settings(c.settings),
+        change_settings = handler.change_settings,
       }
+      -- presets: add all keywords found in the presets of the collection
+      opts.kw = vim.list_extend(opts.kw, to_kw(handler, c.presets, opts.enable_match))
     end
   end
-  return actual
-end
-
-M.setup = function(opts_supplied, collection)
-  -- merge
-  local supplied = vim.tbl_deep_extend("force", defaults, opts_supplied or {})
-
-  -- sanitze input and resolve presets into keywords
-  local opts = transform(collection, supplied)
 
   -- add keywords supplied by user
-  local user_keywords = supplied.kw and vim.tbl_map(string.lower, supplied.kw) or {}
-  opts.kw = vim.list_extend(opts.kw, user_keywords) -- keywords including presets
+  local user_kw = opts_supplied.kw and vim.tbl_map(string.lower, opts_supplied.kw) or {}
+  opts.kw = vim.list_extend(opts.kw, user_kw)
 
-  -- when there are kw, also add kw_always_enable  when enable_match==true
+  return opts
+end
+
+M.setup = function(opts_supplied, collection_names)
+  -- merge with defaults
+  local supplied = vim.tbl_deep_extend("force", defaults, opts_supplied or {})
+
+  -- sanitze opts and resolve presets into keywords
+  local opts = transform(collection_names, supplied)
+
+  -- when there are keywords, also add kw_always_enable if enable_match==true
   if not vim.tbl_isempty(opts.kw) then
     if opts.enable_match then
       opts.kw = vim.list_extend(vim.list_extend({}, opts.kw_always_enable), opts.kw)

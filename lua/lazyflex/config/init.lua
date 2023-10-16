@@ -46,6 +46,10 @@ local defaults = {
 
   -- keywords specified by the user:
   kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
+
+  -- when the name of the plugin matches keywords in both kw/preset and override_kw:
+  -- invert enable_match for that plugin
+  override_kw = {},
 }
 
 local handlers = {
@@ -112,6 +116,7 @@ local function transform(collection_names, opts_supplied)
   opts["enable_match"] = opts_supplied.enable_match
   opts["kw_always_enable"] = sanitze_always_enable(opts_supplied.kw_always_enable)
   opts["kw"] = {}
+  opts["override_kw"] = {}
 
   for _, name in ipairs(collection_names) do
     local c = opts_supplied[name] -- the supplied options of the collection
@@ -131,6 +136,7 @@ local function transform(collection_names, opts_supplied)
   -- add keywords supplied by user
   local user_kw = opts_supplied.kw and vim.tbl_map(string.lower, opts_supplied.kw) or {}
   opts.kw = vim.list_extend(opts.kw, user_kw)
+  opts.override_kw = opts.override_kw and vim.tbl_map(string.lower, opts_supplied.override_kw) or {}
 
   return opts
 end

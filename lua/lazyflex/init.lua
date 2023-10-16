@@ -31,8 +31,12 @@ function M.on_hook(adapter, collection_names)
   end
 
   -- keywords
-  local opts_for_attach = { enable_match = opts.enable_match, kw = opts.kw }
-  require("lazyflex.attach").attach(opts_for_attach, adapter)
+  local opts_attach = {
+    enable_match = opts.enable_match,
+    kw = opts.kw,
+    override_kw = opts.override_kw,
+  }
+  require("lazyflex.attach").attach(opts_attach, adapter)
 
   -- settings
   local result = {}

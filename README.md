@@ -31,7 +31,7 @@ require("lazy").setup({
     {
       "abeldekat/lazyflex.nvim",
       version = "*",
-      cond = true, -- enable/disable lazyflex.nvim
+      cond = true,
       import = "lazyflex.entry.lazyvim", -- when using LazyVim
       -- import = "lazyflex.entry.lazy", -- or: when only using lazy.nvim
       opts = {},
@@ -45,7 +45,7 @@ require("lazy").setup({
 
 _Note_: The `cond` property in the snippet above is practical for quickly toggling
 **lazyflex** on or off, whilst still keeping the plugin installed.
-**Lazyflex** is heavily optimized, and can be kept enabled.
+**Lazyflex** is heavily optimized, and can also be kept enabled.
 
 _Note_: It is not possible to configure multiple fragments of the plugin.
 
@@ -157,7 +157,7 @@ Add to the [spec](#installation):
 The settings of the resulting configuration will default to stock Neovim.
 
 This can be useful during testing or when reporting an issue for one of the plugins,
-instead of adding the full spec to a reproducible configuration.
+instead of adding the full spec to a [reproducible configuration](#minimal-reproducible-configurations)
 
 > Prerequisite: Add **LazyVim** to your [plugin spec](#installation)
 

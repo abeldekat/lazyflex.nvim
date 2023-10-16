@@ -156,7 +156,7 @@ Add to the [spec](#installation):
   -- Plugins: approximately 30 disabled
   {
     "abeldekat/lazyflex.nvim",
-    import = "lazyflex.hook",
+    import = "lazyflex.entry.lazyvim",
     opts = {
       kw_always_enable = { "tokyo" }, -- always enable your colorscheme
       lazyvim = { presets = { "editor" } },

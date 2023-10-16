@@ -1,20 +1,13 @@
 local M = {}
 
--- for each valid item in collection: The corresponding lua module
-local mods = {}
-
 local defaults = {
-  -- the "user" collection is always included:
-  collection = { "lazyvim" }, -- set to false when not using a community setup
-
-  -- lazyvim collection:
+  -- lazyvim collection
   lazyvim = {
-    mod = "lazyflex.collections.lazyvim", -- do not modify
     -- any lazyvim.presets specified that don't match have no effect:
     presets = {}, -- example: { "coding" }: matches all plugins in the coding module
 
-    -- by default, load lazyvim's settings:
-    config = {
+    -- load lazyvim's settings by default:
+    settings = {
       enabled = true, -- quick switch. Disables the three options below:
       options = true, -- use config.options
       autocmds = true, -- use config.autocmds
@@ -22,23 +15,26 @@ local defaults = {
     },
   },
 
-  -- user collection:
+  -- user collection
   user = {
-    -- lazyflex will first try to require the default "mod" property
-    -- The module is -optional- in the user's configuration,
-    -- and should implement "lazyflex.collections.stub"
-    mod = "config.lazyflex",
-    fallback = "lazyflex.collections.stub", -- do not modify
-    -- without user.mod, any user.presets specified will have no effect:
-    presets = {}, -- example when implemented: { "test" }
+    -- lazyflex.collections.stub is used by default as a pass-through
 
-    -- it's possible to implement custom loading of user settings in user.mod
-    -- by default, load user's settings:
-    config = {
+    -- 1. optional: functions overriding lazyflex.collections.stub
+    get_preset_keywords = nil,
+    change_settings = nil,
+
+    -- 2. optional: a user module, "required" automatically
+    -- the module should contain an implementation of lazyflex.collections.stub
+    -- use lazyflex.collections.lazyvim as an example
+    mod = "config.lazyflex",
+
+    presets = {}, -- example, when implemented: { "editor" }
+
+    settings = { -- passed into function change_settings:
       enabled = true, -- quick switch. Disables the three options below:
-      options = true, -- use config.options
-      autocmds = true, -- use config.autocmds
-      keymaps = true, -- use config.keymaps
+      options = true,
+      autocmds = true,
+      keymaps = true,
     },
   },
 
@@ -56,88 +52,109 @@ local defaults = {
   override_kw = {},
 }
 
-local function sanitize_config_options(collection)
-  if not collection.config then
-    collection.config = { enabled = false }
+local handlers = {
+  lazyvim = function(_)
+    local mod = require("lazyflex.collections.lazyvim")
+    return {
+      get_preset_keywords = mod.get_preset_keywords,
+      change_settings = mod.change_settings,
+    }
+  end,
+  user = function(collection)
+    local mod = nil
+    if not (collection.get_preset_keywords or collection.change_settings) then
+      local ok, usermod = pcall(require, collection.mod)
+      if ok then
+        mod = usermod
+      else
+        mod = require("lazyflex.collections.stub")
+      end
+    end
+    return {
+      get_preset_keywords = collection.get_preset_keywords or mod and mod.get_preset_keywords,
+      change_settings = collection.change_settings or mod and mod.change_settings,
+    }
+  end,
+}
+
+local function sanitize_settings(config)
+  local result = config
+  if not result then
+    result = { enabled = false }
   end
-  if not collection.config.enabled then
-    collection.config.options = false
-    collection.config.autocmds = false
-    collection.config.keymaps = false
+  if not result.enabled then
+    result.options = false
+    result.autocmds = false
+    result.keymaps = false
   end
+  return result
 end
 
-local function sanitize(opts)
-  local always_enable = opts.kw_always_enable or {}
+local function sanitze_always_enable(kw_always_enable)
+  local always_enable = kw_always_enable or {}
   if not vim.tbl_contains(always_enable, "lazy") then
     table.insert(always_enable, "lazy")
   end
-  local collection = opts.collection or {}
-  if not vim.tbl_contains(collection, "user") then
-    table.insert(collection, "user")
-  end
-
-  -- opts.collection is a table of names
-  -- each name is a table key referring to a corresponding table in opts
-  -- each table representing the collection has a mod property that will be "required".
-  return vim.tbl_filter(function(name)
-    local result = false -- by default: only add when name is valid
-
-    local col = opts[name] -- the named collection
-    if col then
-      local ok, usermod = pcall(require, col.mod)
-      if not ok and col.fallback then
-        usermod = require(col.fallback)
-      end
-      if usermod then
-        sanitize_config_options(col)
-        mods[name] = usermod
-        result = true -- collection and matching module: add to the list
-      end
-    end
-
-    return result
-  end, collection)
+  return always_enable
 end
 
-local function from_presets(name, opts)
-  local col = opts[name]
-  local mod = mods[name]
-  if not col.presets or vim.tbl_isempty(col.presets) then
-    return {}
+local function to_kw(handler, presets, enable_match)
+  local keywords = {}
+  if vim.tbl_isempty(presets) then
+    return keywords
   end
 
-  local keywords = {}
-  for _, preset in ipairs(col.presets) do
-    local words = mod.get_preset_keywords(preset, opts.enable_match)
-    keywords = vim.list_extend(keywords, words)
+  for _, preset in ipairs(presets) do
+    keywords = vim.list_extend(keywords, handler.get_preset_keywords(preset, enable_match))
   end
   return keywords
 end
 
-M.setup = function(opts)
-  -- merge
-  opts = vim.tbl_deep_extend("force", defaults, opts or {})
+local function transform(collection_names, opts_supplied)
+  local opts = {}
 
-  -- sanitize
-  opts.collection = sanitize(opts)
+  opts["enable_match"] = opts_supplied.enable_match
+  opts["kw_always_enable"] = sanitze_always_enable(opts_supplied.kw_always_enable)
+  opts["kw"] = {}
+  opts["override_kw"] = {}
 
-  -- calculate keywords
-  local keywords = {}
-  for _, name in ipairs(opts.collection) do
-    keywords = vim.list_extend(keywords, from_presets(name, opts))
+  for _, name in ipairs(collection_names) do
+    local c = opts_supplied[name] -- the supplied options of the collection
+    if c then
+      -- the handler has functions for presets and settings
+      local handler = handlers[name](c)
+      -- settings: add the settings and the corresponding handler
+      opts[name] = {
+        settings = sanitize_settings(c.settings),
+        change_settings = handler.change_settings,
+      }
+      -- presets: add all keywords found in the presets of the collection
+      opts.kw = vim.list_extend(opts.kw, to_kw(handler, c.presets, opts.enable_match))
+    end
   end
-  local user_keywords = opts.kw and vim.tbl_map(string.lower, opts.kw) or {}
-  opts.kw = vim.list_extend(keywords, user_keywords) -- the result
-  opts.override_kw = opts.override_kw and vim.tbl_map(string.lower, opts.override_kw) or {}
+
+  -- add keywords supplied by user
+  local user_kw = opts_supplied.kw and vim.tbl_map(string.lower, opts_supplied.kw) or {}
+  opts.kw = vim.list_extend(opts.kw, user_kw)
+  opts.override_kw = opts.override_kw and vim.tbl_map(string.lower, opts_supplied.override_kw) or {}
 
   return opts
 end
 
-M.for_each_collection = function(opts, callback)
-  for _, name in ipairs(opts.collection) do
-    callback(mods[name], opts[name].config)
+M.setup = function(opts_supplied, collection_names)
+  -- merge with defaults
+  local supplied = vim.tbl_deep_extend("force", defaults, opts_supplied or {})
+
+  -- sanitze opts and resolve presets into keywords
+  local opts = transform(collection_names, supplied)
+
+  -- when there are keywords, also add kw_always_enable if enable_match==true
+  if not vim.tbl_isempty(opts.kw) then
+    if opts.enable_match then
+      opts.kw = vim.list_extend(vim.list_extend({}, opts.kw_always_enable), opts.kw)
+    end
   end
+  return opts
 end
 
 return M

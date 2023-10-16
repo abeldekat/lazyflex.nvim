@@ -13,15 +13,15 @@ M.get_preset_keywords = function(name, enable_match)
   return result or {}
 end
 
-M.return_spec = function(config)
-  if not config.options then
+M.change_settings = function(settings)
+  if not settings.options then
     package.loaded["lazyvim.config.options"] = true
     vim.g.mapleader, vim.g.maplocalleader = " ", "\\"
   end
 
   return {
     "LazyVim/LazyVim",
-    opts = { defaults = { autocmds = config.autocmds, keymaps = config.keymaps } },
+    opts = { defaults = { autocmds = settings.autocmds, keymaps = settings.keymaps } },
     optional = true,
   }
 end

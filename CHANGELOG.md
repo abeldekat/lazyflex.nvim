@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/abeldekat/lazyflex.nvim/compare/v2.3.0...v3.0.0) (2023-10-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* **core:** Split lazyflex.hook and remove the collection option  ([#57](https://github.com/abeldekat/lazyflex.nvim/issues/57))
+
+### Code Refactoring
+
+* **core:** Split lazyflex.hook and remove the collection option  ([#57](https://github.com/abeldekat/lazyflex.nvim/issues/57)) ([2d977ba](https://github.com/abeldekat/lazyflex.nvim/commit/2d977ba23558556b18704309fc90f3b2388e657d))
+
 ## [2.3.0](https://github.com/abeldekat/lazyflex.nvim/compare/v2.2.0...v2.3.0) (2023-10-15)
 
 

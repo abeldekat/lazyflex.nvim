@@ -1,9 +1,10 @@
-*lazyflex.nvim.txt*      For Neovim >= 0.8.0      Last change: 2023 October 16
+*lazyflex.nvim.txt*      For Neovim >= 0.8.0      Last change: 2023 October 17
 
 ==============================================================================
 Table of Contents                            *lazyflex.nvim-table-of-contents*
 
 1. lazyflex.nvim                                 |lazyflex.nvim-lazyflex.nvim|
+  - Demo                                    |lazyflex.nvim-lazyflex.nvim-demo|
   - Features                            |lazyflex.nvim-lazyflex.nvim-features|
   - Requirements                    |lazyflex.nvim-lazyflex.nvim-requirements|
   - Installation                    |lazyflex.nvim-lazyflex.nvim-installation|
@@ -23,6 +24,12 @@ Table of Contents                            *lazyflex.nvim-table-of-contents*
 <https://github.com/folke/lazy.nvim>, a modern plugin manager for Neovim.
 
 The plugin facilitates troubleshooting and writing reproducible configurations.
+
+
+DEMO                                        *lazyflex.nvim-lazyflex.nvim-demo*
+
+
+https://github.com/abeldekat/lazyflex.nvim/assets/58370433/b9d95405-c2a6-463a-bb7c-5eb9ac3a3ca0
 
 
 FEATURES                                *lazyflex.nvim-lazyflex.nvim-features*

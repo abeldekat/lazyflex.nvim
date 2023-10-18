@@ -2,11 +2,13 @@
 
 **lazyflex.nvim** is an add-on for [**lazy.nvim**](https://github.com/folke/lazy.nvim), a modern plugin manager for Neovim.
 
-The plugin has support for binary debugging and facilitates writing concise reproducible configurations.
+Its main objective is to make it easier to test and troubleshoot a `neovim` configuration.
 
 ## Demo
 
 https://github.com/abeldekat/lazyflex.nvim/assets/58370433/b9d95405-c2a6-463a-bb7c-5eb9ac3a3ca0
+
+> The code used for the demo can be found [here](https://github.com/abeldekat/starter/blob/lazyflex_demo/lua/config/lazyflex_test.lua)
 
 ## Features
 

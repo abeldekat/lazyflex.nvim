@@ -8,7 +8,7 @@ Its main objective is to make it easier to test and troubleshoot a `neovim` conf
 
 https://github.com/abeldekat/lazyflex.nvim/assets/58370433/b9d95405-c2a6-463a-bb7c-5eb9ac3a3ca0
 
-> The code used for the demo can be found [here](https://github.com/abeldekat/starter/blob/lazyflex_demo/lua/config/lazyflex_test.lua)
+> The code used in the demo can be found [here](https://github.com/abeldekat/starter/blob/lazyflex_demo/lua/config/lazyflex_test.lua)
 
 ## Features
 

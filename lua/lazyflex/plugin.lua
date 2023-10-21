@@ -13,13 +13,10 @@ local function is_also_found_in(name, keywords)
   return keywords and not vim.tbl_isempty(keywords) and find(name, keywords)
 end
 
-local function is_optional_in_core(plugin)
+local function is_optional(plugin)
   -- when a plugin is removed from core,
-  -- plugin.optional and plugin.enabled are used to inform the user
-  if plugin.optional == true then
-    return plugin._.module and not plugin._.module:find("lazyvim.plugins.extras")
-  end
-  return false
+  -- plugin.optional and plugin.enabled=false are used to inform the user
+  return plugin.optional
 end
 
 -- cond and enabled can be a function
@@ -45,23 +42,19 @@ end
 
 -- each plugin can have multiple fragments, identified by fid
 -- for the same plugin, the add method can be called multiple times:
-function M.attach(opts, adapter)
-  local object_to_attach = adapter.get_object_to_attach()
-  local add = object_to_attach.add
-
-  object_to_attach.add = function(self, plugin_to_add, ...)
-    -- call lazy's add
-    local plugin = add(self, plugin_to_add, ...)
-
+function M.intercept(opts, adapter)
+  adapter.add(function(_, plugin)
     -- when invalid(see lazy.nvim):
     local name = plugin and plugin.name and string.lower(plugin.name) or nil
     if not name then
       return plugin
     end
-    -- when optional in core:
-    if is_optional_in_core(plugin) then
+
+    -- when optional
+    if is_optional(plugin) then
       return plugin
     end
+
     -- when unconditionally disabled:
     if get_value(plugin.enabled, plugin) == false then
       -- see unit test: "is repaired when cond=false"
@@ -74,7 +67,7 @@ function M.attach(opts, adapter)
     -- plugin is enabled:
     plugin.cond = calculate_cond(name, opts)
     return plugin
-  end
+  end)
 end
 
 return M

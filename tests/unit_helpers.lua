@@ -1,38 +1,28 @@
 local M = {}
 
--- see lazyflex.adapter.lazy: simulate the interaction with lazy.nvim
-function M.fake_lazy(opts, to_attach)
+-- see lazyflex.adapter.lazy: replace lazy.nvim
+function M.fake_lazy(opts, spec)
   return {
     get_opts = function()
       return opts
     end,
-    get_object_to_attach = function()
-      return to_attach
+    add = function(lazyflex_add)
+      -- simulate lazy.nvim parsing the spec
+      for _, plugin in ipairs(spec) do
+        lazyflex_add(_, plugin)
+      end
     end,
   }
 end
 
+-- run lazyflex. See lazyflex.hook
 function M.activate(opts, spec, collection_names)
-  -- simulate lazy.nvim internals(adapter)
-  local lazy_attached = {
-    add = function(_, plugin)
-      -- lazy.nvim adds and returns the plugin...
-      return plugin
-    end,
-  }
-  local lazy = M.fake_lazy(opts, lazy_attached)
+  local lazy = M.fake_lazy(opts, spec)
 
-  -- run lazyflex. See lazyflex.hook. Decorates lazy_attached.add
   if not collection_names then
     collection_names = { "lazyvim", "user" }
   end
-  local return_spec = require("lazyflex").on_hook(lazy, collection_names)
-
-  -- simulate lazy.nvim parsing the spec
-  for _, plugin in ipairs(spec) do
-    lazy_attached.add(_, plugin)
-  end
-  return return_spec
+  return require("lazyflex").on_hook(lazy, collection_names)
 end
 
 -- filters the spec using plugin.cond==enable_match

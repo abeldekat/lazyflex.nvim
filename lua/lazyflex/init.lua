@@ -31,12 +31,12 @@ function M.on_hook(adapter, collection_names)
   end
 
   -- keywords
-  local opts_attach = {
+  local opts_plugin = {
     enable_match = opts.enable_match,
     kw = opts.kw,
     override_kw = opts.override_kw,
   }
-  require("lazyflex.attach").attach(opts_attach, adapter)
+  require("lazyflex.plugin").intercept(opts_plugin, adapter)
 
   -- settings
   local result = {}

@@ -1,10 +1,3 @@
---[[
--- NOTE:
--- all plugins are enabled in new_test_spec
--- thus, when using enable_match = true,
--- assertions must be done on plugins that are disabled...
---]]
-
 local h = require("tests.unit_helpers")
 
 -- a stripped down version of lazy.core.plugin#merge
@@ -110,7 +103,7 @@ describe("an optional plugin", function()
     }
   end
 
-  it("is discarded when that plugin is in core", function()
+  it("is not taken into account when it's enabled explicitly", function()
     local plugin = get_plugin("lazyvim.plugins.coding")
 
     local opts = { enable_match = false, kw = { "comment" } }
@@ -119,13 +112,23 @@ describe("an optional plugin", function()
     assert(plugin["cond"] == nil)
   end)
 
-  it("is processed when that plugin is in extras", function()
-    local plugin = get_plugin("lazyvim.plugins.extras.mini")
-    local spec = { plugin }
+  it("is not taken into account when it's enabled implicitly", function()
+    local plugin = get_plugin("lazyvim.plugins.coding")
+    plugin.enabled = nil
 
     local opts = { enable_match = false, kw = { "comment" } }
-    h.activate(opts, spec)
+    h.activate(opts, { plugin })
 
-    assert(plugin["cond"] == false)
+    assert(plugin["cond"] == nil)
+  end)
+
+  it("is not taken into account when it's disabled", function()
+    local plugin = get_plugin("lazyvim.plugins.coding")
+    plugin.enabled = false
+
+    local opts = { enable_match = false, kw = { "comment" } }
+    h.activate(opts, { plugin })
+
+    assert(plugin["cond"] == nil)
   end)
 end)

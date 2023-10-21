@@ -19,9 +19,16 @@ function M.get_opts()
   return opts
 end
 
--- Returns the object in lazy.nvim holding the add method
-function M.get_object_to_attach()
-  return require("lazy.core.plugin").Spec
+function M.add(lazyflex_add)
+  local Spec = require("lazy.core.plugin").Spec
+  local add = Spec.add
+
+  ---@diagnostic disable-next-line: duplicate-set-field
+  Spec.add = function(_, plugin)
+    add(_, plugin)
+    lazyflex_add(_, plugin)
+    return plugin
+  end
 end
 
 return M

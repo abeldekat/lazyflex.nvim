@@ -290,7 +290,7 @@ Add to the options:
     },
   },
 
-  -- filter the imports in use:
+  -- filter the selected imports:
   filter_import = {
     enabled = false,
     -- always import the following modules:

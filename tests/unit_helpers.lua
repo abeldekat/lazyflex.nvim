@@ -12,6 +12,15 @@ function M.fake_lazy(opts, spec)
         lazyflex_add(_, plugin)
       end
     end,
+    import = function(lazyflex_import)
+      -- simulate lazy.nvim importing a module
+      for _, plugin in ipairs(spec) do
+        if plugin.import then
+          local result = lazyflex_import(_, plugin)
+          plugin.is_imported = result
+        end
+      end
+    end,
   }
 end
 

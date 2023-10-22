@@ -125,6 +125,7 @@ _Note_: A preset setting that does not match a predefined preset will be ignored
 Add to the [spec](#installation):
 
 > `import = "lazyflex.entry.lazyvim"`
+
 ```lua
   -- New plugin: harpoon
   -- Plugins: approximately 40 disabled
@@ -172,6 +173,15 @@ Add to the [spec](#installation):
     },
   },
 
+  -- Lazyvim: all plugins, without modules imported from "extras"
+  {
+    "abeldekat/lazyflex.nvim",
+    import = "lazyflex.entry.lazyvim",
+    opts = {
+      kw_always_enable = { "tokyo" },
+      filter_import = { enabled = true, kw = {} },
+    },
+  },
 ```
 
 ### Reusing specs from a collection of plugins
@@ -268,6 +278,14 @@ Add to the options:
       autocmds = true,
       keymaps = true,
     },
+  },
+
+  filter_import = {
+    enabled = false, -- when enabled and kw is empty: only imports always_import
+    -- always import the following modnames:
+    always_import = {}, -- contains "lazyvim.plugins" and "plugins" by default
+    -- only import when the name matches a keyword in kw:
+    kw = {}, -- { "python", "black" }: only imports python (see lazyvim extras)
   },
 
   -- either enable or disable matching plugins:

@@ -53,7 +53,7 @@ function M.import(lazyflex_import)
 
   -- detach when done
   -- also needed for the LazyExtra command...
-  vim.api.nvim_create_autocmd({
+  vim.api.nvim_create_autocmd("User", {
     pattern = "LazyDone",
     once = true,
     callback = function()

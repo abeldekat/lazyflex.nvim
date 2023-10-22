@@ -31,4 +31,16 @@ function M.add(lazyflex_add)
   end
 end
 
+function M.import(lazyflex_import)
+  local Spec = require("lazy.core.plugin").Spec
+  local imp = Spec.import
+
+  ---@diagnostic disable-next-line: duplicate-set-field
+  Spec.import = function(_, spec)
+    if lazyflex_import(_, spec) then
+      imp(_, spec)
+    end
+  end
+end
+
 return M

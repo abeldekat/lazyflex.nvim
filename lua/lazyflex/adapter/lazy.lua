@@ -29,6 +29,15 @@ function M.add(lazyflex_add)
     lazyflex_add(_, plugin)
     return plugin
   end
+
+  -- detach when done
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "LazyDone",
+    once = true,
+    callback = function()
+      Spec.add = add
+    end,
+  })
 end
 
 function M.import(lazyflex_import)
@@ -41,6 +50,16 @@ function M.import(lazyflex_import)
       imp(_, spec)
     end
   end
+
+  -- detach when done
+  -- also needed for the LazyExtra command...
+  vim.api.nvim_create_autocmd({
+    pattern = "LazyDone",
+    once = true,
+    callback = function()
+      Spec.import = imp
+    end,
+  })
 end
 
 return M

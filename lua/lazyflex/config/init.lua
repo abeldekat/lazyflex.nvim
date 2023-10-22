@@ -38,11 +38,12 @@ local defaults = {
     },
   },
 
+  -- filter the imports in use:
   filter_import = {
-    enabled = false, -- when enabled and kw is empty: only imports always_import
-    -- always import the following modnames:
+    enabled = false,
+    -- always import the following modules:
     always_import = {}, -- contains "lazyvim.plugins" and "plugins" by default
-    -- only import when the name matches a keyword in kw:
+    -- only import when the name of the module matches a keyword in kw:
     kw = {}, -- { "python", "black" }: only imports python (see lazyvim extras)
   },
 

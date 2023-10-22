@@ -165,7 +165,7 @@ Add to the [spec](#installation):
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.entry.lazyvim",
     opts = {
-      kw_always_enable = { "tokyo" }, -- always enable your colorscheme
+      kw_always_enable = { "tokyo" },
       lazyvim = { presets = { "editor" } },
       kw = { "cmp" },
       --  don't enable: "nvim-spectre", "flash.nvim" and "cmp_luasnip"
@@ -180,6 +180,16 @@ Add to the [spec](#installation):
     opts = {
       kw_always_enable = { "tokyo" },
       filter_import = { enabled = true, kw = {} },
+    },
+  },
+
+  -- Lazyvim: all plugins, import only python and black modules from "extras"
+  {
+    "abeldekat/lazyflex.nvim",
+    import = "lazyflex.entry.lazyvim",
+    opts = {
+      kw_always_enable = { "tokyo" },
+      filter_import = { enabled = true, kw = { "py", "bl" } },
     },
   },
 ```
@@ -280,11 +290,12 @@ Add to the options:
     },
   },
 
+  -- filter the imports in use:
   filter_import = {
-    enabled = false, -- when enabled and kw is empty: only imports always_import
-    -- always import the following modnames:
+    enabled = false,
+    -- always import the following modules:
     always_import = {}, -- contains "lazyvim.plugins" and "plugins" by default
-    -- only import when the name matches a keyword in kw:
+    -- only import when the name of the module matches a keyword in kw:
     kw = {}, -- { "python", "black" }: only imports python (see lazyvim extras)
   },
 

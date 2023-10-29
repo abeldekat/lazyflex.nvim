@@ -22,7 +22,7 @@ bootstrap(root)
 -- install plugins
 local plugins = {
   -- optional: reduce the number of plugins needed to reproduce the problem
-  { "abeldekat/lazyflex.nvim", enabled = false, version = "*", import = "lazyflex.entry.lazy", opts = {} },
+  { "abeldekat/lazyflex.nvim", enabled = false, version = "*", import = "lazyflex.hook", opts = {} },
   "folke/tokyonight.nvim",
   -- add any other plugins here
 }

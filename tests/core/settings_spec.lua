@@ -6,12 +6,11 @@ describe("settings from LazyVim", function()
   local function get_plugin()
     return {
       name = "LazyVim/LazyVim",
-      enabled = false,
     }
   end
-  it("are activated by default", function()
+  it("are activated by default when providing opts.lazyvim", function()
     local plugin = get_plugin()
-    local opts = { kw = { "LazyVim" } }
+    local opts = { kw = { "LazyVim" }, lazyvim = {} }
     local return_spec = h.activate(opts, { plugin })
 
     local LazyVim = return_spec[1]
@@ -35,13 +34,21 @@ describe("settings from the user", function()
   local function get_plugin()
     return {
       name = "mini.comment",
-      enabled = false,
     }
   end
   it("are activated by default", function()
     local plugin = get_plugin()
-    local opts = { kw = { "com" }, user = { mod = "tests.dummy_collection" } }
-    local dummy_result = h.activate(opts, { plugin }, { "user" })
+    local user = {
+      change_settings = function(config)
+        local result = {
+          "foo/bar",
+          opts = config,
+        }
+        return result
+      end,
+    }
+    local opts = { kw = { "com" }, user = user }
+    local dummy_result = h.activate(opts, { plugin })
 
     local expected = {
       enabled = true,
@@ -53,23 +60,7 @@ describe("settings from the user", function()
     assert.same(expected, dummy_result[1].opts)
   end)
 
-  it("can be turned off using a custom module", function()
-    local plugin = get_plugin()
-    local user = { mod = "tests.dummy_collection", settings = { enabled = false } }
-    local opts = { kw = { "com" }, user = user }
-    local dummy_result = h.activate(opts, { plugin }, { "user" })
-
-    local expected = {
-      enabled = false,
-      options = false,
-      autocmds = false,
-      keymaps = false,
-    }
-
-    assert.same(expected, dummy_result[1].opts)
-  end)
-
-  it("can be turned off using a function", function()
+  it("can be turned off ", function()
     local plugin = get_plugin()
     local user = {
       change_settings = function(config)
@@ -82,7 +73,7 @@ describe("settings from the user", function()
       settings = { enabled = false },
     }
     local opts = { kw = { "com" }, user = user }
-    local dummy_result = h.activate(opts, { plugin }, { "user" })
+    local dummy_result = h.activate(opts, { plugin })
 
     local expected = {
       enabled = false,

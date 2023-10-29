@@ -25,13 +25,9 @@ function M.fake_lazy(opts, spec)
 end
 
 -- run lazyflex. See lazyflex.hook
-function M.activate(opts, spec, collection_names)
+function M.activate(opts, spec)
   local lazy = M.fake_lazy(opts, spec)
-
-  if not collection_names then
-    collection_names = { "lazyvim", "user" }
-  end
-  return require("lazyflex").on_hook(lazy, collection_names)
+  return require("lazyflex").on_hook(lazy)
 end
 
 -- filters the spec using plugin.cond==enable_match

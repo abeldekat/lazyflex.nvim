@@ -4,13 +4,13 @@ This plugin should be the first plugin in the spec list!
 
 local M = {}
 
-local function get_opts(adapter, collection_names)
+local function get_opts(adapter)
   local opts = adapter.get_opts()
   if opts == nil or type(opts) == "table" and vim.tbl_isempty(opts) then
     return nil -- no opts to work with
   end
 
-  opts = require("lazyflex.config").setup(opts, collection_names)
+  opts = require("lazyflex.config").setup(opts)
   if vim.tbl_isempty(opts.kw) and not opts.filter_import.enabled then
     return nil -- nothing to do
   end
@@ -35,9 +35,9 @@ local function plugins(opts, adapter)
   end
 end
 
-local function settings(opts, collection_names)
+local function settings(opts)
   local spec = {}
-  for _, name in ipairs(collection_names) do
+  for _, name in ipairs(opts.collection_names) do
     local c = opts[name]
     if c then
       table.insert(spec, c.change_settings(c.settings) or {})
@@ -46,20 +46,20 @@ local function settings(opts, collection_names)
   return spec
 end
 
-function M.on_hook(adapter, collection_names)
+function M.on_hook(adapter)
   -- don't use when embedded
   if vim.g.vscode or vim.g.started_by_firenvim then
     return {}
   end
 
-  local opts = get_opts(adapter, collection_names)
+  local opts = get_opts(adapter)
   if opts == nil then
     return {} -- opt-out early
   end
 
   filter_import(opts, adapter)
   plugins(opts, adapter)
-  return settings(opts, collection_names)
+  return settings(opts)
 end
 
 function M.setup(_)

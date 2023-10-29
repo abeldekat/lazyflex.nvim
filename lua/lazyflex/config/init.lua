@@ -27,14 +27,9 @@ local defaults = {
   user = {
     -- lazyflex.collections.stub is used by default as a pass-through
 
-    -- 1. optional: functions overriding lazyflex.collections.stub
+    -- optional: functions overriding lazyflex.collections.stub
     get_preset_keywords = nil,
     change_settings = nil,
-
-    -- 2. optional: a user module, "required" automatically
-    -- the module should contain an implementation of lazyflex.collections.stub
-    -- use lazyflex.collections.lazyvim as an example
-    mod = "config.lazyflex",
 
     presets = {}, -- example, when implemented: { "editor" }
 
@@ -69,18 +64,10 @@ local handlers = {
     }
   end,
   user = function(collection)
-    local mod = nil
-    if not (collection.get_preset_keywords or collection.change_settings) then
-      local ok, usermod = pcall(require, collection.mod)
-      if ok then
-        mod = usermod
-      else
-        mod = require("lazyflex.collections.stub")
-      end
-    end
+    local mod = require("lazyflex.collections.stub")
     return {
-      get_preset_keywords = collection.get_preset_keywords or mod and mod.get_preset_keywords,
-      change_settings = collection.change_settings or mod and mod.change_settings,
+      get_preset_keywords = collection.get_preset_keywords or mod.get_preset_keywords,
+      change_settings = collection.change_settings or mod.change_settings,
     }
   end,
 }
@@ -141,6 +128,7 @@ end
 local function transform(collection_names, opts_supplied)
   local opts = {}
 
+  opts["collection_names"] = collection_names
   opts["filter_import"] = sanitize_filter_import(opts_supplied.filter_import)
   opts["enable_match"] = opts_supplied.enable_match
   opts["kw"] = {}
@@ -169,7 +157,12 @@ local function transform(collection_names, opts_supplied)
   return opts
 end
 
-M.setup = function(opts_supplied, collection_names)
+local function to_collection_names(opts_unmerged)
+  return opts_unmerged.lazyvim and { "lazyvim", "user" } or { "user" }
+end
+
+M.setup = function(opts_supplied)
+  local collection_names = to_collection_names(opts_supplied)
   -- merge with defaults
   local supplied = vim.tbl_deep_extend("force", defaults, opts_supplied or {})
 

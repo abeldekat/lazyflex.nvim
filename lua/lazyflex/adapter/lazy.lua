@@ -19,9 +19,47 @@ function M.get_opts()
   return opts
 end
 
--- Returns the object in lazy.nvim holding the add method
-function M.get_object_to_attach()
-  return require("lazy.core.plugin").Spec
+function M.add(lazyflex_add)
+  local Spec = require("lazy.core.plugin").Spec
+  local add = Spec.add
+
+  ---@diagnostic disable-next-line: duplicate-set-field
+  Spec.add = function(_, plugin)
+    add(_, plugin)
+    lazyflex_add(_, plugin)
+    return plugin
+  end
+
+  -- detach when done
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "LazyDone",
+    once = true,
+    callback = function()
+      Spec.add = add
+    end,
+  })
+end
+
+function M.import(lazyflex_import)
+  local Spec = require("lazy.core.plugin").Spec
+  local imp = Spec.import
+
+  ---@diagnostic disable-next-line: duplicate-set-field
+  Spec.import = function(_, spec)
+    if lazyflex_import(_, spec) then
+      imp(_, spec)
+    end
+  end
+
+  -- detach when done
+  -- also needed for the LazyExtra command...
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "LazyDone",
+    once = true,
+    callback = function()
+      Spec.import = imp
+    end,
+  })
 end
 
 return M

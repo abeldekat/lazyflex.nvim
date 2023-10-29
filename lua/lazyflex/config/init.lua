@@ -1,7 +1,15 @@
 local M = {}
 
 local defaults = {
-  -- lazyvim collection
+
+  -- when enabled: only import a selection of the modules in use
+  filter_import = {
+    enabled = false,
+    kw = {}, -- contains keywords for module names to import
+    always_import = {}, -- always contains "lazyvim.plugins" and "plugins"
+  },
+
+  -- lazyvim settings
   lazyvim = {
     -- any lazyvim.presets specified that don't match have no effect:
     presets = {}, -- example: { "coding" }: matches all plugins in the coding module
@@ -15,7 +23,7 @@ local defaults = {
     },
   },
 
-  -- user collection
+  -- user settings
   user = {
     -- lazyflex.collections.stub is used by default as a pass-through
 
@@ -90,7 +98,27 @@ local function sanitize_settings(config)
   return result
 end
 
-local function sanitze_always_enable(kw_always_enable)
+local function sanitize_filter_import(filter_import)
+  if not filter_import.enabled then
+    return filter_import
+  end
+
+  if not filter_import.kw then
+    filter_import.kw = {}
+  end
+
+  if not vim.tbl_contains(filter_import.always_import, "lazyvim.plugins") then
+    table.insert(filter_import.always_import, "lazyvim.plugins")
+  end
+  if not vim.tbl_contains(filter_import.always_import, "plugins") then
+    table.insert(filter_import.always_import, "plugins")
+  end
+  filter_import.kw = vim.tbl_map(string.lower, filter_import.kw)
+  filter_import.always_import = vim.tbl_map(string.lower, filter_import.always_import)
+  return filter_import
+end
+
+local function sanitize_always_enable(kw_always_enable)
   local always_enable = kw_always_enable or {}
   if not vim.tbl_contains(always_enable, "lazy") then
     table.insert(always_enable, "lazy")
@@ -113,8 +141,8 @@ end
 local function transform(collection_names, opts_supplied)
   local opts = {}
 
+  opts["filter_import"] = sanitize_filter_import(opts_supplied.filter_import)
   opts["enable_match"] = opts_supplied.enable_match
-  opts["kw_always_enable"] = sanitze_always_enable(opts_supplied.kw_always_enable)
   opts["kw"] = {}
   opts["override_kw"] = {}
 
@@ -151,7 +179,8 @@ M.setup = function(opts_supplied, collection_names)
   -- when there are keywords, also add kw_always_enable if enable_match==true
   if not vim.tbl_isempty(opts.kw) then
     if opts.enable_match then
-      opts.kw = vim.list_extend(vim.list_extend({}, opts.kw_always_enable), opts.kw)
+      local always_enable = supplied and sanitize_always_enable(supplied.kw_always_enable) or {}
+      opts.kw = vim.list_extend(vim.list_extend({}, always_enable), opts.kw)
     end
   end
   return opts

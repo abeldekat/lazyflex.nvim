@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/abeldekat/lazyflex.nvim/compare/v3.0.0...v3.1.0) (2023-10-29)
+
+
+### Features
+
+* **extras:** added filter_import ([#62](https://github.com/abeldekat/lazyflex.nvim/issues/62)) ([81c85e7](https://github.com/abeldekat/lazyflex.nvim/commit/81c85e7ed0d29a1de01c61f5a22b18c0c0bf43ec))
+
 ## [3.0.0](https://github.com/abeldekat/lazyflex.nvim/compare/v2.3.0...v3.0.0) (2023-10-16)
 
 

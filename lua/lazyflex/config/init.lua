@@ -1,7 +1,15 @@
 local M = {}
 
 local defaults = {
-  -- lazyvim collection
+
+  -- when enabled: only import a selection of the modules in use
+  filter_import = {
+    enabled = false,
+    kw = {}, -- contains keywords for module names to import
+    always_import = {}, -- always contains "lazyvim.plugins" and "plugins"
+  },
+
+  -- lazyvim settings
   lazyvim = {
     -- any lazyvim.presets specified that don't match have no effect:
     presets = {}, -- example: { "coding" }: matches all plugins in the coding module
@@ -15,7 +23,7 @@ local defaults = {
     },
   },
 
-  -- user collection
+  -- user settings
   user = {
     -- lazyflex.collections.stub is used by default as a pass-through
 
@@ -36,15 +44,6 @@ local defaults = {
       autocmds = true,
       keymaps = true,
     },
-  },
-
-  -- filter the selected imports:
-  filter_import = {
-    enabled = false,
-    -- always import the following modules:
-    always_import = {}, -- contains "lazyvim.plugins" and "plugins" by default
-    -- only import when the name of the module matches a keyword in kw:
-    kw = {}, -- { "python", "black" }: only imports python (see lazyvim extras)
   },
 
   -- either enable or disable matching plugins:

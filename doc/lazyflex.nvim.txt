@@ -1,4 +1,4 @@
-*lazyflex.nvim.txt*      For Neovim >= 0.8.0      Last change: 2023 October 18
+*lazyflex.nvim.txt*      For Neovim >= 0.8.0      Last change: 2023 October 29
 
 ==============================================================================
 Table of Contents                            *lazyflex.nvim-table-of-contents*
@@ -20,17 +20,17 @@ Table of Contents                            *lazyflex.nvim-table-of-contents*
 ==============================================================================
 1. lazyflex.nvim                                 *lazyflex.nvim-lazyflex.nvim*
 
-**lazyflex.nvim** is an add-on for **lazy.nvim**
+**lazyflex.nvim** is an add-on for lazy.nvim
 <https://github.com/folke/lazy.nvim>, a modern plugin manager for Neovim.
 
-Its main objective is to make it easier to test and troubleshoot a `neovim`
+Its main objective is to make it easier to test and troubleshoot a `Neovim`
 configuration.
 
 
 DEMO                                        *lazyflex.nvim-lazyflex.nvim-demo*
 
 
-https://github.com/abeldekat/lazyflex.nvim/assets/58370433/1bb1ba01-b6a3-4753-b3d7-e05bc1cd1ce7
+<https://github.com/abeldekat/lazyflex.nvim/assets/58370433/1bb1ba01-b6a3-4753-b3d7-e05bc1cd1ce7>
 
 
   The code used in the demo can be found here
@@ -41,8 +41,9 @@ FEATURES                                *lazyflex.nvim-lazyflex.nvim-features*
 - Easier troubleshooting/testing from one central location.
     - Enable/disable multiple plugins by keyword.
     - Define and use |lazyflex.nvim-presets| for your own configuration.
-    - Has presets for each default plugin module in **LazyVim** <https://github.com/LazyVim/LazyVim>.
-    - Has options to skip loading the configuration modules (`options`, `autocmds`, `keymaps`) provided by **LazyVim**.
+    - Has presets for each default plugin module in LazyVim <https://github.com/LazyVim/LazyVim>.
+    - Has options to skip loading the configuration modules
+        (`options`, `autocmds`, `keymaps`) provided by LazyVim <https://github.com/LazyVim/LazyVim>
 - Helps to verify the independence of the components in the configuration.
 - When creating an issue, facilitates writing a concise reproducible configuration.
     - Contains |lazyflex.nvim-examples| for minimal configurations using **lazyflex**.
@@ -52,7 +53,7 @@ REQUIREMENTS                        *lazyflex.nvim-lazyflex.nvim-requirements*
 
 **References**
 
-- Requirementssection: **lazy.nvim** <https://github.com/folke/lazy.nvim#%EF%B8%8F-requirements>
+- lazy.nvimrequirements <https://github.com/folke/lazy.nvim#%EF%B8%8F-requirements>
 
 
 INSTALLATION                        *lazyflex.nvim-lazyflex.nvim-installation*
@@ -85,25 +86,32 @@ _Note_It is not possible to configure multiple fragments of the plugin.
 
 **References**
 
-- Installationsection: **lazy.nvim** <https://github.com/folke/lazy.nvim#-installation>
-- `config.lazy`**LazyVim starter** <https://github.com/LazyVim/starter/blob/a13d5c90769ce6177d1e27b46efd967ed52c1d68/lua/config/lazy.lua#L11>
+- lazy.nviminstallation <https://github.com/folke/lazy.nvim#-installation>
+- LazyVim starter <https://github.com/LazyVim/starter/blob/a13d5c90769ce6177d1e27b46efd967ed52c1d68/lua/config/lazy.lua#L11>
 
 
 CONCEPTS                                *lazyflex.nvim-lazyflex.nvim-concepts*
 
 **lazyflex**
 
-1. Returnsimmediately when there are no keywords or presets supplied to _enable_ or _disable_
-2. Only operates on plugins that are not unconditionally disabled(`plugin.enabled = false`)
+1. Returnsimmediately when there are no keywords or presets supplied
+to _enable_ or _disable_
+2. Only operates on plugins
+that are not unconditionally disabled(`plugin.enabled = false`)
 
 
 IMPORTANT PROPERTIES ~
 
+- `filter_import.kw`when enabled, only import a selection
+    of the _modules_ in use, thereby reducing the number of plugins to consider.
+    See lazy.nvim’s import <https://github.com/folke/lazy.nvim#%EF%B8%8F-importing-specs-config--opts>
 - `kw`a list of words matching names of plugins.
 - `preset`a _predefined_ list of words matching names of plugins
 - `enable_match`
-    - `true`(_enable_incrementally, default): _enable_ all plugins that match keywords, _disable_ the others.
-    - `false`(_disable_ incrementally): _disable_ all plugins that match keywords, _enable_ the others
+    - `true`(_enable_incrementally, default):
+        _enable_ all plugins that match keywords, _disable_ the others.
+    - `false`(_disable_ incrementally):
+        _disable_ all plugins that match keywords, _enable_ the others
 - `override_kw`invert `enable_match` on a plugin when its name has a match
     in both this list of words **and** in `kw` including `presets`
 
@@ -114,9 +122,10 @@ _Important_The name of the colorscheme must be in the keywords when `enabling`
 
 Alternatively:
 
-1. Add the name to property |lazyflex.nvim-kw_always_enable| `kw_always_enable = { "name-of-colorscheme"}`
-2. When using **LazyVim**Use the `colorscheme` preset.
-3. When using |lazyflex.nvim-custom-presets|Create a `colorscheme` preset.
+1. Add the name to property |lazyflex.nvim-kw_always_enable| 
+`kw_always_enable = { "name-of-colorscheme"}`
+2. Whenusing LazyVim <https://github.com/LazyVim/LazyVim>Use the `colorscheme` preset.
+3. When using custom |lazyflex.nvim-presets|Create a `colorscheme` preset.
 
 
 EXAMPLES                                *lazyflex.nvim-lazyflex.nvim-examples*
@@ -125,9 +134,9 @@ EXAMPLES                                *lazyflex.nvim-lazyflex.nvim-examples*
 USING A PERSONAL CONFIGURATION ~
 
 The plugin can be used when your personal configuration is not build upon a
-community setup like **LazyVim**.
+community setup like LazyVim <https://github.com/LazyVim/LazyVim>.
 
-Add to the |lazyflex.nvim-spec|
+Add to the |lazyflex.nvim-spec-of-lazyflex|
 
 
   `import = "lazyflex.entry.lazy"`
@@ -153,10 +162,10 @@ Add to the |lazyflex.nvim-spec|
 USINGA COMMUNITY SETUP LIKE LAZYVIM ~
 
 
-  Prerequisite: Add **LazyVim** to your |lazyflex.nvim-plugin-spec|
+  Prerequisite: Add the LazyVim <https://github.com/LazyVim/LazyVim> plugin
 _Note_A preset setting that does not match a predefined preset will be ignored.
 
-Add to the |lazyflex.nvim-spec|
+Add to the |lazyflex.nvim-spec-of-lazyflex|
 
 
   `import = "lazyflex.entry.lazyvim"`
@@ -199,11 +208,32 @@ Add to the |lazyflex.nvim-spec|
         "abeldekat/lazyflex.nvim",
         import = "lazyflex.entry.lazyvim",
         opts = {
-          kw_always_enable = { "tokyo" }, -- always enable your colorscheme
+          kw_always_enable = { "tokyo" },
           lazyvim = { presets = { "editor" } },
           kw = { "cmp" },
           --  don't enable: "nvim-spectre", "flash.nvim" and "cmp_luasnip"
           override_kw = { "spectre", "fla", "luasn" },
+        },
+      },
+    
+      -- Lazyvim: all plugins, without modules imported from "extras"
+      {
+        "abeldekat/lazyflex.nvim",
+        import = "lazyflex.entry.lazyvim",
+        opts = {
+          kw_always_enable = { "tokyo" },
+          filter_import = { enabled = true, kw = {} },
+        },
+      },
+    
+      -- Lazyvim: minimal set of plugins usable for neotest-python
+      {
+        "abeldekat/lazyflex.nvim",
+        import = "lazyflex.entry.lazyvim",
+        opts = {
+          filter_import = { enabled = true, kw = { "py", "test" } },
+          lazyvim = { presets = { "treesitter"} }
+          kw = { "toky", "test", "plen" },
         },
       },
 <
@@ -211,21 +241,21 @@ Add to the |lazyflex.nvim-spec|
 
 REUSINGSPECS FROM A COLLECTION OF PLUGINS ~
 
-**LazyVim** can be used without loading its options, autocommands and
-keymappings. The settings of the resulting configuration will default to stock
-Neovim.
+LazyVim <https://github.com/LazyVim/LazyVim> can be used without loading its
+options, autocommands and keymappings. The settings of the resulting
+configuration will default to stock Neovim.
 
 This can be useful during testing or when reporting an issue for one of the
 plugins, instead of adding the full spec to a
-|lazyflex.nvim-reproducible-configuration|
+|lazyflex.nvim-reproducible-configuration|.
 
 
-  Prerequisite: Add **LazyVim** to your |lazyflex.nvim-plugin-spec|
-Add to the |lazyflex.nvim-spec|
+  Prerequisite: Add the LazyVim <https://github.com/LazyVim/LazyVim> plugin
+Add to the |lazyflex.nvim-spec-of-lazyflex|
 
 
   `import = "lazyflex.entry.lazyvim"`
-Addto the options:
+Addto |lazyflex.nvim-opts|
 
 
   `lazyvim = { settings = { enabled = false } }`
@@ -267,17 +297,22 @@ Addto the options:
 
 CONFIGURATION                      *lazyflex.nvim-lazyflex.nvim-configuration*
 
-**lazyflex.nvim** comes with the following defaults:
+**lazyflex.nvim**comes with the following defaults:
 
 >lua
     {
-      -- lazyvim collection
+      -- when enabled: only import a selection of the modules in use
+      filter_import = {
+        enabled = false,
+        kw = {}, -- contains keywords for module names to import
+        always_import = {}, -- always contains "lazyvim.plugins" and "plugins"
+      },
+    
+      -- lazyvim settings
       lazyvim = {
-        -- any lazyvim.presets specified that don't match have no effect:
         presets = {}, -- example: { "coding" }: matches all plugins in the coding module
     
-        -- load lazyvim's settings by default:
-        settings = {
+        settings = { -- load lazyvim's settings by default:
           enabled = true, -- quick switch. Disables the three options below:
           options = true, -- use config.options
           autocmds = true, -- use config.autocmds
@@ -285,7 +320,7 @@ CONFIGURATION                      *lazyflex.nvim-lazyflex.nvim-configuration*
         },
       },
     
-      -- user collection
+      -- user settings
       user = {
         -- lazyflex.collections.stub is used by default as a pass-through
     
@@ -329,25 +364,22 @@ CUSTOM PRESETS AND SETTINGS ~
 As an _optional_ step, the user can add custom functions for handling presets
 and changing settings. The following functions are used by **lazyflex**
 
-1. presets:`get_preset_keywords(name, enable_match)`
-
-- `name`the name of the preset
-- `enable_match`true when enabling, false otherwise
-- _returns_a `list` with keywords or `{}`
-
-1. settings: `change_settings(settings)`
-
-- `settings`the settings provided in |lazyflex.nvim-opts|
-- _returns_a `spec`(used by **LazyVim**) or `{}`
+- presets:`get_preset_keywords(name, enable_match)`
+    - `name`the name of the preset
+    - `enable_match`true when enabling, false otherwise
+    - _returns_a `list` with keywords or `{}`
+- settings: `change_settings(settings)`
+    - `settings`the settings provided in |lazyflex.nvim-opts|
+    - _returns_a `spec`(used by **LazyVim**) or `{}`
 
 _Note_User presets will only apply when the module is correctly implemented and
 are otherwise ignored.
 
-Add to the options:
+Add to the _opts_
 
 
   `user = { presets = { "coding", "editor"} }`
-The user can add custom code directly into the |lazyflex.nvim-opts|
+Theuser can add custom code directly into the |lazyflex.nvim-opts|
 
 >lua
     user = {
@@ -362,22 +394,23 @@ The user can add custom code directly into the |lazyflex.nvim-opts|
     },
 <
 
-Alternatively,the user can add a `lua` module to the configuration:
+Alternatively,the user can add a `lua` module:
 
 
-  Example: Copy the lazyflex module `lazyflex.collections.stub`
+  Example: Copy the **lazyflex** module lazyflex.collections.stub
   <https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua>
   to `your-neovim-config-folder/lua/config/lazyflex.lua`
-When the user module is not present, **lazyflex** falls back to
-lazyflex.collections.stub.
-<https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua>
 The path and the name of the module can be changed:
 
 
   user = { mod = "inside-your-lua-folder.another-name"}
-_Note_Do not use a folder `lazy.nvim` imports
+_Note_Do not use a folder that is configured to import
 <https://github.com/folke/lazy.nvim#%EF%B8%8F-importing-specs-config--opts>
 from.
+
+_Note_When the user module is not present, **lazyflex** falls back to
+lazyflex.collections.stub
+<https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua>.
 
 Example implementation:
 
@@ -431,8 +464,8 @@ MINIMAL REPRODUCIBLE CONFIGURATIONS*lazyflex.nvim-lazyflex.nvim-minimal-reproduc
 The plugin has two examples for writing reproducible configurations using
 `lazyflex`, located in the `./repro` folder:
 
-- `repro_lazy.lua` <https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazy.lua>
-- `repro_lazyvim.lua` <https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazyvim.lua>
+- repro_lazy.lua <https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazy.lua>
+- repro_lazyvim.lua <https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazyvim.lua>
 
 
 ABOUT ENABLING AND DISABLING*lazyflex.nvim-lazyflex.nvim-about-enabling-and-disabling*
@@ -442,10 +475,11 @@ For each plugin managed by _lazy.nvim_ that is not unconditionally `disabled`,
 
 The `cond` property needs to be set before **lazy.nvim** starts taking its
 value into consideration. Therefore, **lazyflex** operates in the `spec phase`.
+As part of the `spec phase`, **lazy.nvim** _requires_ the import
+<https://github.com/folke/lazy.nvim#%EF%B8%8F-importing-specs-config--opts>
 
 
-  See: `:Lazy profile`. As part of the `spec phase`, **lazy.nvim** _requires_ the
-  `import`
+  See: `:Lazy profile`.
 A similar approach can also be found in the following code:
 
 - `vscode.lua`**LazyVim** <https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/plugins/extras/vscode.lua#L24>
@@ -469,8 +503,8 @@ The idea grew over time:
 
 ACKNOWLEDGEMENTS                *lazyflex.nvim-lazyflex.nvim-acknowledgements*
 
-- **lazy.nvim** <https://github.com/folke/lazy.nvim>The architecture, semantics and enhanced possibilities.
-- **LazyVim** <https://github.com/LazyVim/LazyVim>The concept of a plugin as a collection of other plugins.
+
+
 
 Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
 

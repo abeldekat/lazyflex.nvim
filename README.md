@@ -218,7 +218,6 @@ Add to [opts]:
     always_import = {}, -- always contains "lazyvim.plugins" and "plugins"
   },
 
-  -- lazyvim settings
   lazyvim = {
     presets = {}, -- example: { "coding" }: matches all plugins in the coding module
 
@@ -230,11 +229,8 @@ Add to [opts]:
     },
   },
 
-  -- user settings
   user = {
-    -- lazyflex.collections.stub is used by default as a pass-through
-
-    -- optional: functions overriding lazyflex.collections.stub
+    -- optional: functions implementing presets and change_settings
     get_preset_keywords = nil,
     change_settings = nil,
 
@@ -254,10 +250,10 @@ Add to [opts]:
   -- keywords matching plugins to always enable:
   kw_always_enable = {}, -- the "lazy" keyword is always included
 
-  -- keywords specified by the user:
+  -- keywords matching plugins, as specified by the user:
   kw = {}, -- example: "line" matches lualine, bufferline and indent-blankline
 
-  -- when the name of the plugin matches keywords in both kw/preset and override_kw:
+  -- when the name of a plugin is matched and also has a match in override_kw:
   -- invert enable_match for that plugin
   override_kw = {},
 }

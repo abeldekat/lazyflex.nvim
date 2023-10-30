@@ -1,6 +1,9 @@
---[[
-inversion of control pattern
-important benefit: testing...
---]]
-local lazy_adapter = require("lazyflex.adapter.lazy")
-return require("lazyflex").on_hook(lazy_adapter)
+require("lazy.core.util").warn({
+  "`import = lazyflex.entry.lazy` has been removed in v4.0.0.",
+  "",
+  "please use `lazyflex.hook`",
+  "",
+  "For other important changes: see issue #65(https://github.com/abeldekat/lazyflex.nvim/issues/65)",
+})
+
+return {}

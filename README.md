@@ -199,7 +199,7 @@ Add to [opts]:
     import = "lazyflex.hook",
     opts = {
       filter_modules = { enabled = true, kw = { "py", "test" } },
-      lazyvim = { presets = { "treesitter"} }
+      lazyvim = { presets = { "treesitter"} },
       kw = { "toky", "test", "plen" },
     },
   },
@@ -303,6 +303,16 @@ There are two examples for writing reproducible configurations using `lazyflex`:
 - [repro_lazy.lua]
 - [repro_lazyvim.lua]
 
+## Lazyflex starter
+
+When starting `Neovim` for the first time, **lazyflex.nvim** is not present yet.
+As a consequence, plugins will be _cloned_ before **lazyflex.nvim** is activated.
+
+It is possible to avoid cloning plugins that will be not be enabled
+by cloning **lazyflex.nvim** first.
+
+See [lazyflex starter], a modified [LazyVim starter]
+
 ## About enabling and disabling
 
 For each plugin managed by **lazy.nvim** that is not unconditionally disabled,
@@ -356,5 +366,6 @@ The idea grew over time:
 [presets]: lua/lazyflex/presets/lazyvim.lua
 [examples/lazyflex_spec.lua]: examples/lazyflex_spec.lua
 [examples/lazyflex_collection.lua]: examples/lazyflex_collection.lua
+[lazyflex starter]: examples/lazyflex_starter.lua
 [repro_lazy.lua]: examples/repro_lazy.lua
 [repro_lazyvim.lua]: examples/repro_lazyvim.lua

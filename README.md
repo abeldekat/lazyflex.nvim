@@ -289,8 +289,8 @@ Example user [opts]:
 
 ```lua
 user = {
-  get_preset_keywords = require("flex_collection").get_preset_keywords,
-  change_settings = require("flex_collection").change_settings,
+  get_preset_keywords = require("lazyflex_collection").get_preset_keywords,
+  change_settings = require("lazyflex_collection").change_settings,
   presets = {},
   settings = {},
 },
@@ -298,21 +298,20 @@ user = {
 
 ## Minimal reproducible configurations
 
-The plugin has two examples for writing reproducible configurations
-using `lazyflex`, located in the `./repro` folder:
+There are two examples for writing reproducible configurations using `lazyflex`:
 
 - [repro_lazy.lua]
 - [repro_lazyvim.lua]
 
 ## About enabling and disabling
 
-For each plugin managed by _lazy.nvim_ that is not unconditionally `disabled`,
+For each plugin managed by **lazy.nvim** that is not unconditionally disabled,
 **lazyflex** overrides its `cond` property.
 
 The `cond` property needs to be set
 before **lazy.nvim** starts taking its value into consideration.
-Therefore, **lazyflex** operates in the `spec phase`.
-As part of the `spec phase`, **lazy.nvim** _requires_ `lazyflex.hook`
+Therefore, **lazyflex** operates in the "spec phase".
+As part of the "spec phase", **lazy.nvim** _requires_ `lazyflex.hook`
 
 > See: `:Lazy profile`.
 

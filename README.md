@@ -14,8 +14,8 @@ Its main objective is to make it easier to test and troubleshoot a `Neovim` conf
 
 - Easier troubleshooting/testing from one central location.
   - Enable/disable multiple plugins by keyword.
-  - Define and use [presets] for your own configuration.
-  - Has presets for each default plugin module in [LazyVim].
+  - Define and use [custom presets] for your own configuration.
+  - Has [presets] for each default plugin module in [LazyVim].
   - Has options to skip loading the configuration modules
   (`options`, `autocmds`, `keymaps`) provided by [LazyVim]
 - Helps to verify the independence of the components in the configuration.
@@ -55,8 +55,7 @@ _Note_: The `cond` property in the snippet above is practical for quickly toggli
 
 _Note_: It is not possible to configure multiple fragments of the plugin.
 
-_Note_: See [examples/lazyflex_spec.lua](examples/lazyflex_spec.lua)
-for a more complete **lazyflex** spec.
+_Note_: See [examples/lazyflex_spec.lua] for a more complete **lazyflex** spec.
 
 **References**:
 
@@ -100,14 +99,14 @@ Approaches:
 2. Add the name to property `kw_always_enable` in the [opts]:
 `kw_always_enable = { "toky" }`
 3. When using [LazyVim]: Use the `colorscheme` preset.
-4. When using custom [presets]: Create a `colorscheme` preset.
+4. When using [custom presets]: Create a `colorscheme` preset.
 
 ## Use cases
 
 ### Using a personal configuration
 
 The plugin can be used when the user's configuration is not build upon
-a community setup like [LazyVim]. Personal [presets] can be configured.
+a community setup like [LazyVim]. It is possible to configure [custom presets].
 
 ### Using a community setup like LazyVim
 
@@ -351,10 +350,12 @@ The idea grew over time:
 [LazyVim starter]: https://github.com/LazyVim/starter/blob/a13d5c90769ce6177d1e27b46efd967ed52c1d68/lua/config/lazy.lua#L11
 [vscode.lua]: (https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/plugins/extras/vscode.lua#L24)
 [config.init]: https://github.com/LazyVim/LazyVim/blob/3acdac917b79e22b1c3420aabde8b583d0799f6a/lua/lazyvim/config/init.lua#L187
-[presets]: #custom-presets-and-settings
+[custom presets]: #custom-presets-and-settings
 [reproducible configuration]: #minimal-reproducible-configurations
 [examples]: #minimal-reproducible-configurations
 [opts]: #configuration
-[examples/lazyflex_collection.lua]: https://github.com/abeldekat/lazyflex.nvim/blob/main/examples/lazyflex_collection.lua
-[repro_lazy.lua]: https://github.com/abeldekat/lazyflex.nvim/blob/main/examples/repro_lazy.lua
-[repro_lazyvim.lua]: https://github.com/abeldekat/lazyflex.nvim/blob/main/examples/repro_lazyvim.lua
+[presets]: lua/lazyflex/presets/lazyvim.lua
+[examples/lazyflex_spec.lua]: examples/lazyflex_spec.lua
+[examples/lazyflex_collection.lua]: examples/lazyflex_collection.lua
+[repro_lazy.lua]: examples/repro_lazy.lua
+[repro_lazyvim.lua]: examples/repro_lazyvim.lua

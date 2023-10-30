@@ -55,6 +55,8 @@ _Note_: The `cond` property in the snippet above is practical for quickly toggli
 
 _Note_: It is not possible to configure multiple fragments of the plugin.
 
+_Note_: See [examples/lazyflex_spec.lua] for a more complete **lazyflex** spec.
+
 **References**:
 
 - [lazy.nvim installation]
@@ -71,7 +73,7 @@ that are not unconditionally disabled(`plugin.enabled = false`)
 
 ### Important properties
 
-- `filter_import.kw`: when enabled, only import a selection
+- `filter_modules.kw`: when enabled, only import a selection
 of the _modules_ in use, thereby reducing the number of plugins to consider.
 See lazy.nvim's [import]
 - `kw`: a list of words matching names of plugins.
@@ -186,7 +188,7 @@ Add to [opts]:
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
     opts = {
-      filter_import = { enabled = true },
+      filter_modules = { enabled = true },
       enable_match = false,
     },
   },
@@ -196,7 +198,7 @@ Add to [opts]:
     "abeldekat/lazyflex.nvim",
     import = "lazyflex.hook",
     opts = {
-      filter_import = { enabled = true, kw = { "py", "test" } },
+      filter_modules = { enabled = true, kw = { "py", "test" } },
       lazyvim = { presets = { "treesitter"} }
       kw = { "toky", "test", "plen" },
     },
@@ -210,7 +212,7 @@ Add to [opts]:
 ```lua
 {
   -- when enabled: only import a selection of the modules in use
-  filter_import = {
+  filter_modules = {
     enabled = false,
     kw = {}, -- contains keywords for module names to import
     always_import = {}, -- always contains "lazyvim.plugins" and "plugins"
@@ -273,69 +275,22 @@ The following functions are used by **lazyflex**:
   - _returns_: a `list` with keywords or `{}`
 - settings: `change_settings(settings)`
   - `settings`: the settings provided in [opts](#configuration)
-  - _returns_: a `spec`(used by **LazyVim**) or `{}`
+  - _returns_: a `spec`(used by [LazyVim]) or `{}`
 
 These functions can be implemented in a separate module in the user's configuration.
+Suggestion: Copy the example module [examples/lazyflex_collection.lua]
+to the `lua` folder inside `XDG_CONFIG_HOME`(default on `linux`: `~/.config/nvim`)
 
-> Example: Copy the **lazyflex** module [lazyflex.collections.stub]
-> to `~/.config/nvim/lua/config/flex_collection.lua`
+_Note_: Do not use a folder [lazy.nvim] is configured to [import] from.
 
-_Note_: Do not use a folder that is configured to [import] from.
-
-Example implementation:
-
-```lua
-local M = {}
-
-local presets = {
-  editor = { "harpoon" }, -- add more plugins
-  -- add more presets
-}
-
--- enable_match=true: harpoon needs plenary
--- enable_match=false: plenary should not be disabled
-local when_enabling = {
-  editor = { "plenary" },
-}
-
-M.get_preset_keywords = function(name, enable_match)
-  local result = presets[name]
-
-  if result and enable_match then
-    local extra = when_enabling[name]
-    if extra then
-      result = vim.list_extend(vim.list_extend({}, result), extra)
-    end
-  end
-  return result or {}
-end
-
-M.change_settings = function(settings)
-  if settings.options == false then
-    package.loaded["config.options"] = true
-    vim.g.mapleader = " "
-    vim.g.maplocalleader = "\\"
-  end
-  if settings.autocmds == false then
-    package.loaded["config.autocmds"] = true
-  end
-  if settings.keymaps == false then
-    package.loaded["config.keymaps"] = true
-  end
-  return {}
-end
-
-return M
-```
-
-Given the example implementation above, one could use:
+Example user [opts]:
 
 ```lua
 user = {
-  get_preset_keywords = require("config.flex_collection").get_preset_keywords,
-  change_settings = require("config.flex_collection").change_settings,
-  presets = { "editor" },
-  settings = { enabled = false },
+  get_preset_keywords = require("flex_collection").get_preset_keywords,
+  change_settings = require("flex_collection").change_settings,
+  presets = {},
+  settings = {},
 },
 ```
 
@@ -397,6 +352,7 @@ The idea grew over time:
 [reproducible configuration]: #minimal-reproducible-configurations
 [examples]: #minimal-reproducible-configurations
 [opts]: #configuration
-[lazyflex.collections.stub]: https://github.com/abeldekat/lazyflex.nvim/blob/main/lua/lazyflex/collections/stub.lua
-[repro_lazy.lua]: https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazy.lua
-[repro_lazyvim.lua]: https://github.com/abeldekat/lazyflex.nvim/blob/main/repro/repro_lazyvim.lua
+[examples/lazyflex_spec.lua]: https://github.com/abeldekat/lazyflex.nvim/blob/main/examples/lazyflex_spec.lua
+[examples/lazyflex_collection.lua]: https://github.com/abeldekat/lazyflex.nvim/blob/main/examples/lazyflex_collection.lua
+[repro_lazy.lua]: https://github.com/abeldekat/lazyflex.nvim/blob/main/examples/repro_lazy.lua
+[repro_lazyvim.lua]: https://github.com/abeldekat/lazyflex.nvim/blob/main/examples/repro_lazyvim.lua

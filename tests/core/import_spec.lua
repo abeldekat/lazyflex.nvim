@@ -1,7 +1,7 @@
 local h = require("tests.unit_helpers")
 
 -- test import
-describe("lazyflex import", function()
+describe("lazyflex filter modules", function()
   it("is disabled by default and does not do anything regarding imports", function()
     local spec = { { "test/baz" }, { import = "foo" }, { import = "bar" } }
     local opts = { kw = { "baz" } }
@@ -12,9 +12,9 @@ describe("lazyflex import", function()
     assert(spec[3].is_imported == nil) -- untouched
   end)
 
-  it("always imports lazyvim.plugins and plugins", function()
+  it("always imports modules lazyvim.plugins and plugins", function()
     local spec = { { import = "lazyvim.plugins" }, { import = "plugins" } }
-    local opts = { filter_import = { enabled = true } }
+    local opts = { filter_modules = { enabled = true } }
 
     h.activate(opts, spec)
 
@@ -22,9 +22,9 @@ describe("lazyflex import", function()
     assert(spec[2].is_imported == true)
   end)
 
-  it("imports nothing else when filter_import.kw is empty", function()
+  it("imports no other modules when filter_modules.kw is empty", function()
     local spec = { { import = "foo" }, { import = "bar" }, { import = "baz" } }
-    local opts = { filter_import = { enabled = true, kw = {} } }
+    local opts = { filter_modules = { enabled = true, kw = {} } }
     h.activate(opts, spec)
 
     assert(spec[1].is_imported == false)
@@ -34,7 +34,7 @@ describe("lazyflex import", function()
 
   it("filters correctly", function()
     local spec = { { import = "foo" }, { import = "bar" }, { import = "baz" } }
-    local opts = { filter_import = { enabled = true, kw = { "f", "az" } } }
+    local opts = { filter_modules = { enabled = true, kw = { "f", "az" } } }
     h.activate(opts, spec)
 
     assert(spec[1].is_imported == true)

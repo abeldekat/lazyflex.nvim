@@ -55,7 +55,8 @@ _Note_: The `cond` property in the snippet above is practical for quickly toggli
 
 _Note_: It is not possible to configure multiple fragments of the plugin.
 
-_Note_: See [examples/lazyflex_spec.lua] for a more complete **lazyflex** spec.
+_Note_: See [examples/lazyflex_spec.lua](examples/lazyflex_spec.lua)
+for a more complete **lazyflex** spec.
 
 **References**:
 
@@ -93,7 +94,7 @@ When using presets: References to a non-existing preset will be ignored.
 _Important_: The name of the colorscheme must be in the keywords
 when `enable_match = true`
 
-Approach:
+Approaches:
 
 1. Add the name to property `kw` in the [opts]: `kw = { "toky" }`
 2. Add the name to property `kw_always_enable` in the [opts]:
@@ -157,7 +158,7 @@ Add to [opts]:
     },
   },
 
-  -- All specs except the ones defined in LazyVim's ui module
+  -- All plugins except the ones defined in LazyVim's ui module
   -- Plugins: approximately 10 disabled
   {
     "abeldekat/lazyflex.nvim",
@@ -278,8 +279,10 @@ The following functions are used by **lazyflex**:
   - _returns_: a `spec`(used by [LazyVim]) or `{}`
 
 These functions can be implemented in a separate module in the user's configuration.
+
 Suggestion: Copy the example module [examples/lazyflex_collection.lua]
-to the `lua` folder inside `XDG_CONFIG_HOME`(default on `linux`: `~/.config/nvim`)
+to the `lua` folder inside `XDG_CONFIG_HOME`.
+On `linux`, `XDG_CONFIG_HOME` defaults to `~/.config/nvim`
 
 _Note_: Do not use a folder [lazy.nvim] is configured to [import] from.
 
@@ -352,7 +355,6 @@ The idea grew over time:
 [reproducible configuration]: #minimal-reproducible-configurations
 [examples]: #minimal-reproducible-configurations
 [opts]: #configuration
-[examples/lazyflex_spec.lua]: https://github.com/abeldekat/lazyflex.nvim/blob/main/examples/lazyflex_spec.lua
 [examples/lazyflex_collection.lua]: https://github.com/abeldekat/lazyflex.nvim/blob/main/examples/lazyflex_collection.lua
 [repro_lazy.lua]: https://github.com/abeldekat/lazyflex.nvim/blob/main/examples/repro_lazy.lua
 [repro_lazyvim.lua]: https://github.com/abeldekat/lazyflex.nvim/blob/main/examples/repro_lazyvim.lua

@@ -4,23 +4,23 @@ This plugin should be the first plugin in the spec list!
 
 local M = {}
 
-local function get_opts(adapter, collection_names)
+local function get_opts(adapter)
   local opts = adapter.get_opts()
   if opts == nil or type(opts) == "table" and vim.tbl_isempty(opts) then
     return nil -- no opts to work with
   end
 
-  opts = require("lazyflex.config").setup(opts, collection_names)
-  if vim.tbl_isempty(opts.kw) and not opts.filter_import.enabled then
+  opts = require("lazyflex.config").setup(opts)
+  if vim.tbl_isempty(opts.kw) and not opts.filter_modules.enabled then
     return nil -- nothing to do
   end
   return opts
 end
 
-local function filter_import(opts, adapter)
-  if opts.filter_import.enabled then
-    local opts_import = { filter_import = opts.filter_import }
-    require("lazyflex.import").filter(opts_import, adapter)
+local function filter_modules(opts, adapter)
+  if opts.filter_modules.enabled then
+    local opts_modules = { filter_modules = opts.filter_modules }
+    require("lazyflex.modules").filter(opts_modules, adapter)
   end
 end
 
@@ -35,31 +35,28 @@ local function plugins(opts, adapter)
   end
 end
 
-local function settings(opts, collection_names)
+local function settings(opts)
   local spec = {}
-  for _, name in ipairs(collection_names) do
-    local c = opts[name]
-    if c then
-      table.insert(spec, c.change_settings(c.settings) or {})
-    end
+  for _, change_settings in pairs(opts.collections) do
+    table.insert(spec, change_settings() or {})
   end
   return spec
 end
 
-function M.on_hook(adapter, collection_names)
+function M.on_hook(adapter)
   -- don't use when embedded
   if vim.g.vscode or vim.g.started_by_firenvim then
     return {}
   end
 
-  local opts = get_opts(adapter, collection_names)
+  local opts = get_opts(adapter)
   if opts == nil then
     return {} -- opt-out early
   end
 
-  filter_import(opts, adapter)
+  filter_modules(opts, adapter)
   plugins(opts, adapter)
-  return settings(opts, collection_names)
+  return settings(opts)
 end
 
 function M.setup(_)

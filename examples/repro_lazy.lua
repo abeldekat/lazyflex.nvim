@@ -1,7 +1,12 @@
 -- Minimal `init.lua` to reproduce an issue. Save as `repro.lua` and run with `nvim -u repro.lua`
+--
+-- This example is for personal use only!
+-- Use lazyflex and the plugins provided to create different testing scenarios.
+-- As a minimal repro in an issue, lazyflex is superfluous.
 
 -- sets std paths to use .repro and bootstraps lazy
-local function bootstrap(root) -- DO NOT change the paths
+-- DO NOT change the paths and don't remove the colorscheme
+local function bootstrap(root)
   for _, name in ipairs({ "config", "data", "state", "cache" }) do
     vim.env[("XDG_%s_HOME"):format(name:upper())] = root .. "/" .. name
   end
@@ -17,13 +22,12 @@ bootstrap(root)
 -- install plugins
 local plugins = {
   -- optional: reduce the number of plugins needed to reproduce the problem
-  { "abeldekat/lazyflex.nvim", enabled = false, version = "*", import = "lazyflex.entry.lazyvim", opts = {} },
-
+  { "abeldekat/lazyflex.nvim", enabled = false, version = "*", import = "lazyflex.hook", opts = {} },
   "folke/tokyonight.nvim",
-  { "LazyVim/LazyVim", import = "lazyvim.plugins" },
   -- add any other plugins here
 }
 require("lazy").setup(plugins, {
   root = root .. "/plugins",
 })
+vim.cmd.colorscheme("tokyonight")
 -- add anything else here

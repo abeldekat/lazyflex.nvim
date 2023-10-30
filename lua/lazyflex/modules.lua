@@ -22,9 +22,9 @@ end
 
 function M.filter(opts, adapter)
   adapter.import(function(_, spec)
-    local result = is_equal(spec.import, opts.filter_import.always_import)
+    local result = is_equal(spec.import, opts.filter_modules.always_import)
     if not result then
-      result = find(spec.import, opts.filter_import.kw)
+      result = find(spec.import, opts.filter_modules.kw)
     end
     return result
   end)

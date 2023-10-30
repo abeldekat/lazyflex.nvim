@@ -2,7 +2,7 @@ local assert = require("luassert")
 
 local function get_dir()
   local f = debug.getinfo(1, "S").source:sub(2)
-  return vim.fn.fnamemodify(f, ":p:h:h:h")
+  return vim.fn.fnamemodify(f, ":p:h:h:h") or ""
 end
 
 describe("lazyflex.nvim", function()
@@ -24,7 +24,7 @@ describe("lazyflex.nvim", function()
       {
         "abeldekat/lazyflex.nvim",
         dir = get_dir(),
-        import = "lazyflex.entry.lazy",
+        import = "lazyflex.hook",
         opts = { kw = { "paint" } },
       },
       "folke/neodev.nvim",
@@ -46,10 +46,10 @@ describe("lazyflex.nvim", function()
       {
         "abeldekat/lazyflex.nvim",
         dir = get_dir(),
-        import = "lazyflex.entry.lazyvim",
+        import = "lazyflex.hook",
         opts = {
           lazyvim = { settings = { enabled = false } },
-          kw = { "tokyo" }, -- only download LazyVim and tokyonight
+          kw = { "tokyo" }, -- only downloads LazyVim and tokyonight
         },
       },
       {
@@ -70,9 +70,9 @@ describe("lazyflex.nvim", function()
       {
         "abeldekat/lazyflex.nvim",
         dir = get_dir(),
-        import = "lazyflex.entry.lazyvim",
+        import = "lazyflex.hook",
         opts = {
-          kw = { "tokyo" }, -- only download LazyVim and tokyonight
+          kw = { "tokyo" }, -- only downloads LazyVim and tokyonight
         },
       },
       { "LazyVim/LazyVim", import = "lazyvim.plugins" },

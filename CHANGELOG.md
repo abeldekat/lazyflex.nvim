@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/abeldekat/lazyflex.nvim/compare/v3.1.0...v4.0.0) (2023-10-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* **core:** simplify the design and the readme ([#66](https://github.com/abeldekat/lazyflex.nvim/issues/66))
+
+### Code Refactoring
+
+* **core:** simplify the design and the readme ([#66](https://github.com/abeldekat/lazyflex.nvim/issues/66)) ([4539415](https://github.com/abeldekat/lazyflex.nvim/commit/453941556437339ab17cd20926c42225ace6e50a))
+
 ## [3.1.0](https://github.com/abeldekat/lazyflex.nvim/compare/v3.0.0...v3.1.0) (2023-10-29)
 
 

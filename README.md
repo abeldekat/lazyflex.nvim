@@ -1,5 +1,11 @@
 # lazyflex.nvim
 
+
+
+**Update**: This repository has been archived on 20240329
+
+
+
 **lazyflex.nvim** is an add-on for [lazy.nvim], a modern plugin manager for Neovim.
 
 Its main objective is to make it easier to test and troubleshoot a `Neovim` configuration.

@@ -1,4 +1,4 @@
-*lazyflex.nvim.txt*      For Neovim >= 0.8.0      Last change: 2023 October 30
+*lazyflex.nvim.txt*       For Neovim >= 0.8.0       Last change: 2024 March 29
 
 ==============================================================================
 Table of Contents                            *lazyflex.nvim-table-of-contents*
@@ -21,6 +21,8 @@ Table of Contents                            *lazyflex.nvim-table-of-contents*
 
 ==============================================================================
 1. lazyflex.nvim                                 *lazyflex.nvim-lazyflex.nvim*
+
+**Update**This repository has been archived on 20240329
 
 **lazyflex.nvim** is an add-on for lazy.nvim
 <https://github.com/folke/lazy.nvim>, a modern plugin manager for Neovim.

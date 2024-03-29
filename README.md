@@ -1,8 +1,7 @@
 # lazyflex.nvim
 
 
-
-**Update**: This repository has been archived on 20240329
+:exclamation **Update**: This repository has been archived on 20240329
 
 
 
